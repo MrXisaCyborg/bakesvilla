@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakes-Villa - Artisan Cakes</title>
+    
+    <!-- Load Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, addDoc, onSnapshot, collection, setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        // Expose Firebase objects globally for use in the main script block
+        window.FirebaseServices = { 
+            initializeApp, 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged, 
+            getFirestore, 
+            addDoc, 
+            onSnapshot, 
+            collection, 
+            setLogLevel 
+        };
+        
+        // Ensure the main script runs only after this module is loaded
+        if (window.onloadCallback) {
+            window.onloadCallback();
+        }
+    </script>
+
+    <!-- Load Google Fonts: Poppins (for headings) and Lato (for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Poppins:wght[600;700;800]&display=swap" rel="stylesheet">
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configure Tailwind with the Modern Artisan Dark Mode color palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Poppins', 'sans-serif'],
+                        body: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        // Artisan Dark Palette (Coffee, Chocolate, Vanilla, Copper)
+                        'bg-deep': '#1C1917',           // Deep Coffee Charcoal (Main Background)
+                        'surface-dark': '#2C2B29',      // Slightly Lighter Charcoal Layer (Card/Modal Surface)
+                        'primary-warm': '#F3E5AB',      // Cream/Vanilla White (Title/Main Accent)
+                        'accent-copper': '#D97706',     // Burnt Copper/Sienna (Action/Price Highlight)
+                        'text-light': '#EBEBEB',        // Main text color
+                        'text-muted': '#A09A94',        // Secondary text color
+                    },
+                    boxShadow: {
+                        // Custom shadows for the Soft, Warm Glow effect
+                        'shadow-warm': '0 0 15px rgba(243, 229, 171, 0.4)', // Creamy glow
+                        'shadow-copper': '0 0 10px rgba(217, 119, 6, 0.7)',  // Copper glow
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Apply Base Styles for Artisan Dark Mode */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #1C1917; /* bg-deep */
+            color: #EBEBEB; /* text-light */
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* CARD STYLES - Layered and Warm Glowing */
+        .cake-card {
+            background-color: #2C2B29; /* surface-dark */
+            transition: all 0.3s ease-in-out;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Standard soft dark shadow */
+        }
+
+        /* CARD HOVER EFFECT - Activate Warm Glow */
+        .cake-card:hover {
+            box-shadow: var(--tw-shadow), 0 0 15px rgba(243, 229, 171, 0.4); /* Creamy glow */
+            border-color: #F3E5AB; /* Highlight border with cream */
+            transform: translateY(-4px) scale(1.01); /* Subtle lift */
+        }
+        
+        /* MODAL BACKDROP - Glassmorphism style */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.8); /* Slightly darker backdrop for focus */
+            backdrop-filter: blur(8px); /* Increased blur for elegance */
+        }
+
+        /* ARTISAN BUTTON STYLES - Copper Accent */
+        .artisan-button {
+            transition: all 0.2s ease-out; /* Smoother transition */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+        .artisan-button:hover {
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.9); /* Stronger Copper box glow */
+            transform: scale(1.02); /* Less aggressive scale */
+            background-color: #EAB308; /* Darker copper/amber hover */
+        }
+
+        /* FROSTED HEADER EFFECT - OPACITY INCREASED TO 98% */
+        .frosted-header {
+            /* surface-dark (#2C2B29) at 98% opacity */
+            background-color: rgba(44, 43, 41, 0.98);
+            /* This line creates the blur effect on the content scrolling behind the header */
+            backdrop-filter: blur(8px); 
+        }
+        
+        /* Hide default file input button text */
+        input[type="file"]::file-selector-button {
+            display: none;
+        }
+        
+        /* WhatsApp Button Custom Icon styling */
+        .whatsapp-icon {
+            /* Use a simple green color for the WhatsApp icon */
+            color: #25D366; 
+        }
+        
+        /* Hide number input spinners (optional, for aesthetics) */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section (Uses frosted-header class now) -->
+    <header class="frosted-header sticky top-0 z-20 border-b border-primary-warm/30 shadow-md">
+        <div class="max-w-7xl mx-auto py-4 px-6 sm:px-8 lg:px-10 flex justify-between items-center">
+            <h1 class="text-4xl font-heading font-extrabold text-primary-warm tracking-wider uppercase drop-shadow-md flex-shrink-0">
+                Bakes-Villa
+            </h1>
+            <!-- Admin Toggle Button (Visible only when logged in) -->
+            <div class="flex items-center space-x-4">
+                <div id="adminPanelToggle" class="hidden">
+                    <button onclick="toggleAdminPanel()" class="text-primary-warm hover:text-white transition duration-150 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                        </svg>
+                        Admin
+                    </button>
+                </div>
+                <!-- Order Button: Burnt Copper Accent - MOBILE PADDING ADJUSTED -->
+                <a href="tel:9835243250" class="bg-accent-copper text-white px-4 py-2 sm:px-5 sm:py-3 rounded-full font-heading font-semibold text-base sm:text-lg border border-accent-copper artisan-button flex items-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 inline-block mr-2 -mt-0.5">
+                        <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.368c1.08 0 2.114.54 2.778 1.484l.857 1.291c.31.465.424 1.05.282 1.583-.544 2.025-1.292 4.34-2.25 6.614a15.724 15.724 0 0 0 6.134 6.134c2.274-.958 4.589-1.706 6.614-2.25a1.867 1.867 0 0 1 1.583.282l1.291.857c.944.664 1.484 1.698 1.484 2.778V19.5a3 3 0 0 1-3 3h-2.25A16.5 16.5 0 0 1 2.25 6.75V4.5A3 3 0 0 1 1.5 1.5Z" clip-rule="evenodd" />
+                    </svg>
+                    Order Now
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Panel (Hidden by default) -->
+    <div id="adminPanel" class="hidden bg-surface-dark py-4 px-6 sm:px-8 lg:px-10 border-b border-primary-warm/30 shadow-inner z-10 relative">
+        <h3 class="text-xl font-heading font-semibold text-primary-warm mb-3">Admin Panel: Add New Cake</h3>
+        <p class="text-text-muted text-sm mb-4" id="adminStatus">Status: Not Authenticated</p>
+        
+        <form id="addCakeForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto p-4 bg-bg-deep rounded-xl shadow-lg border border-primary-warm/20">
+            <!-- Name -->
+            <input type="text" id="cakeName" placeholder="Cake Name (e.g., Mango Delight)" required
+                   class="col-span-1 p-3 rounded-lg bg-surface-dark border border-text-muted/30 text-text-light placeholder-text-muted focus:ring-primary-warm focus:border-primary-warm">
+            
+            <!-- Price - Changed to type="number" -->
+            <input type="number" id="cakePrice" placeholder="Price (e.g., 950)" required
+                   class="col-span-1 p-3 rounded-lg bg-surface-dark border border-text-muted/30 text-text-light placeholder-text-muted focus:ring-primary-warm focus:border-primary-warm">
+            
+            <!-- Local Image Upload -->
+            <label for="cakeImageFile" class="md:col-span-2 p-3 rounded-lg bg-surface-dark border border-text-muted/30 text-text-muted cursor-pointer flex items-center focus-within:ring-primary-warm focus-within:border-primary-warm">
+                <!-- Updated SVG Logo to a Cupcake -->
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-2 text-primary-warm">
+                    <path d="M12 2C9.79 2 8 3.79 8 6v5h8V6c0-2.21-1.79-4-4-4zM16 13h-8c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-1H6v1z" opacity=".3"/>
+                    <path d="M16 13c1.1 0 2-.9 2-2V6c0-2.21-1.79-4-4-4S8 3.79 8 6v5c0 1.1.9 2 2 2h6zm-4-9c1.1 0 2 .9 2 2v3h-4V6c0-1.1.9-2 2-2zm-6 9v-1h-2v1c0 1.1.9 2 2 2v2c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-2c1.1 0 2-.9 2-2v-2h-2v1c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2z"/>
+                </svg>
+                <span id="fileLabelText">Select Image from Device (JPEG/PNG) *Required*</span>
+                <input type="file" id="cakeImageFile" accept="image/jpeg, image/png" required
+                       class="hidden">
+            </label>
+
+            <!-- Description -->
+            <textarea id="cakeDescription" placeholder="Description (e.g., Rich chocolate cake with salted caramel layer)" required
+                      class="md:col-span-2 p-3 rounded-lg bg-surface-dark border border-text-muted/30 text-text-light placeholder-text-muted focus:ring-primary-warm focus:border-primary-warm h-24"></textarea>
+
+            <!-- Submit Button -->
+            <button type="submit" id="addCakeButton" class="md:col-span-2 bg-accent-copper text-white font-heading font-bold py-3 rounded-full artisan-button text-lg">
+                Add Cake to Catalog
+            </button>
+        </form>
+        <p id="adminMessage" class="text-center mt-3 text-sm text-text-light"></p>
+    </div>
+
+    <!-- Main Gallery Section - Increased top padding (pt-28) to clear the fixed header -->
+    <main class="max-w-7xl mx-auto pt-28 pb-16 px-6 sm:px-8 lg:px-10">
+        <h2 class="text-4xl sm:text-5xl font-heading font-extrabold text-text-light mb-6 text-center leading-tight">
+            <span class="text-primary-warm drop-shadow-lg">Artisan Creations</span>, Crafted with Passion
+        </h2>
+        <p class="text-center text-text-muted text-lg sm:text-xl mb-16 max-w-3xl mx-auto leading-relaxed">
+            Every cake is a labor of love, blending premium ingredients with expert technique for a truly memorable dessert experience.
+        </p>
+
+        <!-- Cake Gallery Grid -->
+        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+            <p class="md:col-span-3 text-center text-text-muted">Loading cakes...</p>
+        </div>
+    </main>
+
+    <!-- Modal/Pop-up Structure (for cake details) -->
+    <div id="cakeModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-backdrop" onclick="closeModal(event)">
+        <!-- Modal Content Container (Warm Layered Card with Cream highlights) -->
+        <div id="modalContent" class="bg-surface-dark rounded-3xl w-full max-w-lg overflow-hidden transform transition-all scale-90 opacity-0 duration-300 border border-primary-warm/40 shadow-2xl shadow-primary-warm/20" onclick="event.stopPropagation()">
+            
+            <!-- Modal Header and Close Button -->
+            <div class="flex justify-between items-center p-5 border-b border-primary-warm/30">
+                <h3 id="modalTitle" class="text-2xl sm:text-3xl font-heading font-bold text-primary-warm">Cake Name</h3>
+                <button onclick="closeModal()" class="text-text-muted hover:text-primary-warm transition duration-150 transform hover:scale-110 p-1 rounded-full hover:bg-bg-deep/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>                      
+                </button>
+            </div>
+
+            <!-- Modal Body (Image and Details) -->
+            <div class="p-6 sm:p-8">
+                <img id="modalImage" src="" alt="Selected Cake" class="w-full h-56 sm:h-72 object-cover rounded-xl mb-6 shadow-xl border border-primary-warm/30" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1C1917/D97706?text=Image+Missing';">
+                <div class="flex justify-between items-center mb-4">
+                    <!-- Updated Price Display: Removed 'Price:' text -->
+                    <p class="text-xl sm:text-2xl font-heading font-extrabold text-accent-copper" id="modalPrice">₹000</p>
+                </div>
+                <p id="modalDescription" class="text-text-muted leading-relaxed text-base sm:text-lg mb-8">Cake description here.</p>
+
+                <!-- NEW: Call to Action for both Call and WhatsApp -->
+                <div class="space-y-4">
+                    <!-- WhatsApp Button (Recommended for mobile ordering) -->
+                    <a href="https://wa.me/919835243250" target="_blank" class="w-full block text-center bg-[#25D366] text-white font-heading font-bold py-4 px-8 rounded-full artisan-button text-lg flex items-center justify-center">
+                        <!-- OG WhatsApp SVG Logo -->
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 mr-3 fill-current text-white">
+                            <path d="M12.031 0C18.63 0 24 5.37 24 12c0 3.18-.7 6.43-2.12 9.07l-2.28-.96c-1.28.54-2.82.88-4.47.89h-.02c-.12 0-.23-.01-.35-.01-5.18-.4-8.88-5.74-7.59-11.75C8.11 3.5 12.03 0 12.03 0zM17.152 14.86c-.19-.08-.66-.32-.76-.36-.18-.08-.3-.13-.44.13-.13.25-.49.62-.6.75-.1.12-.22.13-.42.06s-.84-.31-1.61-1c-.6-.52-1.02-1.1-1.35-1.65-.33-.55-.03-.7-.24-.91s-.24-.36-.24-.42c-.06-.11.02-.21.09-.34s.19-.34.29-.5c.08-.13.17-.25.26-.41.09-.16.03-.31-.02-.42-.05-.12-.44-1.05-.6-1.44-.16-.39-.32-.34-.44-.34-.12 0-.25-.01-.38-.01s-.34.02-.52.25c-.18.23-.7.69-.7 1.68s.71 1.94.8 2.08.18.17.34.42c.16.25.3.48.45.65.15.17.32.32.49.49.52.53 1.05.9 1.57 1.25 1.57 1.06 2.85 1.48 3.25 1.7.4.22.64.19.82.11.2-.08.66-.27.75-.54.08-.26.08-.49.06-.58-.02-.09-.12-.13-.24-.18z"/>
+                        </svg>
+                        WhatsApp Order
+                    </a>
+                    
+                    <!-- Call Button (The original request, still important) -->
+                    <a href="tel:9835243250" class="w-full block text-center bg-accent-copper text-white font-heading font-bold py-4 px-8 rounded-full border border-accent-copper artisan-button text-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 inline-block mr-3 -mt-0.5">
+                            <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.368c1.08 0 2.114.54 2.778 1.484l.857 1.291c.31.465.424 1.05.282 1.583-.544 2.025-1.292 4.34-2.25 6.614a15.724 15.724 0 0 0 6.134 6.134c2.274-.958 4.589-1.706 6.614-2.25a1.867 1.867 0 0 1 1.583.282l1.291.857c.944.664 1.484 1.698 1.484 2.778V19.5a3 3 0 0 1-3 3h-2.25A16.5 16.5 0 0 1 2.25 6.75V4.5A3 3 0 0 1 1.5 1.5Z" clip-rule="evenodd" />
+                        </svg>
+                        Call to Order: 9835243250
+                    </a>
+                </div>
+            </div>
+            
+            <p class="text-xs text-center text-text-muted py-3 border-t border-primary-warm/20">
+                Reference ID: <span id="modalId" class="font-semibold text-text-light"></span>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-backdrop" onclick="closeLoginModal(event)">
+        <div id="loginModalContent" class="bg-surface-dark rounded-3xl w-full max-w-sm overflow-hidden transform transition-all scale-90 opacity-0 duration-300 border border-primary-warm/40 shadow-2xl shadow-primary-warm/20" onclick="event.stopPropagation()">
+            <div class="p-6">
+                <h3 class="text-2xl font-heading font-bold text-primary-warm text-center mb-6">Admin Login (AL)</h3>
+                
+                <form id="adminLoginFormModal" class="space-y-4">
+                    <input type="text" id="adminUsernameModal" placeholder="Username" required
+                           class="w-full p-3 rounded-lg bg-bg-deep border border-text-muted/30 text-text-light placeholder-text-muted focus:ring-primary-warm focus:border-primary-warm">
+                    
+                    <input type="password" id="adminPasswordModal" placeholder="Password" required
+                           class="w-full p-3 rounded-lg bg-bg-deep border border-text-muted/30 text-text-light placeholder-text-muted focus:ring-primary-warm focus:border-primary-warm">
+                    
+                    <button type="submit" class="w-full bg-accent-copper text-white font-heading font-bold py-3 rounded-full artisan-button text-lg">
+                        Login
+                    </button>
+                    <p id="loginMessage" class="text-center text-sm text-red-400 mt-2 h-4"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer with Admin Login Link -->
+    <footer class="mt-16 py-6 bg-surface-dark/50 border-t border-primary-warm/20 text-center text-text-muted">
+        <p id="copyrightText" class="mb-2">
+            <!-- This will be updated by JavaScript -->
+        </p>
+        <!-- The user will either see the Login link or the Logout link -->
+        <button id="adminLoginLink" onclick="openLoginModal()" class="text-text-muted hover:text-primary-warm transition duration-150 text-sm">
+            Admin Login (AL)
+        </button>
+        <button id="adminLogoutLink" onclick="logoutAdmin()" class="hidden text-red-400 hover:text-red-300 transition duration-150 text-sm">
+            Admin Logout
+        </button>
+    </footer>
+
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Set a global variable to hold the callback function
+        window.onloadCallback = null;
+
+        // Global Firebase instances and variables
+        let app;
+        let db;
+        let auth;
+        let userId = null;
+        let isAdmin = false;
+        let cakesCollectionRef;
+
+        // Element references
+        const galleryEl = document.getElementById('gallery');
+        const modalEl = document.getElementById('cakeModal');
+        const adminPanelEl = document.getElementById('adminPanel');
+        const addCakeForm = document.getElementById('addCakeForm');
+        const adminMessageEl = document.getElementById('adminMessage');
+        const fileLabelTextEl = document.getElementById('fileLabelText');
+        const adminPanelToggleEl = document.getElementById('adminPanelToggle'); 
+        const loginModalEl = document.getElementById('loginModal'); 
+        const loginMessageEl = document.getElementById('loginMessage'); 
+        const adminLoginLinkEl = document.getElementById('adminLoginLink'); 
+        const adminLogoutLinkEl = document.getElementById('adminLogoutLink'); 
+        const copyrightTextEl = document.getElementById('copyrightText'); 
+
+
+        // Modal content references
+        const modalTitleEl = document.getElementById('modalTitle');
+        const modalImageEl = document.getElementById('modalImage');
+        const modalDescriptionEl = document.getElementById('modalDescription');
+        const modalPriceEl = document.getElementById('modalPrice');
+        const modalIdEl = document.getElementById('modalId');
+        
+        // --- ADMIN & AUTH FUNCTIONS ---
+        const ADMIN_USERNAME = 'siddhijain';
+        const ADMIN_PASSWORD = 'siddhijain123';
+        const FAKE_ADMIN_UID = 'siddhijain-admin-0000'; // Unique ID for simulated login
+
+        // --- IMAGE RESIZE/COMPRESSION UTILITY (NEW) ---
+        /**
+         * Resizes and compresses an image file into a Base64 string to fit Firestore limits.
+         * @param {File} file - The image file object.
+         * @param {number} maxWidth - Maximum width for the resized image.
+         * @param {number} quality - JPEG quality (0.0 to 1.0).
+         * @returns {Promise<string>} - The compressed Base64 image data.
+         */
+        function resizeImage(file, maxWidth = 800, quality = 0.8) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = height * (maxWidth / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Convert canvas content back to JPEG Base64 with compression
+                        const resizedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        
+                        // Check size of the resulting Base64 string (rough byte calculation: Base64 string length * 0.75)
+                        // If it's still too big (unlikely with 800px width and 0.8 quality), we'd need more aggressive measures, 
+                        // but this should handle most images well within the 1MB limit.
+                        if (resizedBase64.length > 1398101) { // 1MB is approx 1.39 million Base64 characters
+                            reject(new Error("Image is still too large after compression."));
+                        }
+
+                        resolve(resizedBase64);
+                    };
+                    img.onerror = error => reject(error);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+        // --- END IMAGE RESIZE/COMPRESSION UTILITY ---
+
+        // --- FOOTER FIX FUNCTION ---
+        function updateFooterYear() {
+            copyrightTextEl.textContent = `© ${new Date().getFullYear()} Bakes-Villa. All rights reserved.`;
+        }
+
+        function openLoginModal() {
+            loginModalEl.classList.remove('hidden');
+            loginModalEl.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            // Reset message
+            loginMessageEl.textContent = '';
+            // Reset modal content for transition
+            document.getElementById('loginModalContent').classList.remove('scale-90', 'opacity-0');
+            document.getElementById('loginModalContent').classList.add('scale-100', 'opacity-100');
+        }
+
+        function closeLoginModal(event) {
+            // Only close if click is on backdrop or close button
+            if (event && event.target !== loginModalEl && !event.target.closest('button')) {
+                return;
+            }
+
+            document.getElementById('loginModalContent').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('loginModalContent').classList.add('scale-90', 'opacity-0');
+            
+            setTimeout(() => {
+                loginModalEl.classList.remove('flex');
+                loginModalEl.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 300);
+        }
+        
+        function toggleAdminPanel() {
+            if (!isAdmin) return;
+            if (adminPanelEl.classList.contains('hidden')) {
+                adminPanelEl.classList.remove('hidden');
+            } else {
+                adminPanelEl.classList.add('hidden');
+            }
+        }
+        
+        function updateAdminUI(isUserAdmin, id) {
+            const adminStatusEl = document.getElementById('adminStatus');
+            isAdmin = isUserAdmin;
+            userId = id;
+            
+            if (isAdmin) {
+                adminPanelToggleEl.classList.remove('hidden');
+                adminLoginLinkEl.classList.add('hidden');
+                adminLogoutLinkEl.classList.remove('hidden');
+                adminStatusEl.textContent = `Status: Logged in as Admin (${userId.substring(0, 8)}...)`;
+            } else {
+                adminPanelToggleEl.classList.add('hidden');
+                adminPanelEl.classList.add('hidden'); // Hide panel if logged out
+                adminLoginLinkEl.classList.remove('hidden');
+                adminLogoutLinkEl.classList.add('hidden');
+                adminStatusEl.textContent = `Status: Logged out (View Only)`;
+            }
+        }
+        
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsernameModal').value;
+            const password = document.getElementById('adminPasswordModal').value;
+            
+            loginMessageEl.textContent = '';
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                updateAdminUI(true, FAKE_ADMIN_UID);
+                closeLoginModal();
+                adminPanelEl.classList.remove('hidden'); // Open panel upon successful login
+                document.getElementById('adminLoginFormModal').reset();
+            } else {
+                loginMessageEl.textContent = 'Invalid credentials. Please try again.';
+            }
+        }
+        
+        function logoutAdmin() {
+            // Simulate logout by reverting to anon state
+            updateAdminUI(false, crypto.randomUUID());
+        }
+        
+        async function handleAddCake(event) {
+            event.preventDefault();
+            
+            if (!isAdmin || !cakesCollectionRef) {
+                adminMessageEl.textContent = "Error: Not authorized or database not ready.";
+                return;
+            }
+            
+            const { addDoc } = window.FirebaseServices;
+
+            const name = document.getElementById('cakeName').value;
+            const price = document.getElementById('cakePrice').value;
+            const fileInput = document.getElementById('cakeImageFile');
+            const description = document.getElementById('cakeDescription').value;
+            const file = fileInput.files[0];
+            
+            // Validation check for price being a positive number
+            const priceValue = parseFloat(price);
+            if (isNaN(priceValue) || priceValue <= 0) {
+                 adminMessageEl.textContent = "Please enter a valid price (only positive numbers allowed).";
+                 return;
+            }
+
+            if (!file) {
+                adminMessageEl.textContent = "Please select an image file.";
+                return;
+            }
+
+            adminMessageEl.textContent = "Processing and resizing image...";
+
+            try {
+                // 1. Resize and compress the image before converting to Base64
+                const imageData = await resizeImage(file);
+
+                const newCake = {
+                    name,
+                    price: `₹${priceValue.toFixed(0)}`, // Store as integer price with Rupee symbol
+                    imageData, // Now guaranteed to be small enough
+                    description,
+                    createdAt: new Date().toISOString()
+                };
+
+                // 2. Add document to Firestore
+                await addDoc(cakesCollectionRef, newCake);
+                
+                adminMessageEl.textContent = `Success! '${name}' added to the catalog.`;
+                addCakeForm.reset();
+                fileLabelTextEl.textContent = 'Select Image from Device (JPEG/PNG) *Required*';
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                adminMessageEl.textContent = `Error adding cake: ${error.message}. Please try a smaller image.`;
+            }
+        }
+        
+        // --- GALLERY/MODAL FUNCTIONS ---
+
+        /**
+         * Renders all cake cards into the gallery based on live data.
+         * @param {Array} liveCakes - Array of cake objects from Firestore.
+         */
+        function renderGallery(liveCakes) {
+            galleryEl.innerHTML = ''; // Clear existing content
+            
+            if (liveCakes.length === 0) {
+                galleryEl.innerHTML = '<p class="md:col-span-3 text-center text-text-muted mt-8">No cakes available yet. The admin needs to add the first few!</p>';
+                return;
+            }
+
+            liveCakes.forEach(cake => {
+                // Use Base64 data if available, otherwise fallback to a placeholder
+                const imageSource = cake.imageData || "https://placehold.co/400x300/1C1917/D97706?text=Image+Missing";
+
+                const card = document.createElement('div');
+                card.classList.add(
+                    'p-5', 'rounded-3xl', 'cursor-pointer', 'group',
+                    'cake-card', // Custom dark layer
+                    'hover:z-10' 
+                );
+                card.setAttribute('data-cake-id', cake.id);
+                card.onclick = () => openModal(cake); // Pass the entire cake object
+
+                card.innerHTML = `
+                    <img src="${imageSource}" alt="${cake.name}" 
+                         class="w-full h-56 object-cover rounded-2xl mb-4 transition-transform duration-300 ease-in-out border border-primary-warm/20">
+                    <div class="relative z-10 text-center">
+                        <h3 class="text-2xl font-heading font-semibold text-text-light mb-1 truncate">${cake.name}</h3>
+                        <!-- Display price with Rupee symbol -->
+                        <p class="text-accent-copper font-bold text-xl">${cake.price}</p>
+                    </div>
+                `;
+                galleryEl.appendChild(card);
+            });
+        }
+
+
+        /**
+         * Opens the modal with the details of the selected cake.
+         * @param {object} cake - The cake object to display.
+         */
+        function openModal(cake) {
+            // Use Base64 data if available, otherwise fallback to a placeholder
+            const imageSource = cake.imageData || "https://placehold.co/400x300/1C1917/D97706?text=Image+Missing";
+            
+            // Update modal content
+            modalTitleEl.textContent = cake.name;
+            modalImageEl.src = imageSource;
+            modalImageEl.alt = cake.name;
+            modalDescriptionEl.textContent = cake.description;
+            // Display price with Rupee symbol (already stored this way)
+            modalPriceEl.textContent = cake.price;
+            modalIdEl.textContent = `#${cake.id.substring(0, 8)}`;
+            
+            // Show the modal and start transition
+            modalEl.classList.remove('hidden');
+            modalEl.classList.add('flex');
+            document.body.classList.add('overflow-hidden'); 
+
+            // Start CSS transition for content
+            setTimeout(() => {
+                document.getElementById('modalContent').classList.remove('scale-90', 'opacity-0');
+                document.getElementById('modalContent').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        /**
+         * Closes the modal.
+         */
+        function closeModal(event) {
+            if (event && event.target !== modalEl && !event.target.closest('button')) {
+                return; 
+            }
+
+            // Start CSS transition for content (reverse)
+            document.getElementById('modalContent').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('modalContent').classList.add('scale-90', 'opacity-0');
+
+            // Wait for transition to finish before hiding the modal
+            setTimeout(() => {
+                modalEl.classList.remove('flex');
+                modalEl.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 300); 
+        }
+
+        // --- FIREBASE INITIALIZATION ---
+
+        async function initializeFirebase() {
+            // Check if FirebaseServices is available before proceeding
+            if (typeof window.FirebaseServices === 'undefined') {
+                setTimeout(initializeFirebase, 100); // Retry initialization
+                return;
+            }
+            
+            const { 
+                initializeApp, getAuth, signInAnonymously, signInWithCustomToken, 
+                onAuthStateChanged, getFirestore, onSnapshot, collection, setLogLevel 
+            } = window.FirebaseServices;
+
+            try {
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('Debug'); 
+
+                // Attempt sign in with custom token (for authenticated users) or anonymously
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user && user.uid !== 'anon') { 
+                        // If the user is logged in via the platform token, assume admin access
+                        updateAdminUI(true, user.uid); 
+                    } else {
+                        // Otherwise, show the manual login form
+                        updateAdminUI(false, crypto.randomUUID()); 
+                    }
+                    setupFirestoreListener(onSnapshot, collection); 
+                });
+
+                // Attach event listeners
+                addCakeForm.addEventListener('submit', handleAddCake);
+                document.getElementById('adminLoginFormModal').addEventListener('submit', handleAdminLogin);
+
+                document.getElementById('cakeImageFile').addEventListener('change', (e) => {
+                    const fileName = e.target.files[0] ? e.target.files[0].name : 'Select Image from Device (JPEG/PNG) *Required*';
+                    fileLabelTextEl.textContent = fileName;
+                });
+                
+                // Initialize footer year after successful initialization
+                updateFooterYear();
+
+            } catch (error) {
+                console.error("Firebase Initialization or Auth Failed:", error);
+                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-500 mt-8">ERROR: Could not connect to the database. Check console for details.</p>`;
+            }
+        }
+
+        /**
+         * Sets up a real-time listener for the public cakes collection.
+         */
+        function setupFirestoreListener(onSnapshot, collection) {
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            cakesCollectionRef = collection(db, `artifacts/${appId}/public/data/cakes`);
+            
+            onSnapshot(cakesCollectionRef, (snapshot) => {
+                const liveCakes = [];
+                snapshot.forEach(doc => {
+                    liveCakes.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort client-side by name 
+                liveCakes.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+                
+                renderGallery(liveCakes);
+            }, (error) => {
+                console.error("Error fetching cakes:", error);
+                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-500 mt-8">Error loading catalog: ${error.message}</p>`;
+            });
+        }
+
+        // Use a global callback to ensure initialization happens after the module script loads.
+        window.onloadCallback = initializeFirebase;
+    </script>
+
+</body>
+</html>
