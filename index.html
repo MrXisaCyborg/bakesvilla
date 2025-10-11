@@ -1,9 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bakes-Villa - Artisan Cakes</title>
+    
+    <!-- FAVICON: Cupcake emoji favicon for browser tabs -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧁</text></svg>">
     
     <!-- Load Firebase SDKs -->
     <script type="module">
@@ -642,7 +646,16 @@
             } = window.FirebaseServices;
 
             try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+                const firebaseConfig = JSON.parse(rawConfig);
+                
+                // CRITICAL SAFETY CHECK: If config is empty, log error and prevent SDK initialization crash
+                if (Object.keys(firebaseConfig).length === 0) {
+                     console.error("FIREBASE ERROR: The '__firebase_config' environment variable is missing or empty. Database connection is not possible.");
+                     galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-400 mt-8">ERROR: Could not connect to the database. Check console for details.</p>`;
+                     return; 
+                }
+
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -680,7 +693,7 @@
 
             } catch (error) {
                 console.error("Firebase Initialization or Auth Failed:", error);
-                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-500 mt-8">ERROR: Could not connect to the database. Check console for details.</p>`;
+                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-400 mt-8">ERROR: Could not connect to the database. Check console for details.</p>`;
             }
         }
 
@@ -688,6 +701,9 @@
          * Sets up a real-time listener for the public cakes collection.
          */
         function setupFirestoreListener(onSnapshot, collection) {
+            // Check if we skipped initialization due to missing config
+            if (!db) return; 
+
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             cakesCollectionRef = collection(db, `artifacts/${appId}/public/data/cakes`);
             
@@ -703,7 +719,7 @@
                 renderGallery(liveCakes);
             }, (error) => {
                 console.error("Error fetching cakes:", error);
-                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-500 mt-8">Error loading catalog: ${error.message}</p>`;
+                galleryEl.innerHTML = `<p class="md:col-span-3 text-center text-red-400 mt-8">Error loading catalog: ${error.message}</p>`;
             });
         }
 
