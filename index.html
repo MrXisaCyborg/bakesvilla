@@ -275,6 +275,14 @@
                 </button>
             </div>
             <nav class="space-y-6">
+                <!-- Theme Toggle moved here -->
+                <div class="flex items-center space-x-3 pb-4 border-b border-secondary/30">
+                    <button id="themeToggle" onclick="toggleTheme(); toggleMobileMenu();" class="primary-button text-sm w-10 h-10 rounded-full font-bold flex items-center justify-center border border-primary/50">
+                        D
+                    </button>
+                    <span class="text-text-dark font-semibold">Toggle Theme (L/D)</span>
+                </div>
+
                 <a href="#about-section" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">About</a>
                 <a href="#gallery" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">Shop</a>
                 <a href="tel:7543060400" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">Call to Enquire</a>
@@ -288,22 +296,18 @@
             
             <div class="flex items-center space-x-3">
                  <!-- Hamburger Menu Button -->
-                <button onclick="toggleMobileMenu()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center sm:hidden">
+                <button onclick="toggleMobileMenu()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
 
-                <h1 class="text-4xl font-heading font-extrabold text-primary tracking-wider uppercase drop-shadow-sm flex-shrink-0">
+                <h1 class="text-4xl font-heading font-extrabold text-primary tracking-wider uppercase drop-shadow-sm flex-shrink-0 sm:text-3xl lg:text-4xl">
                     Bakes-Villa
                 </h1>
             </div>
             
-            <div class="header-actions">
-                <!-- Theme Toggle Button -->
-                <button id="themeToggle" onclick="toggleTheme()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center border border-primary/50">
-                    D
-                </button>
+            <div class="header-actions hidden sm:flex"> 
                 
                 <!-- Admin Controls Group -->
                 <div id="adminControlsGroup" class="flex items-center space-x-2">
@@ -327,10 +331,14 @@
                             </svg>
                         </button>
                     </div>
+                    
+                    <!-- Theme Toggle Button (Desktop only) -->
+                    <button id="themeToggleDesktop" onclick="toggleTheme()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center border border-primary/50">
+                        D
+                    </button>
 
                 </div>
-                
-                <!-- REMOVED: Order Button as requested by user, now accessible via mobile menu -->
+
             </div>
         </div>
     </header>
