@@ -108,14 +108,14 @@
         
         /* Base Styles and Fonts */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* body font */
             background-color: var(--color-bg-main);
             color: var(--color-text-dark);
             scroll-behavior: smooth;
             transition: background-color 0.3s, color 0.3s;
         }
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Playfair Display', serif; /* heading font */
         }
 
         /* CARD STYLES - Soft, Layered Surface */
@@ -140,6 +140,19 @@
             background-color: rgba(0, 0, 0, 0.7); 
             backdrop-filter: blur(10px);
         }
+        
+        /* MODAL CONTENT SIZING FIX - Ensure modal content scales correctly on mobile */
+        #modalContent, #editModalContent {
+            max-width: 90vw; /* Limit modal width on very small screens */
+        }
+
+        /* MODAL IMAGE SIZING FIX - Make image scale down gracefully */
+        .modal-image {
+            max-width: 100%; /* Ensure image doesn't overflow container */
+            height: auto;
+            max-height: 20rem; /* Limit vertical size on smaller screens */
+        }
+
 
         /* PRIMARY BUTTON STYLES - Deep Accent */
         .primary-button {
@@ -166,7 +179,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
         }
         .accent-button:hover {
-            background-color: #B58D6D; /* Slightly lighter accent */
+            background-color: #B58D6D; /* Slightly lighter rose taupe */
             box-shadow: 0 0 15px rgba(210, 180, 140, 0.7); /* Tan glow */
             transform: scale(1.02); 
         }
@@ -355,7 +368,7 @@
 
             <!-- Modal Body -->
             <div class="p-6 sm:p-8">
-                <img id="modalImage" src="" alt="Selected Cake" class="w-full h-64 object-cover rounded-xl mb-6 shadow-md border border-secondary/50">
+                <img id="modalImage" src="" alt="Selected Cake" class="w-full h-64 object-cover rounded-xl mb-6 shadow-md border border-secondary/50 modal-image">
                 
                 <div class="flex justify-between items-center mb-4">
                     <p class="text-2xl font-heading font-extrabold text-accent-warm" id="modalPrice">₹000</p>
@@ -994,4 +1007,5 @@
     </script>
 </body>
 </html>
+
 
