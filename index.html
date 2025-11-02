@@ -1,328 +1,416 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bakes-Villa - Artisan Cakes</title>
-    
-    <!-- FAVICON: BV in Satisfy font --><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><style>@font-face {font-family: 'Satisfy'; src: url('https://fonts.gstatic.com/s/satisfy/v16/rP2Fp2AHaPq3iFqWlE4D-w.woff2') format('woff2');} text {font-family: 'Satisfy'; font-size: 50px; font-weight: 700; fill: %23A37D45;}</style><text x=%2250%%22 y=%2265%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>BV</text></svg>">
-    
-    <!-- Load Supabase SDK Module --><script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bakes-Villa — Cakes</title>
 
-        // NOTE: These keys are derived from user input and MUST be kept in the code for the Supabase logic to work.
-        const SUPABASE_URL = 'https://pbdibajhxdvotlppvfmz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiZGliYWpoeGR2b3RscHB2Zm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMjQ1NTYsImV4cCI6MjA3NTcwMDU1Nn0.MEP7RhOQTOr2ZNbkfJwTGyNd-44dm5UWSVtrEajFZlY';
-        
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Expose Supabase client globally
-        window.supabaseClient = supabase;
-        window.SUPABASE_TABLE_NAME = 'Bakes-Villa'; // Table name confirmed via user error history
-        
-        // Global Initialization Trigger (Guaranteed to fire after module loads)
-        window.onloadCallback = function() {
-            if (typeof window.initializeApp === 'function') {
-                window.initializeApp();
-            }
-        }
-    </script>
+  <!-- Tailwind CDN (for a single-file workflow) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Load Google Fonts: Satisfy (Headings) and Quicksand (Body) --><link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Configure Tailwind with the new Premium Dark/Gold palette --><script>
-        // --- Color Palette Definitions (Premium Dark/Gold) ---
-        const GOLD_PRIMARY = '#A37D45';
-        const LIGHT_CREAM = '#F0E5D4';
-        const DARK_CHARCOAL = '#1A1A1A';
-        const DEEP_GRAY = '#333333';
+  <!-- Google Fonts (heading + body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
-        // Light Mode Colors (Soft Contrast for Premium Feel)
-        const lightColors = {
-            'bg-main': '#F9F7F3',           // Off-White/Cream
-            'bg-surface': '#FFFFFF',        // Pure White (Card Background)
-            'primary': GOLD_PRIMARY,        // Gold Accent
-            'secondary': '#72543D',         // Muted Brown/Muted Text
-            'accent-warm': DEEP_GRAY,       // Dark Gray Buttons
-            'text-dark': DEEP_GRAY,         // Dark Gray Text
-        };
-        
-        // Dark Mode Colors (High Contrast for Premium Feel)
-        const darkColors = {
-            'bg-main': DARK_CHARCOAL,       // Deep Charcoal Page Background
-            'bg-surface': '#2A2A2A',        // Dark Gray (Card Background)
-            'primary': LIGHT_CREAM,         // Light Cream/White Accent
-            'secondary': GOLD_PRIMARY,      // Gold Accent
-            'accent-warm': GOLD_PRIMARY,    // Gold Buttons
-            'text-dark': LIGHT_CREAM,       // Light Cream Text
-        };
-
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        heading: ['Satisfy', 'cursive'], // Updated to Satisfy
-                        body: ['Quicksand', 'sans-serif'], // Updated to Quicksand
-                    },
-                    colors: {
-                        'bg-main': 'var(--color-bg-main)',
-                        'bg-surface': 'var(--color-bg-surface)',
-                        'primary': 'var(--color-primary)',
-                        'secondary': 'var(--color-secondary)',
-                        'accent-warm': 'var(--color-accent-warm)',
-                        'text-dark': 'var(--color-text-dark)',
-                    },
-                    boxShadow: {
-                        'glow': '0 0 20px rgba(163, 125, 69, 0.6)', // Rich Gold Glow
-                        'card-lift': '0 10px 30px rgba(0, 0, 0, 0.3)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* CSS Variables based on Light/Dark Mode (New Palette) */
-        :root {
-            --color-bg-main: #F9F7F3;
-            --color-bg-surface: #FFFFFF;
-            --color-primary: #A37D45; 
-            --color-secondary: #72543D;
-            --color-accent-warm: #333333;
-            --color-text-dark: #333333;
-            --color-primary-shadow: rgba(163, 125, 69, 0.3);
-        }
-        
-        .dark {
-            --color-bg-main: #1A1A1A;
-            --color-bg-surface: #2A2A2A;
-            --color-primary: #F0E5D4;
-            --color-secondary: #A37D45;
-            --color-accent-warm: #A37D45;
-            --color-text-dark: #F0E5D4; 
-            --color-primary-shadow: rgba(240, 229, 212, 0.4); 
-        }
-        
-        /* Base Styles and Fonts */
-        body {
-            font-family: 'Quicksand', sans-serif; /* Updated body font */
-            background-color: var(--color-bg-main);
-            color: var(--color-text-dark);
-            scroll-behavior: smooth;
-            transition: background-color 0.4s, color 0.4s;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Satisfy', cursive; /* Updated heading font */
-            /* Add shadow to headings for pop */
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.1);
-        }
-
-        /* CARD STYLES - Floating/Elevated Look */
-        .cake-card {
-            background-color: var(--color-bg-surface); 
-            transition: all 0.3s ease-in-out;
-            border: 1px solid var(--color-secondary); 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            opacity: 0; 
-            transform: translateY(20px); 
-        }
-        .cake-card:hover {
-            box-shadow: var(--tw-shadow), var(--shadow-glow); 
-            border-color: var(--color-primary); 
-            transform: translateY(-8px) scale(1.03);
-        }
-        
-        /* Primary button uses the gold/cream primary color */
-        .primary-button {
-            background-color: var(--color-primary); 
-            color: var(--color-bg-main); /* Text is dark on gold/cream */
-            transition: all 0.2s ease-out; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-weight: 700;
-        }
-        .primary-button:hover {
-            filter: brightness(1.1);
-            transform: scale(1.02); 
-            box-shadow: var(--tw-shadow), 0 0 10px var(--color-primary-shadow);
-        }
-        .dark .primary-button {
-            background-color: var(--color-primary); 
-            color: var(--color-bg-surface); /* Text is dark on light accent */
-        }
-
-        /* Accent button uses the dark charcoal/gold accent color */
-        .accent-button {
-            background-color: var(--color-accent-warm); 
-            color: white;
-            transition: all 0.2s ease-out; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            font-weight: 700;
-        }
-        .accent-button:hover {
-            filter: brightness(1.2);
-            transform: scale(1.02);
-            box-shadow: var(--tw-shadow), 0 0 10px var(--color-primary-shadow);
-        }
-        .dark .accent-button {
-            background-color: var(--color-accent-warm); 
-            color: var(--color-bg-main); /* Text is dark background on gold accent */
-        }
-        .dark .accent-button:hover {
-             filter: brightness(1.1);
-        }
-
-
-        /* Hero Image/Color Block (Placeholder for user photo input) */
-        .hero-banner {
-            background-color: var(--color-bg-surface);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-            border: 2px solid var(--color-primary);
-        }
-        
-        /* CRITICAL FIX: Set specific dimensions and image source */
-        .hero-placeholder {
-            /* CORRECTED URL: Using the specified British Bakels image */
-            background-image: url('https://britishbakels.b-cdn.net/wp-content/uploads/sites/2/2022/06/feature-680x445.jpg');
-            background-size: 100% 100%; /* Stretch to fit the container precisely (680x445) */
-            background-repeat: no-repeat; 
-            background-position: center;
-            background-color: #333333; 
-        }
-        
-        /* Set the size of the container to match the requested dimensions for desktop */
-        .hero-banner-fixed {
-            width: 680px; 
-            height: 445px;
-            max-width: 100%; /* Ensures responsiveness on smaller screens */
-            max-height: 445px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* FIX: Ensures the image fills the modal width but maintains aspect ratio without cropping parts of the cake. */
-        .modal-image {
-            width: 100%;
-            height: auto; 
-            max-height: 50vh; 
-            object-fit: contain; /* CRITICAL FIX: Ensures full image is visible */
-        }
-
-        /* Utility styles (kept) */
-        input[type="file"]::file-selector-button { display: none; }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-entry { animation: slideIn 0.5s ease-out forwards; }
-
-    </style>
+  <style>
+    :root{
+      --bv-brown: #b0854b;
+      --bv-dark: #2b2b2b;
+      --bv-cream: #f7f4f1;
+    }
+    body { font-family: 'Lato', sans-serif; background: var(--bv-cream); -webkit-font-smoothing:antialiased; }
+    .header-script { font-family: 'Pacifico', cursive; }
+    .card-shadow { box-shadow: 0 8px 20px rgba(43,43,43,0.08); }
+    /* small helpers for mobile sticky header spacing */
+    .top-pad { padding-top: 72px; }
+    /* admin badge */
+    .pill { padding: .25rem .6rem; border-radius: 9999px; font-size: .75rem; }
+  </style>
 </head>
-<body class="min-h-screen">
+<body class="antialiased">
 
-    <!-- Mobile Navigation Modal --><div id="mobileMenuContainer" class="mobile-menu-container hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onclick="toggleMobileMenu(event)">
-        <div id="mobileMenu" class="mobile-menu p-8 bg-bg-surface w-3/4 max-w-xs h-full shadow-2xl" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-10 border-b border-secondary/30 pb-4">
-                 <!-- Updated Mobile Logo to use the new style --><h2 class="text-3xl font-heading font-extrabold text-primary">B-VILLA</h2>
-                <button onclick="toggleMobileMenu()" class="text-primary hover:text-accent-warm transition duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <nav class="space-y-6">
-                <a href="#about-section" class="block text-xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150" onclick="toggleMobileMenu();">Our Story</a>
-                <a href="#gallery" class="block text-xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150" onclick="toggleMobileMenu();">Collection</a>
-                <!-- UPDATED MOBILE CONTACT NUMBER LABEL --><a href="tel:+917543060400" class="block text-xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150" onclick="toggleMobileMenu();">Call Us</a>
-                 <!-- Theme Toggle moved here --><div class="flex items-center space-x-3 pt-6 border-t border-secondary/30">
-                    <button id="themeToggle" onclick="toggleTheme(); toggleMobileMenu();" class="primary-button text-sm w-10 h-10 rounded-full flex items-center justify-center">
-                        D
-                    </button>
-                    <span class="text-secondary font-semibold">Toggle Theme</span>
-                </div>
-            </nav>
-        </div>
+  <!-- CONFIG: Replace these values with your Supabase details -->
+  <script>
+    // --- EDIT THESE BEFORE DEPLOYING ---
+    const SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
+    // If your table name contains a hyphen like Bakes-Villa, set:
+    // const TABLE_NAME = '"Bakes-Villa"';
+    // Otherwise set the plain table name:
+    const TABLE_NAME = 'cakes';
+    // Staff credentials (as you requested)
+    const STAFF_USERNAME = 'siddhijain';
+    const STAFF_PASSWORD = 'siddhijain12';
+    // WhatsApp number in international format (no plus sign)
+    const WHATSAPP_NUMBER = '917543060400';
+  </script>
+
+  <!-- Supabase JS SDK (from CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- ===== Header / Navbar ===== -->
+  <header class="fixed w-full top-0 left-0 z-40 bg-white/90 backdrop-blur-sm border-b">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="text-2xl header-script text-[color:var(--bv-brown)]">Bakes-Villa</div>
+        <nav class="hidden sm:flex gap-6 text-sm text-gray-700">
+          <a href="#home" class="hover:underline">Home</a>
+          <a href="#collection" class="hover:underline">Collection</a>
+          <a href="#contact" class="hover:underline">Contact</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="staffBtn" class="px-3 py-1 rounded-full bg-[color:var(--bv-dark)] text-white text-sm">Staff Login</button>
+      </div>
     </div>
+  </header>
 
-    <!-- Header Section --><header class="sticky top-0 z-20 bg-bg-surface shadow-card-lift">
-        <div class="max-w-7xl mx-auto py-4 px-6 sm:px-8 lg:px-10 flex justify-between items-center">
-            
-            <div class="flex items-center space-x-3">
-                <button onclick="toggleMobileMenu()" class="primary-button text-sm w-8 h-8 rounded-full flex items-center justify-center sm:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
+  <!-- Content container with top padding so header doesn't overlap -->
+  <main class="top-pad">
 
-                <!-- FINAL LOGO IMPLEMENTATION: Handwritten Bakes-Villa --><h1 class="text-3xl font-heading font-extrabold tracking-widest" style="font-size: 2.2rem;">
-                    <span class="text-secondary">Bakes</span><span class="text-primary">-Villa</span>
-                </h1>
-            </div>
-            
-            <div class="hidden sm:flex items-center space-x-4">
-                <a href="#about-section" class="text-text-dark hover:text-primary transition font-body font-semibold">Our Story</a>
-                <a href="#gallery" class="text-text-dark hover:text-primary transition font-body font-semibold">Collection</a>
-                <!-- UPDATED DESKTOP CONTACT NUMBER LABEL --><a href="tel:+917543060400" class="text-text-dark hover:text-primary transition font-body font-semibold">Call Us</a>
-            </div>
-
-            <!-- Admin & Theme Group (Visible on Desktop) --><div id="adminControlsGroup" class="flex items-center space-x-3">
-                 <!-- Theme Toggle Button (Desktop only) --><button id="themeToggleDesktop" onclick="toggleTheme()" class="primary-button text-sm w-8 h-8 rounded-full flex items-center justify-center hidden sm:flex">
-                    D
-                </button>
-
-                <!-- Admin Login/Toggle Button (Prominent) --><button onclick="toggleAdminPanel()" class="accent-button text-sm sm:text-base px-4 py-2 rounded-full flex items-center font-heading font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-1">
-                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-                    </svg>
-                    <span id="adminToggleText">Staff Login</span>
-                </button>
-
-                <!-- Logout Button (Hidden by default) --><div id="logoutButtonContainer" class="hidden">
-                    <button onclick="handleLogout()" class="primary-button text-sm sm:text-base w-8 h-8 rounded-full flex items-center justify-center bg-red-600 hover:bg-red-700">
-                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+    <!-- HERO -->
+    <section id="home" class="pt-8 pb-10">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h1 class="text-4xl sm:text-5xl header-script text-[color:var(--bv-dark)] leading-tight">Excellence Baked Daily</h1>
+        <p class="mt-3 text-gray-600">Handcrafted cakes & pastries made with love. Order easily via WhatsApp.</p>
+        <div class="mt-6 flex justify-center">
+          <a href="#collection" class="px-6 py-3 rounded-full bg-[color:var(--bv-brown)] text-white header-script shadow-lg">Explore Collection</a>
         </div>
-    </header>
+        <div class="mt-8">
+          <div class="rounded-xl overflow-hidden border-2 border-[color:var(--bv-brown)] card-shadow mx-auto" style="max-width:720px">
+            <img src="/images/hero.jpg" alt="Bakes-Villa hero image" class="w-full h-auto object-cover">
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Main Content Area --><main class="max-w-7xl mx-auto pt-16 pb-16 px-6 sm:px-8 lg:px-10">
-        
-        <!-- Premium Hero Section (Space for user photo) --><div class="text-center mb-20">
-            <h2 class="text-5xl sm:text-7xl font-heading font-extrabold text-text-dark leading-tight mb-4 tracking-wider">
-                Excellence Baked Daily
-            </h2>
-            <p class="text-lg sm:text-xl text-secondary mb-12 max-w-4xl mx-auto">
-                Discover the art of artisan baking. Every creation is handcrafted for pure, gourmet satisfaction.
-            </p>
-
-            <!-- Image Placeholder Area (FIXED: size to 680x445) --><div class="relative hero-banner hero-banner-fixed rounded-xl overflow-hidden mb-12">
-                <div class="hero-placeholder w-full h-full"></div>
-            </div>
-
-            <a href="#gallery" class="primary-button text-bg-main px-10 py-4 rounded-full font-heading font-bold text-lg hover:filter-none transition duration-300 shadow-xl">
-                Explore the Collection
-            </a>
+    <!-- COLLECTION -->
+    <section id="collection" class="py-8">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl header-script text-[color:var(--bv-brown)]">Collection</h2>
+          <div id="adminIndicator" class="hidden items-center gap-2">
+            <span class="pill bg-[color:var(--bv-brown)] text-white">Admin</span>
+            <button id="logoutBtn" class="text-sm text-red-600">Logout</button>
+          </div>
         </div>
 
+        <div id="cakesGrid" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- cake cards injected here -->
+        </div>
 
-        <!-- About Section Anchor (FIXED: 3-in-line layout and new SVG icons) --><div id="about-section" class="mb-20 pt-10">
-            <h3 class="text-4xl font-heading font-extrabold text-primary mb-12 text-center border-b-2 border-primary/30 pb-3 max-w-sm mx-auto">Our Commitment</h3>
-            
-            <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto text-center">
-                
-                <!-- 1. FINEST INGREDIENTS - Icon: Wheat --><div class="p-4">
-                    <div class="text-primary mx-auto mb-4">
-                        <!-- WHEAT ICON SVG (Corrected) --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor" class="w-12 h-12 mx-auto">
-                            <path d="M48.5 7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5V91c0 2.2 1.8 4 4 4h4c2.2 0 4-1.8 4-4V78.8c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-4.7c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8v-1.2c0-2.3 1.5-4.3 3.7-5l1.3-.4c.8-.2 1.3-1 1.3-1.8V7.5a1.5 1.5 0 0 0-3 0v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6-1.3 1.8l-1.3.4c-2.2.7-3.7 2.7-3.7 5v1.2c0 .8.5 1.6 1.3 1.8l1.3.4c2.2.7 3.7 2.7 3.7 5v4.7c0 .8-.5 1.6
+        <div class="mt-6 text-center text-gray-500 text-sm body-sans">
+          Tip: Use the Staff Login button to add or remove cakes (mobile-friendly).
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT/FOOTER -->
+    <footer id="contact" class="py-8 border-t mt-8">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h3 class="text-xl header-script text-[color:var(--bv-brown)]">Contact</h3>
+        <p class="mt-3 text-gray-600">Email: <a href="mailto:bakesvillaindia@gmail.com" class="text-[color:var(--bv-dark)] hover:underline">bakesvillaindia@gmail.com</a><br>Phone: <a href="tel:+917543060400" class="text-[color:var(--bv-dark)] hover:underline">+91 75430 60400</a></p>
+        <p class="mt-4 text-sm text-gray-500">Made for Bakes-Villa • Host-ready single file</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ===== Staff Modal (hidden by default) ===== -->
+  <div id="staffModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
+    <div class="bg-white w-full max-w-md rounded-xl overflow-hidden">
+      <div class="p-4 border-b flex items-center justify-between">
+        <div class="font-semibold">Staff Panel</div>
+        <button id="closeModal" class="text-gray-500">Close</button>
+      </div>
+
+      <div class="p-4">
+        <!-- If not logged in, show login form -->
+        <div id="loginForm">
+          <div class="mb-2 text-sm text-gray-600">Login as staff to add/delete cakes</div>
+          <form id="login" class="grid gap-2">
+            <input id="loginUser" placeholder="Username" class="border p-2 rounded" value="siddhijain">
+            <input id="loginPass" placeholder="Password" class="border p-2 rounded" value="siddhijain12" type="password">
+            <div class="flex gap-2">
+              <button type="submit" class="flex-1 px-4 py-2 rounded bg-[color:var(--bv-brown)] text-white">Login</button>
+              <button type="button" id="closeModal2" class="px-4 py-2 rounded border">Cancel</button>
+            </div>
+            <div id="loginMsg" class="text-sm text-red-500 mt-2 hidden"></div>
+          </form>
+        </div>
+
+        <!-- Admin controls (shown after login) -->
+        <div id="adminPanel" class="hidden">
+          <div class="text-sm text-gray-600 mb-2">Add a new cake (image URL recommended)</div>
+          <form id="addCakeForm" class="grid gap-2">
+            <input id="cakeName" placeholder="Name" class="border p-2 rounded" required>
+            <textarea id="cakeDesc" placeholder="Description" class="border p-2 rounded" rows="2"></textarea>
+            <input id="cakePrice" placeholder="Price (e.g. 499)" class="border p-2 rounded" required inputmode="numeric">
+            <input id="cakeImage" placeholder="Image URL (imageData)" class="border p-2 rounded">
+            <div class="flex gap-2">
+              <button type="submit" class="flex-1 px-4 py-2 rounded bg-green-600 text-white">Add Cake</button>
+              <button type="button" id="refreshBtn" class="px-4 py-2 rounded border">Refresh</button>
+            </div>
+            <div id="adminMsg" class="text-sm text-green-600 mt-2 hidden"></div>
+          </form>
+
+          <div class="mt-4">
+            <div class="text-sm text-gray-600 mb-2">Existing cakes</div>
+            <div id="adminList" class="space-y-2 max-h-48 overflow-auto"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scripts ===== -->
+  <script>
+    // Basic safety checks: ensure supabase keys are set
+    if (!SUPABASE_URL || SUPABASE_URL.includes('REPLACE') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('REPLACE')) {
+      console.warn('Supabase URL or ANON KEY not set — please fill the top config in the HTML.');
+      // We'll still set up a non-working client to avoid runtime errors, but prompt the user.
+    }
+
+    // Initialize Supabase client
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Elements
+    const cakesGrid = document.getElementById('cakesGrid');
+    const staffBtn = document.getElementById('staffBtn');
+    const staffModal = document.getElementById('staffModal');
+    const closeModal = document.getElementById('closeModal');
+    const closeModal2 = document.getElementById('closeModal2');
+    const loginForm = document.getElementById('loginForm');
+    const adminPanel = document.getElementById('adminPanel');
+    const login = document.getElementById('login');
+    const loginMsg = document.getElementById('loginMsg');
+    const adminIndicator = document.getElementById('adminIndicator');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const addCakeForm = document.getElementById('addCakeForm');
+    const adminList = document.getElementById('adminList');
+    const adminMsg = document.getElementById('adminMsg');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    let isAdmin = false;
+    // Minimal client-side "session"
+    function setAdmin(flag) {
+      isAdmin = !!flag;
+      adminIndicator.style.display = isAdmin ? 'flex' : 'none';
+      loginForm.style.display = isAdmin ? 'none' : 'block';
+      adminPanel.style.display = isAdmin ? 'block' : 'none';
+      if(isAdmin) { loginMsg.classList.add('hidden'); }
+    }
+
+    // Modal toggles
+    staffBtn.addEventListener('click', ()=> staffModal.classList.remove('hidden'));
+    closeModal.addEventListener('click', ()=> staffModal.classList.add('hidden'));
+    closeModal2.addEventListener('click', ()=> staffModal.classList.add('hidden'));
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      setAdmin(false);
+      staffModal.classList.add('hidden');
+    });
+
+    // Fetch cakes from Supabase
+    async function fetchCakes(){
+      try {
+        // If TABLE_NAME uses a hyphen wrapped in quotes, we pass it directly.
+        const tableName = TABLE_NAME;
+        const { data, error } = await supabase.from(tableName).select('*').order('createdAt', { ascending: false });
+        if (error) { console.error('Supabase fetch error', error); return []; }
+        return data || [];
+      } catch (err) {
+        console.error('FetchCakes error', err);
+        return [];
+      }
+    }
+
+    // Render cake cards
+    function renderCakes(cakes){
+      cakesGrid.innerHTML = '';
+      if (!cakes || cakes.length === 0) {
+        cakesGrid.innerHTML = '<div class="text-center text-gray-500 col-span-full">No cakes found.</div>';
+        return;
+      }
+      cakes.forEach(c => {
+        // imageData may be a URL or base64. If empty fallback to placeholder
+        const imgSrc = c.imageData || '/images/hero2.jpg' || 'https://images.unsplash.com/photo-1542831371-d531d36971e6';
+        // price formatting
+        const price = c.price ? `₹${c.price}` : '₹0';
+        const cakeName = c.name || 'Untitled';
+
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl p-3 card-shadow';
+
+        card.innerHTML = `
+          <div class="rounded-md overflow-hidden">
+            <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(cakeName)}" class="w-full h-44 object-cover">
+          </div>
+          <h3 class="mt-3 header-script text-lg">${escapeHtml(cakeName)}</h3>
+          <p class="mt-1 text-sm text-gray-600">${escapeHtml(c.description || '')}</p>
+          <div class="mt-2 flex items-center justify-between">
+            <div class="font-semibold">${escapeHtml(price)}</div>
+            <div class="flex gap-2">
+              <a class="orderBtn inline-flex items-center gap-2 px-3 py-1 rounded border text-sm" href="#" data-name="${encodeURIComponent(cakeName)}" data-price="${encodeURIComponent(c.price || '')}">
+                🛒 Order
+              </a>
+              ${isAdmin ? `<button class="deleteBtn inline-flex items-center gap-2 px-3 py-1 rounded bg-red-500 text-white text-sm" data-id="${c.id}">Delete</button>` : ''}
+            </div>
+          </div>
+        `;
+
+        cakesGrid.appendChild(card);
+      });
+
+      // wire order buttons & delete
+      document.querySelectorAll('.orderBtn').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          const name = decodeURIComponent(btn.dataset.name);
+          const price = decodeURIComponent(btn.dataset.price) || '';
+          openWhatsAppOrder(name, price);
+        });
+      });
+
+      document.querySelectorAll('.deleteBtn').forEach(btn => {
+        btn.addEventListener('click', async (ev) => {
+          const id = btn.dataset.id;
+          if(!confirm('Delete this cake?')) return;
+          await deleteCake(id);
+          await refreshCakes();
+        });
+      });
+    }
+
+    // Escape helper
+    function escapeHtml(str){
+      if(!str) return '';
+      return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
+    }
+
+    // Open WhatsApp with message formatted
+    function openWhatsAppOrder(name, price){
+      const cakeName = name || 'cake';
+      const rupee = price ? `₹${price}` : '';
+      const message = `Hello Bakes-Villa! I’d like to order the ${cakeName} cake (${rupee}).%0AMy name: ______%0ADelivery address: ______`;
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      // use window.open so it works on mobile and desktop
+      window.open(url, '_blank');
+    }
+
+    // Add cake (insert into Supabase)
+    async function addCakeToSupabase({ name, description, price, imageData }){
+      try {
+        const tableName = TABLE_NAME;
+        const payload = { name, description, price, imageData, createdAt: new Date().toISOString() };
+        const { data, error } = await supabase.from(tableName).insert([payload]).select();
+        if (error) {
+          console.error('Insert error', error);
+          throw error;
+        }
+        return data && data[0];
+      } catch (err) {
+        console.error('addCakeToSupabase error', err);
+        throw err;
+      }
+    }
+
+    // Delete cake
+    async function deleteCake(id){
+      try {
+        const tableName = TABLE_NAME;
+        if(!id) return;
+        const { error } = await supabase.from(tableName).delete().eq('id', id);
+        if (error) { console.error('Delete error', error); throw error; }
+      } catch (err) {
+        console.error('deleteCake error', err);
+      }
+    }
+
+    // Refresh list
+    async function refreshCakes(){
+      const cakes = await fetchCakes();
+      renderCakes(cakes);
+      // update admin list too
+      renderAdminList(cakes);
+    }
+
+    // Render admin list for convenience
+    function renderAdminList(cakes){
+      adminList.innerHTML = '';
+      if(!cakes || cakes.length === 0) {
+        adminList.innerHTML = '<div class="text-sm text-gray-500">No cakes yet</div>';
+        return;
+      }
+      cakes.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between bg-gray-50 p-2 rounded';
+        row.innerHTML = `<div class="text-sm">${escapeHtml(c.name)} <div class="text-xs text-gray-500">₹${escapeHtml(c.price||'')}</div></div>
+                         <div class="flex gap-2">
+                           <button data-id="${c.id}" class="delSmall px-2 py-1 text-xs bg-red-500 text-white rounded">Delete</button>
+                         </div>`;
+        adminList.appendChild(row);
+      });
+      document.querySelectorAll('.delSmall').forEach(b => {
+        b.addEventListener('click', async () => {
+          if(!confirm('Delete this cake?')) return;
+          await deleteCake(b.dataset.id);
+          await refreshCakes();
+        });
+      });
+    }
+
+    // Login handler
+    login.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('loginUser').value.trim();
+      const p = document.getElementById('loginPass').value;
+      if(u === STAFF_USERNAME && p === STAFF_PASSWORD){
+        setAdmin(true);
+        loginMsg.classList.add('hidden');
+        // show admin panel and update list
+        refreshCakes();
+      } else {
+        loginMsg.textContent = 'Invalid credentials';
+        loginMsg.classList.remove('hidden');
+      }
+    });
+
+    // Add cake form handler
+    addCakeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if(!isAdmin) { alert('Please login as staff'); return; }
+      const name = document.getElementById('cakeName').value.trim();
+      const description = document.getElementById('cakeDesc').value.trim();
+      const price = document.getElementById('cakePrice').value.trim();
+      const imageData = document.getElementById('cakeImage').value.trim();
+      if(!name || !price) { alert('Name and price required'); return; }
+      try {
+        adminMsg.textContent = 'Adding...';
+        adminMsg.classList.remove('hidden');
+        await addCakeToSupabase({ name, description, price, imageData });
+        adminMsg.textContent = 'Added successfully';
+        setTimeout(()=> adminMsg.classList.add('hidden'), 2000);
+        addCakeForm.reset();
+        await refreshCakes();
+      } catch (err) {
+        adminMsg.textContent = 'Error adding cake (check console)';
+        console.error(err);
+      }
+    });
+
+    // refresh button
+    refreshBtn.addEventListener('click', refreshCakes);
+
+    // Start: fetch and render cakes
+    (async function init(){
+      await refreshCakes();
+    })();
+  </script>
+
+</body>
+</html>
+
 
 
