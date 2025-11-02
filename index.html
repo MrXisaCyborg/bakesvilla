@@ -1,416 +1,920 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bakes-Villa — Cakes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakes-Villa - Excellence Baked Daily</title>
+    
+    <!-- Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lobster&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Supabase Client --><script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        
+        // These keys are from your screenshot and are necessary for the app to work.
+        const SUPABASE_URL = 'https://pbdibajhxdvotlppvfmz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiZGliYWpoeGR2b3RscHB2Zm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMjQ1NTYsImV4cCI6MjA3NTcwMDU1Nn0.MEP7RhOQTOr2ZNbkfJwTGyNd-44dm5UWSVtrEajFZlY';
+        
+        // Create and expose the Supabase client
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window.supabase = supabase;
+        console.log('Supabase client initialized with new keys:', window.supabase); // Added for debugging
+    </script>
+    
+    <!-- Dark Mode Initializer --><script>
+        // Set theme on page load to avoid FOUC (Flash of Unstyled Content)
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
 
-  <!-- Tailwind CDN (for a single-file workflow) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts (heading + body) -->
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bv-brown: #b0854b;
-      --bv-dark: #2b2b2b;
-      --bv-cream: #f7f4f1;
-    }
-    body { font-family: 'Lato', sans-serif; background: var(--bv-cream); -webkit-font-smoothing:antialiased; }
-    .header-script { font-family: 'Pacifico', cursive; }
-    .card-shadow { box-shadow: 0 8px 20px rgba(43,43,43,0.08); }
-    /* small helpers for mobile sticky header spacing */
-    .top-pad { padding-top: 72px; }
-    /* admin badge */
-    .pill { padding: .25rem .6rem; border-radius: 9999px; font-size: .75rem; }
-  </style>
+        function toggleTheme() {
+            if (localStorage.theme === 'dark') {
+                localStorage.theme = 'light';
+                document.documentElement.classList.remove('dark');
+            } else {
+                localStorage.theme = 'dark';
+                document.documentElement.classList.add('dark');
+            }
+            window.dispatchEvent(new Event('themeChanged'));
+        }
+    </script>
+    
+    <!-- Custom Tailwind Configuration --><script>
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-background': '#FFFCF5', // Lighter cream background
+                        'brand-text': '#5D4037',     // Softer brown text
+                        'brand-primary': '#8D6E63',   // Medium warm brown (buttons)
+                        'brand-logo': '#8D6E63',     // Changed to light brown for better visibility
+                        'brand-secondary': '#A1887F', // Lighter muted brown
+                        'brand-accent': '#EFEBE9',    // Very light neutral border
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'logo': ['Pacifico', 'cursive'],
+                        'headline': ['Lobster', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Page Styles --><style>
+        body {
+            font-family: 'sans', sans-serif;
+        }
+        .modal {
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        /* Hide scrollbar for mobile menu */
+        #mobile-menu {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        #mobile-menu::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+    </style>
 </head>
-<body class="antialiased">
+<body class="antialiased bg-brand-background dark:bg-gray-900 text-brand-text dark:text-gray-200">
 
-  <!-- CONFIG: Replace these values with your Supabase details -->
-  <script>
-    // --- EDIT THESE BEFORE DEPLOYING ---
-    const SUPABASE_URL = 'https://pbdibajhxdvotlppvfmz.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiZGliYWpoeGR2b3RscHB2Zm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMjQ1NTYsImV4cCI6MjA3NTcwMDU1Nn0.MEP7RhOQTOr2ZNbkfJwTGyNd-44dm5UWSVtrEajFZlY';
-    // If your table name contains a hyphen like Bakes-Villa, set:
-    // const TABLE_NAME = '"Bakes-Villa"';
-    // Otherwise set the plain table name:
-    const TABLE_NAME = 'cakes';
-    // Staff credentials (as you requested)
-    const STAFF_USERNAME = 'siddhijain';
-    const STAFF_PASSWORD = 'siddhijain12';
-    // WhatsApp number in international format (no plus sign)
-    const WHATSAPP_NUMBER = '917543060400';
-  </script>
+    <!-- Header --><header class="sticky top-0 z-40 w-full bg-brand-background/90 dark:bg-gray-800/90 backdrop-blur-sm border-b border-brand-accent dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo --><a href="#" class="flex-shrink-0 flex items-center">
+                    <span class="font-logo text-3xl font-bold text-brand-logo">Bakes-Villa</span>
+                </a>
+                
+                <!-- Desktop Navigation --><nav class="hidden md:flex md:items-center md:space-x-8">
+                    <a href="#story" class="text-gray-700 dark:text-gray-300 hover:text-brand-primary dark:hover:text-white font-medium">Our Story</a>
+                    <a href="#collection" class="text-gray-700 dark:text-gray-300 hover:text-brand-primary dark:hover:text-white font-medium">Collection</a>
+                    <a href="#contact" class="text-gray-700 dark:text-gray-300 hover:text-brand-primary dark:hover:text-white font-medium">Call Us</a>
+                </nav>
+                
+                <!-- Desktop Right Side (Login & Theme) --><div class="hidden md:flex items-center">
+                    <button id="theme-toggle-btn-desktop" class="p-2 rounded-full text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 mr-4">
+                        <svg class="theme-toggle-dark-icon w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg class="theme-toggle-light-icon w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.05 14.95a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM3 10a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1zM16 10a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zM5.05 5.05a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="staff-login-btn" class="bg-brand-primary text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-colors">
+                        Staff Login
+                    </button>
+                    <button id="logout-btn" class="hidden bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-colors">
+                        Logout
+                    </button>
+                </div>
 
-  <!-- Supabase JS SDK (from CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+                <!-- Mobile Menu Button --><div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="p-2 rounded-full text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="theme-toggle-dark-icon w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg class="theme-toggle-light-icon w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.05 14.95a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM3 10a1 1 0 011-1h1a1 1 0 110 2H4a1 1 0 01-1-1zM16 10a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zM5.05 5.05a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="mobile-menu-btn" class="p-2 rounded-md text-brand-text dark:text-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-  <!-- ===== Header / Navbar ===== -->
-  <header class="fixed w-full top-0 left-0 z-40 bg-white/90 backdrop-blur-sm border-b">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="text-2xl header-script text-[color:var(--bv-brown)]">Bakes-Villa</div>
-        <nav class="hidden sm:flex gap-6 text-sm text-gray-700">
-          <a href="#home" class="hover:underline">Home</a>
-          <a href="#collection" class="hover:underline">Collection</a>
-          <a href="#contact" class="hover:underline">Contact</a>
+    <!-- Mobile Menu --><div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-30 bg-brand-background dark:bg-gray-900 p-4 pt-20 overflow-y-auto">
+        <nav class="flex flex-col space-y-4 text-center mt-8">
+            <a href="#story" class="mobile-nav-link text-lg text-brand-text dark:text-gray-200 hover:text-brand-logo">Our Story</a>
+            <a href="#collection" class="mobile-nav-link text-lg text-brand-text dark:text-gray-200 hover:text-brand-logo">Collection</a>
+            <a href="#contact" class="mobile-nav-link text-lg text-brand-text dark:text-gray-200 hover:text-brand-logo">Call Us</a>
+            <hr class="border-brand-accent dark:border-gray-700 pt-4"/>
+            <button id="staff-login-btn-mobile" class="w-full bg-brand-primary text-white py-2 px-4 rounded-md font-medium">
+                Staff Login
+            </button>
+            <button id="logout-btn-mobile" class="hidden w-full bg-red-600 text-white py-2 px-4 rounded-md font-medium">
+                Logout
+            </button>
         </nav>
-      </div>
-      <div class="flex items-center gap-3">
-        <button id="staffBtn" class="px-3 py-1 rounded-full bg-[color:var(--bv-dark)] text-white text-sm">Staff Login</button>
-      </div>
     </div>
-  </header>
 
-  <!-- Content container with top padding so header doesn't overlap -->
-  <main class="top-pad">
+    <!-- Main Content --><main>
+        <!-- Hero Section --><section id="hero" class="py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="font-headline text-5xl md:text-7xl font-bold text-brand-text dark:text-gray-100">
+                    Excellence Baked Daily
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+                    Discover the art of artisan baking. Every creation is handcrafted for pure, gourmet satisfaction.
+                </p>
+                <div class="mt-12 max-w-4xl mx-auto rounded-lg shadow-2xl overflow-hidden">
+                    <img src="https://britishbakels.b-cdn.net/wp-content/uploads/sites/2/2022/06/feature-680x445.jpg" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/680x445/EFEBE9/4E3629?text=Image+Not+Found';"
+                         alt="Artisan baked goods" class="w-full h-auto object-cover">
+                </div>
+            </div>
+        </section>
 
-    <!-- HERO -->
-    <section id="home" class="pt-8 pb-10">
-      <div class="max-w-4xl mx-auto px-4 text-center">
-        <h1 class="text-4xl sm:text-5xl header-script text-[color:var(--bv-dark)] leading-tight">Excellence Baked Daily</h1>
-        <p class="mt-3 text-gray-600">Handcrafted cakes & pastries made with love. Order easily via WhatsApp.</p>
-        <div class="mt-6 flex justify-center">
-          <a href="#collection" class="px-6 py-3 rounded-full bg-[color:var(--bv-brown)] text-white header-script shadow-lg">Explore Collection</a>
+        <!-- Our Story Section --><section id="story" class="py-20 md:py-32 bg-white dark:bg-gray-800">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="font-headline text-4xl font-bold text-brand-text dark:text-gray-100">Our Story</h2>
+                <p class="mt-6 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                    Founded in the heart of Purnia, Bakes-Villa started with a simple passion: to bring joy to our community through exceptional baking. We use only the finest local ingredients, traditional recipes, and a dash of modern creativity. Every loaf, pastry, and cake from our ovens is a testament to our dedication to quality and taste.
+                </p>
+            </div>
+        </section>
+
+        <!-- Collection Section --><section id="collection" class="py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="font-headline text-4xl font-bold text-brand-text dark:text-gray-100 text-center">Our Collection</h2>
+                
+                <!-- Loading Spinner --><div id="collection-loader" class="text-center py-12">
+                    <svg class="animate-spin h-10 w-10 text-brand-logo mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-4 text-gray-600 dark:text-gray-400">Loading our delicious cakes...</p>
+                </div>
+
+                <!-- Cake Grid --><div id="collection-grid" class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Cake cards will be injected here by JavaScript --></div>
+            </div>
+        </section>
+
+        <!-- Contact Section --><section id="contact" class="py-20 md:py-32 bg-white dark:bg-gray-800">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="font-headline text-4xl font-bold text-brand-text dark:text-gray-100">Get In Touch</h2>
+                <p class="mt-6 text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                    We'd love to hear from you. For custom orders, questions, or just to say hello, reach out to us!
+                </p>
+                <div class="mt-10 space-y-4 text-lg text-gray-700 dark:text-gray-300">
+                    <p>
+                        <strong>Phone:</strong> <a href="tel:7543060400" class="hover:text-brand-logo">7543060400</a>
+                    </p>
+                    <p>
+                        <strong>Email:</strong> <a href="mailto:bakesvillaindia@gmail.com" class="hover:text-brand-logo">bakesvillaindia@gmail.com</a>
+                    </p>
+                    <p>
+                        <strong>Address:</strong> Purnia, Bihar
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer --><footer class="bg-brand-primary dark:bg-gray-800 text-brand-accent dark:text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; <span id="current-year"></span> Bakes-Villa. All Rights Reserved.</p>
         </div>
-        <div class="mt-8">
-          <div class="rounded-xl overflow-hidden border-2 border-[color:var(--bv-brown)] card-shadow mx-auto" style="max-width:720px">
-            <img src="/images/hero.jpg" alt="Bakes-Villa hero image" class="w-full h-auto object-cover">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- COLLECTION -->
-    <section id="collection" class="py-8">
-      <div class="max-w-4xl mx-auto px-4">
-        <div class="flex items-center justify-between">
-          <h2 class="text-2xl header-script text-[color:var(--bv-brown)]">Collection</h2>
-          <div id="adminIndicator" class="hidden items-center gap-2">
-            <span class="pill bg-[color:var(--bv-brown)] text-white">Admin</span>
-            <button id="logoutBtn" class="text-sm text-red-600">Logout</button>
-          </div>
-        </div>
-
-        <div id="cakesGrid" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- cake cards injected here -->
-        </div>
-
-        <div class="mt-6 text-center text-gray-500 text-sm body-sans">
-          Tip: Use the Staff Login button to add or remove cakes (mobile-friendly).
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT/FOOTER -->
-    <footer id="contact" class="py-8 border-t mt-8">
-      <div class="max-w-4xl mx-auto px-4 text-center">
-        <h3 class="text-xl header-script text-[color:var(--bv-brown)]">Contact</h3>
-        <p class="mt-3 text-gray-600">Email: <a href="mailto:bakesvillaindia@gmail.com" class="text-[color:var(--bv-dark)] hover:underline">bakesvillaindia@gmail.com</a><br>Phone: <a href="tel:+917543060400" class="text-[color:var(--bv-dark)] hover:underline">+91 75430 60400</a></p>
-        <p class="mt-4 text-sm text-gray-500">Made for Bakes-Villa • Host-ready single file</p>
-      </div>
     </footer>
 
-  </main>
-
-  <!-- ===== Staff Modal (hidden by default) ===== -->
-  <div id="staffModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
-    <div class="bg-white w-full max-w-md rounded-xl overflow-hidden">
-      <div class="p-4 border-b flex items-center justify-between">
-        <div class="font-semibold">Staff Panel</div>
-        <button id="closeModal" class="text-gray-500">Close</button>
-      </div>
-
-      <div class="p-4">
-        <!-- If not logged in, show login form -->
-        <div id="loginForm">
-          <div class="mb-2 text-sm text-gray-600">Login as staff to add/delete cakes</div>
-          <form id="login" class="grid gap-2">
-            <input id="loginUser" placeholder="Username" class="border p-2 rounded" value="siddhijain">
-            <input id="loginPass" placeholder="Password" class="border p-2 rounded" value="siddhijain12" type="password">
-            <div class="flex gap-2">
-              <button type="submit" class="flex-1 px-4 py-2 rounded bg-[color:var(--bv-brown)] text-white">Login</button>
-              <button type="button" id="closeModal2" class="px-4 py-2 rounded border">Cancel</button>
-            </div>
-            <div id="loginMsg" class="text-sm text-red-500 mt-2 hidden"></div>
-          </form>
-        </div>
-
-        <!-- Admin controls (shown after login) -->
-        <div id="adminPanel" class="hidden">
-          <div class="text-sm text-gray-600 mb-2">Add a new cake (image URL recommended)</div>
-          <form id="addCakeForm" class="grid gap-2">
-            <input id="cakeName" placeholder="Name" class="border p-2 rounded" required>
-            <textarea id="cakeDesc" placeholder="Description" class="border p-2 rounded" rows="2"></textarea>
-            <input id="cakePrice" placeholder="Price (e.g. 499)" class="border p-2 rounded" required inputmode="numeric">
-            <input id="cakeImage" placeholder="Image URL (imageData)" class="border p-2 rounded">
-            <div class="flex gap-2">
-              <button type="submit" class="flex-1 px-4 py-2 rounded bg-green-600 text-white">Add Cake</button>
-              <button type="button" id="refreshBtn" class="px-4 py-2 rounded border">Refresh</button>
-            </div>
-            <div id="adminMsg" class="text-sm text-green-600 mt-2 hidden"></div>
-          </form>
-
-          <div class="mt-4">
-            <div class="text-sm text-gray-600 mb-2">Existing cakes</div>
-            <div id="adminList" class="space-y-2 max-h-48 overflow-auto"></div>
-          </div>
-        </div>
-
-      </div>
+    <!-- --- MODALS --- --><!-- Global Loading Modal --><div id="loading-modal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 invisible opacity-0">
+        <div class="animate-spin h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
     </div>
-  </div>
 
-  <!-- ===== Scripts ===== -->
-  <script>
-    // Basic safety checks: ensure supabase keys are set
-    if (!SUPABASE_URL || SUPABASE_URL.includes('REPLACE') || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes('REPLACE')) {
-      console.warn('Supabase URL or ANON KEY not set — please fill the top config in the HTML.');
-      // We'll still set up a non-working client to avoid runtime errors, but prompt the user.
-    }
-
-    // Initialize Supabase client
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Elements
-    const cakesGrid = document.getElementById('cakesGrid');
-    const staffBtn = document.getElementById('staffBtn');
-    const staffModal = document.getElementById('staffModal');
-    const closeModal = document.getElementById('closeModal');
-    const closeModal2 = document.getElementById('closeModal2');
-    const loginForm = document.getElementById('loginForm');
-    const adminPanel = document.getElementById('adminPanel');
-    const login = document.getElementById('login');
-    const loginMsg = document.getElementById('loginMsg');
-    const adminIndicator = document.getElementById('adminIndicator');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const addCakeForm = document.getElementById('addCakeForm');
-    const adminList = document.getElementById('adminList');
-    const adminMsg = document.getElementById('adminMsg');
-    const refreshBtn = document.getElementById('refreshBtn');
-
-    let isAdmin = false;
-    // Minimal client-side "session"
-    function setAdmin(flag) {
-      isAdmin = !!flag;
-      adminIndicator.style.display = isAdmin ? 'flex' : 'none';
-      loginForm.style.display = isAdmin ? 'none' : 'block';
-      adminPanel.style.display = isAdmin ? 'block' : 'none';
-      if(isAdmin) { loginMsg.classList.add('hidden'); }
-    }
-
-    // Modal toggles
-    staffBtn.addEventListener('click', ()=> staffModal.classList.remove('hidden'));
-    closeModal.addEventListener('click', ()=> staffModal.classList.add('hidden'));
-    closeModal2.addEventListener('click', ()=> staffModal.classList.add('hidden'));
-
-    // Logout
-    logoutBtn.addEventListener('click', () => {
-      setAdmin(false);
-      staffModal.classList.add('hidden');
-    });
-
-    // Fetch cakes from Supabase
-    async function fetchCakes(){
-      try {
-        // If TABLE_NAME uses a hyphen wrapped in quotes, we pass it directly.
-        const tableName = TABLE_NAME;
-        const { data, error } = await supabase.from(tableName).select('*').order('createdAt', { ascending: false });
-        if (error) { console.error('Supabase fetch error', error); return []; }
-        return data || [];
-      } catch (err) {
-        console.error('FetchCakes error', err);
-        return [];
-      }
-    }
-
-    // Render cake cards
-    function renderCakes(cakes){
-      cakesGrid.innerHTML = '';
-      if (!cakes || cakes.length === 0) {
-        cakesGrid.innerHTML = '<div class="text-center text-gray-500 col-span-full">No cakes found.</div>';
-        return;
-      }
-      cakes.forEach(c => {
-        // imageData may be a URL or base64. If empty fallback to placeholder
-        const imgSrc = c.imageData || '/images/hero2.jpg' || 'https://images.unsplash.com/photo-1542831371-d531d36971e6';
-        // price formatting
-        const price = c.price ? `₹${c.price}` : '₹0';
-        const cakeName = c.name || 'Untitled';
-
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-xl p-3 card-shadow';
-
-        card.innerHTML = `
-          <div class="rounded-md overflow-hidden">
-            <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(cakeName)}" class="w-full h-44 object-cover">
-          </div>
-          <h3 class="mt-3 header-script text-lg">${escapeHtml(cakeName)}</h3>
-          <p class="mt-1 text-sm text-gray-600">${escapeHtml(c.description || '')}</p>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="font-semibold">${escapeHtml(price)}</div>
-            <div class="flex gap-2">
-              <a class="orderBtn inline-flex items-center gap-2 px-3 py-1 rounded border text-sm" href="#" data-name="${encodeURIComponent(cakeName)}" data-price="${encodeURIComponent(c.price || '')}">
-                🛒 Order
-              </a>
-              ${isAdmin ? `<button class="deleteBtn inline-flex items-center gap-2 px-3 py-1 rounded bg-red-500 text-white text-sm" data-id="${c.id}">Delete</button>` : ''}
+    <!-- Global Message Modal --><div id="message-modal" class="modal fixed top-0 left-0 right-0 z-50 flex justify-center pt-10 invisible opacity-0">
+        <div id="message-content" class="modal-content p-4 rounded-lg shadow-lg max-w-sm w-full text-white transform -translate-y-20">
+            <p id="message-text"></p>
+        </div>
+    </div>
+    
+    <!-- Login Modal --><div id="login-modal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4 invisible opacity-0">
+        <div class="modal-content bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md transform scale-95">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-headline text-2xl font-bold text-brand-text dark:text-gray-100">Staff Login</h3>
+                <button id="close-login-modal" class="text-gray-400 hover:text-gray-700 dark:hover:text-white">&times;</button>
             </div>
-          </div>
-        `;
+            <form id="login-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <input type="email" id="login-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-logo focus:border-brand-logo dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                        <input type="password" id="login-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-logo focus:border-brand-logo dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-primary text-white py-2 px-4 rounded-md font-medium hover:bg-opacity-90 transition-colors">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        cakesGrid.appendChild(card);
-      });
+    <!-- Admin Panel Modal --><div id="admin-modal" class="modal fixed inset-0 z-50 bg-gray-100 dark:bg-gray-900 p-4 md:p-8 overflow-y-auto invisible opacity-0">
+        <div class="modal-content bg-white dark:bg-gray-800 p-6 md:p-8 rounded-lg shadow-2xl w-full max-w-6xl mx-auto transform scale-95">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-headline text-3xl font-bold text-brand-text dark:text-gray-100">Admin Panel</h3>
+                <button id="close-admin-modal" class="text-gray-400 hover:text-gray-700 dark:hover:text-white text-3xl">&times;</button>
+            </div>
+            
+            <div class="mb-6">
+                <button id="add-new-cake-btn" class="bg-green-600 text-white py-2 px-5 rounded-md font-medium hover:bg-green-700 transition-colors">
+                    + Add New Cake
+                </button>
+            </div>
 
-      // wire order buttons & delete
-      document.querySelectorAll('.orderBtn').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-          ev.preventDefault();
-          const name = decodeURIComponent(btn.dataset.name);
-          const price = decodeURIComponent(btn.dataset.price) || '';
-          openWhatsAppOrder(name, price);
-        });
-      });
+            <!-- Admin Cake List --><div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Image</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-cakes-list" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Admin cake rows will be injected here --></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-      document.querySelectorAll('.deleteBtn').forEach(btn => {
-        btn.addEventListener('click', async (ev) => {
-          const id = btn.dataset.id;
-          if(!confirm('Delete this cake?')) return;
-          await deleteCake(id);
-          await refreshCakes();
-        });
-      });
-    }
+    <!-- Add/Edit Cake Modal --><div id="cake-modal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-75 p-4 invisible opacity-0">
+        <div class="modal-content bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl transform scale-95 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="cake-modal-title" class="font-headline text-2xl font-bold text-brand-text dark:text-gray-100">Add New Cake</h3>
+                <button id="close-cake-modal" class="text-gray-400 hover:text-gray-700 dark:hover:text-white">&times;</button>
+            </div>
+            <form id="cake-form">
+                <input type="hidden" id="cake-id">
+                <input type="hidden" id="current-image-path">
+                <div class="space-y-4">
+                    <div>
+                        <label for="cake-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cake Name</label>
+                        <input type="text" id="cake-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-logo focus:border-brand-logo dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label for="cake-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                        <textarea id="cake-description" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-logo focus:border-brand-logo dark:bg-gray-700 dark:text-white"></textarea>
+                    </div>
+                    <div>
+                        <label for="cake-price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price (e.g., 500)</label>
+                        <input type="text" id="cake-price" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-brand-logo focus:border-brand-logo dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label for="cake-image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>
+                        <input type="file" id="cake-image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-accent file:text-brand-logo hover:file:bg-brand-secondary/30 dark:file:bg-gray-700 dark:file:text-gray-200 dark:hover:file:bg-gray-600">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank if you don't want to change the current image (when editing).</p>
+                        <img id="image-preview" src="" alt="Image preview" class="hidden mt-4 w-32 h-32 object-cover rounded-md">
+                    </div>
+                    <button type="submit" id="save-cake-btn" class="w-full bg-brand-primary text-white py-2 px-4 rounded-md font-medium hover:bg-opacity-90 transition-colors">
+                        Save Cake
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Confirm Delete Modal --><div id="confirm-delete-modal" class="modal fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-75 p-4 invisible opacity-0">
+        <div class="modal-content bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-sm transform scale-95">
+            <h3 class="font-headline text-xl font-bold text-brand-text dark:text-gray-100 mb-4">Are you sure?</h3>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">This action cannot be undone. This will permanently delete the cake and its image.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="cancel-delete-btn" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-md font-medium hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
+                    Cancel
+                </button>
+                <button id="confirm-delete-btn" class="bg-red-600 text-white py-2 px-4 rounded-md font-medium hover:bg-red-700">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
 
-    // Escape helper
-    function escapeHtml(str){
-      if(!str) return '';
-      return String(str).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
-    }
+    <!-- Main Application Logic --><script type="module">
+        // --- CONSTANTS ---
+        const TABLE_NAME = 'Bakes-Villa';
+        const STORAGE_BUCKET = 'cake-images';
+        const WHATSAPP_NUMBER = '917543060400';
+        
+        // --- SUPABASE CLIENT ---
+        // Supabase client is already on the window object from the first script block
+        const supabase = window.supabase;
 
-    // Open WhatsApp with message formatted
-    function openWhatsAppOrder(name, price){
-      const cakeName = name || 'cake';
-      const rupee = price ? `₹${price}` : '';
-      const message = `Hello Bakes-Villa! I’d like to order the ${cakeName} cake (${rupee}).%0AMy name: ______%0ADelivery address: ______`;
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-      // use window.open so it works on mobile and desktop
-      window.open(url, '_blank');
-    }
+        // --- DOM ELEMENTS ---
+        const currentYearEl = document.getElementById('current-year');
+        
+        // Navigation
+        const staffLoginBtn = document.getElementById('staff-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const staffLoginBtnMobile = document.getElementById('staff-login-btn-mobile');
+        const logoutBtnMobile = document.getElementById('logout-btn-mobile');
+        
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        
+        // Theme Toggle
+        const themeToggleBtnDesktop = document.getElementById('theme-toggle-btn-desktop');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const darkIcons = document.querySelectorAll('.theme-toggle-dark-icon');
+        const lightIcons = document.querySelectorAll('.theme-toggle-light-icon');
 
-    // Add cake (insert into Supabase)
-    async function addCakeToSupabase({ name, description, price, imageData }){
-      try {
-        const tableName = TABLE_NAME;
-        const payload = { name, description, price, imageData, createdAt: new Date().toISOString() };
-        const { data, error } = await supabase.from(tableName).insert([payload]).select();
-        if (error) {
-          console.error('Insert error', error);
-          throw error;
+        // Collection
+        const collectionGrid = document.getElementById('collection-grid');
+        const collectionLoader = document.getElementById('collection-loader');
+
+        // Modals
+        const loadingModal = document.getElementById('loading-modal');
+        const messageModal = document.getElementById('message-modal');
+        const messageContent = document.getElementById('message-content');
+        const messageText = document.getElementById('message-text');
+        
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModalBtn = document.getElementById('close-login-modal');
+        const loginForm = document.getElementById('login-form');
+        const loginEmail = document.getElementById('login-email');
+        const loginPassword = document.getElementById('login-password');
+
+        const adminModal = document.getElementById('admin-modal');
+        const closeAdminModalBtn = document.getElementById('close-admin-modal');
+        const addNewCakeBtn = document.getElementById('add-new-cake-btn');
+        const adminCakesList = document.getElementById('admin-cakes-list');
+        
+        const cakeModal = document.getElementById('cake-modal');
+        const closeCakeModalBtn = document.getElementById('close-cake-modal');
+        const cakeForm = document.getElementById('cake-form');
+        const cakeModalTitle = document.getElementById('cake-modal-title');
+        const cakeIdInput = document.getElementById('cake-id');
+        const currentImagePathInput = document.getElementById('current-image-path');
+        const cakeNameInput = document.getElementById('cake-name');
+        const cakeDescriptionInput = document.getElementById('cake-description');
+        const cakePriceInput = document.getElementById('cake-price');
+        const cakeImageInput = document.getElementById('cake-image');
+        const imagePreview = document.getElementById('image-preview');
+        
+        const confirmDeleteModal = document.getElementById('confirm-delete-modal');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+        // --- STATE ---
+        let adminCakes = [];
+        let cakeToDelete = { id: null, imagePath: null };
+
+        // --- HELPER FUNCTIONS ---
+        
+        /** Shows a modal by ID */
+        function showModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('invisible', 'opacity-0');
+                modal.querySelector('.modal-content')?.classList.remove('scale-95');
+            }
         }
-        return data && data[0];
-      } catch (err) {
-        console.error('addCakeToSupabase error', err);
-        throw err;
-      }
-    }
 
-    // Delete cake
-    async function deleteCake(id){
-      try {
-        const tableName = TABLE_NAME;
-        if(!id) return;
-        const { error } = await supabase.from(tableName).delete().eq('id', id);
-        if (error) { console.error('Delete error', error); throw error; }
-      } catch (err) {
-        console.error('deleteCake error', err);
-      }
-    }
+        /** Hides a modal by ID */
+        function hideModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('invisible', 'opacity-0');
+                modal.querySelector('.modal-content')?.classList.add('scale-95');
+            }
+        }
+        
+        /** Shows the global loading spinner */
+        function showLoading() {
+            loadingModal.classList.remove('invisible', 'opacity-0');
+        }
+        
+        /** Hides the global loading spinner */
+        function hideLoading() {
+            loadingModal.classList.add('invisible', 'opacity-0');
+        }
+        
+        /** Shows a global message */
+        function showMessage(message, isError = false) {
+            messageText.textContent = message;
+            messageContent.classList.toggle('bg-red-600', isError);
+            messageContent.classList.toggle('bg-green-600', !isError);
+            
+            messageModal.classList.remove('invisible', 'opacity-0');
+            messageContent.classList.remove('-translate-y-20');
+            
+            setTimeout(() => {
+                messageModal.classList.add('invisible', 'opacity-0');
+                messageContent.classList.add('-translate-y-20');
+            }, 3000);
+        }
 
-    // Refresh list
-    async function refreshCakes(){
-      const cakes = await fetchCakes();
-      renderCakes(cakes);
-      // update admin list too
-      renderAdminList(cakes);
-    }
+        /** Extracts the path from a Supabase storage URL */
+        function getPathFromUrl(url) {
+            if (!url) return null;
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split(`/${STORAGE_BUCKET}/`);
+                return pathParts[1] || null;
+            } catch (error) {
+                console.error('Error parsing image URL:', error);
+                return null;
+            }
+        }
+        
+        // --- THEME/UI FUNCTIONS ---
+        
+        /** Toggles the mobile menu */
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+        
+        /** Updates the sun/moon icons based on the current theme */
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            darkIcons.forEach(icon => icon.classList.toggle('hidden', isDark));
+            lightIcons.forEach(icon => icon.classList.toggle('hidden', !isDark));
+        }
 
-    // Render admin list for convenience
-    function renderAdminList(cakes){
-      adminList.innerHTML = '';
-      if(!cakes || cakes.length === 0) {
-        adminList.innerHTML = '<div class="text-sm text-gray-500">No cakes yet</div>';
-        return;
-      }
-      cakes.forEach(c => {
-        const row = document.createElement('div');
-        row.className = 'flex items-center justify-between bg-gray-50 p-2 rounded';
-        row.innerHTML = `<div class="text-sm">${escapeHtml(c.name)} <div class="text-xs text-gray-500">₹${escapeHtml(c.price||'')}</div></div>
-                         <div class="flex gap-2">
-                           <button data-id="${c.id}" class="delSmall px-2 py-1 text-xs bg-red-500 text-white rounded">Delete</button>
-                         </div>`;
-        adminList.appendChild(row);
-      });
-      document.querySelectorAll('.delSmall').forEach(b => {
-        b.addEventListener('click', async () => {
-          if(!confirm('Delete this cake?')) return;
-          await deleteCake(b.dataset.id);
-          await refreshCakes();
+        /** Handles theme toggle button click */
+        function handleThemeToggle() {
+            window.toggleTheme(); // Calls function from <head>
+        }
+        
+        // --- PUBLIC CAKE FUNCTIONS ---
+
+        /** Fetches cakes from Supabase and renders them */
+        async function fetchPublicCakes() {
+            collectionLoader.classList.remove('hidden');
+            collectionGrid.innerHTML = '';
+
+            // --- DEBUGGING NOTE ---
+            // If you are seeing a "TypeError: Failed to fetch" error in the console,
+            // this is NOT a code error. It is a Supabase configuration issue.
+            //
+            // **THE FIX:** You MUST enable CORS in your Supabase project.
+            // 1. Go to Project Settings > API
+            // 2. Scroll to "CORS configuration"
+            // 3. Add `*` (a single asterisk) to the list of URLs and save.
+            //
+            // This tells Supabase to allow your website to make requests.
+            // -------------------------
+
+            console.log("Attempting to fetch cakes from:", TABLE_NAME); // Added for more debugging
+
+            const { data: cakes, error } = await supabase
+                .from(TABLE_NAME)
+                .select('*')
+                .order('createdAt', { ascending: false });
+
+            collectionLoader.classList.add('hidden');
+
+            if (error) {
+                console.error('Error fetching cakes:', error);
+                let userMessage = 'Could not load cakes. Please try again later.';
+                if (error.message.includes('Failed to fetch')) {
+                    // This is the error you reported. It's often RLS or CORS.
+                    userMessage = 'Error: Could not connect to the database. This is most likely a Supabase configuration issue. Please check two things in your Supabase project: 1) **CORS Settings**: Go to Project Settings > API > CORS configuration and make sure your website\'s domain is listed (or add `*` for testing). 2) **Row Level Security (RLS)**: You mentioned RLS is disabled, which is fine, but if it was accidentally re-enabled, it would also cause this error without a read policy.';
+                } else if (error.message.includes('security rules')) {
+                     userMessage = 'Error: Database security rules are blocking access. This happens when RLS is ENABLED. Please add a "read access for everyone" policy in Supabase.';
+                }
+                collectionGrid.innerHTML = `<p class="text-red-600 col-span-full text-center p-4">${userMessage}</p>`;
+                return;
+            }
+
+            if (cakes.length === 0) {
+                collectionGrid.innerHTML = `<p class="text-gray-600 dark:text-gray-400 col-span-full text-center">No cakes available at the moment. Please check back soon!</p>`;
+                return;
+            }
+
+            cakes.forEach(cake => {
+                const card = createCakeCard(cake);
+                collectionGrid.appendChild(card);
+            });
+        }
+
+        /** Creates HTML for a single cake card */
+        function createCakeCard(cake) {
+            const card = document.createElement('div');
+            card.className = 'bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col';
+            
+            const placeholder = `https://placehold.co/600x400/EFEBE9/4E3629?text=${encodeURIComponent(cake.name)}`;
+            
+            card.innerHTML = `
+                <div class="w-full h-64 bg-gray-200">
+                    <img src="${cake.imageData || placeholder}" 
+                         onerror="this.onerror=null;this.src='${placeholder}';"
+                         alt="${cake.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <h3 class="font-headline text-2xl font-bold text-brand-text dark:text-gray-100">${cake.name}</h3>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400 flex-grow">${cake.description || 'No description available.'}</p>
+                    <p class="mt-4 text-2xl font-bold text-brand-logo">${cake.price.startsWith('₹') ? '' : '₹'}${cake.price}</p>
+                    <button data-cake-name="${cake.name}" class="whatsapp-order-btn mt-6 w-full bg-green-500 text-white py-3 px-4 rounded-md font-medium hover:bg-green-600 transition-colors flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.06 21.94L7.31 20.59C8.76 21.39 10.37 21.82 12.04 21.82C17.5 21.82 21.95 17.37 21.95 11.91C21.95 6.45 17.5 2 12.04 2M12.04 20.13C10.59 20.13 9.19 19.76 7.96 19.06L7.6 18.88L4.39 19.7L5.3 16.58L5.1 16.23C4.34 14.94 3.9 13.45 3.9 11.91C3.9 7.42 7.59 3.71 12.04 3.71C16.49 3.71 20.18 7.42 20.18 11.91C20.18 16.4 16.49 20.13 12.04 20.13M17.34 14.63C17.11 14.51 16.1 14.05 15.88 13.97C15.67 13.89 15.51 13.85 15.36 14.1C15.2 14.34 14.73 14.85 14.56 15.03C14.4 15.22 14.24 15.24 14 15.12C13.75 15 13.08 14.76 12.28 14.04C11.62 13.45 11.16 12.71 11.01 12.46C10.87 12.22 10.97 12.11 11.08 12C11.18 11.89 11.3 11.75 11.43 11.6C11.56 11.45 11.6 11.33 11.7 11.14C11.79 10.95 11.75 10.81 11.68 10.69C11.61 10.57 11.1 9.42 10.89 8.95C10.69 8.49 10.48 8.55 10.33 8.55C10.17 8.55 10 8.54 9.84 8.54C9.69 8.54 9.43 8.6 9.22 8.84C9 9.08 8.53 9.54 8.53 10.6C8.53 11.66 9.25 12.64 9.37 12.78C9.49 12.92 10.74 15.01 12.81 15.82C14.88 16.62 15.34 16.44 15.7 16.4C16.07 16.35 16.98 15.84 17.19 15.29C17.4 14.73 17.4 14.24 17.34 14.1C17.28 13.97 17.16 13.91 17.34 14.63V14.63Z"></path></svg>
+                        <span>Order on WhatsApp</span>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+        
+        /** Handles clicking the WhatsApp order button */
+        function handleWhatsAppOrder(e) {
+            const target = e.target.closest('.whatsapp-order-btn');
+            if (target) {
+                const cakeName = target.dataset.cakeName;
+                const message = encodeURIComponent(`Hello Bakes-Villa, I would like to inquire about ordering the "${cakeName}".`);
+                const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+                window.open(waUrl, '_blank');
+            }
+        }
+        
+        // --- ADMIN AUTH FUNCTIONS ---
+        
+        /** Handles the login form submission */
+        async function handleLogin(e) {
+            e.preventDefault();
+            showLoading();
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: loginEmail.value,
+                password: loginPassword.value,
+            });
+            hideLoading();
+            if (error) {
+                showMessage(error.message, true);
+            } else {
+                showMessage('Login successful!');
+                hideModal('login-modal');
+                if (!mobileMenu.classList.contains('hidden')) {
+                    toggleMobileMenu();
+                }
+                loginForm.reset();
+                showModal('admin-modal');
+                await fetchAdminCakes();
+            }
+        }
+
+        /** Handles the logout button click */
+        async function handleLogout() {
+            showLoading();
+            const { error } = await supabase.auth.signOut();
+            hideLoading();
+            if (error) {
+                showMessage(error.message, true);
+            } else {
+                showMessage('Logged out successfully.');
+                hideModal('admin-modal');
+                adminCakes = [];
+                adminCakesList.innerHTML = '';
+            }
+        }
+        
+        /** Updates UI based on auth state */
+        function updateAuthUI(user) {
+            if (user) {
+                staffLoginBtn.classList.add('hidden');
+                staffLoginBtnMobile.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                logoutBtnMobile.classList.remove('hidden');
+            } else {
+                staffLoginBtn.classList.remove('hidden');
+                staffLoginBtnMobile.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                logoutBtnMobile.classList.add('hidden');
+                hideModal('admin-modal'); // Hide admin panel if logged out
+            }
+        }
+        
+        /** Checks auth state on load and sets up a listener */
+        async function checkAuthState() {
+            const { data: { session } } = await supabase.auth.getSession();
+            updateAuthUI(session?.user);
+
+            supabase.auth.onAuthStateChange((event, session) => {
+                updateAuthUI(session?.user);
+                if (event === 'SIGNED_OUT') {
+                    adminCakes = [];
+                    adminCakesList.innerHTML = '';
+                }
+            });
+        }
+
+        // --- ADMIN CRUD FUNCTIONS ---
+
+        /** Fetches all cakes for the admin panel */
+        async function fetchAdminCakes() {
+            adminCakesList.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500 dark:text-gray-400">Loading...</td></tr>`;
+            
+            const { data, error } = await supabase
+                .from(TABLE_NAME)
+                .select('*')
+                .order('createdAt', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching admin cakes:', error);
+                adminCakesList.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-red-600">Error loading cakes.</td></tr>`;
+                return;
+            }
+
+            adminCakes = data;
+            renderAdminList();
+        }
+        
+        /** Renders the list of cakes in the admin panel */
+        function renderAdminList() {
+            if (adminCakes.length === 0) {
+                adminCakesList.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500 dark:text-gray-400">No cakes found. Add one!</td></tr>`;
+                return;
+            }
+            
+            adminCakesList.innerHTML = ''; // Clear list
+            adminCakes.forEach(cake => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+                const placeholder = `https://placehold.co/100x100/EFEBE9/4E3629?text=No+Image`;
+                const imagePath = getPathFromUrl(cake.imageData);
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <img src="${cake.imageData || placeholder}" alt="${cake.name}" class="w-16 h-16 object-cover rounded-md">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowGrap">
+                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">${cake.name}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">${cake.description || ''}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">${cake.price.startsWith('₹') ? '' : '₹'}${cake.price}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button data-id="${cake.id}" class="edit-cake-btn text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</button>
+                        <button data-id="${cake.id}" data-image-path="${imagePath || ''}" class="delete-cake-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                    </td>
+                `;
+                adminCakesList.appendChild(tr);
+            });
+        }
+        
+        /** Shows the Add New Cake modal */
+        function handleShowAddModal() {
+            cakeForm.reset();
+            cakeIdInput.value = '';
+            currentImagePathInput.value = '';
+            cakeModalTitle.textContent = 'Add New Cake';
+            imagePreview.classList.add('hidden');
+            imagePreview.src = '';
+            showModal('cake-modal');
+        }
+        
+        /** Shows the Edit Cake modal */
+        function handleShowEditModal(id) {
+            const cake = adminCakes.find(c => c.id === id);
+            if (!cake) return;
+            
+            cakeForm.reset();
+            cakeModalTitle.textContent = 'Edit Cake';
+            cakeIdInput.value = cake.id;
+            cakeNameInput.value = cake.name;
+            cakeDescriptionInput.value = cake.description || '';
+            cakePriceInput.value = cake.price;
+            
+            const imagePath = getPathFromUrl(cake.imageData);
+            currentImagePathInput.value = imagePath || '';
+
+            if (cake.imageData) {
+                imagePreview.src = cake.imageData;
+                imagePreview.classList.remove('hidden');
+            } else {
+                imagePreview.classList.add('hidden');
+                imagePreview.src = '';
+            }
+            
+            showModal('cake-modal');
+        }
+
+        /** Shows the confirm delete modal */
+        function handleShowDeleteModal(id, imagePath) {
+            cakeToDelete.id = id;
+            cakeToDelete.imagePath = imagePath;
+            showModal('confirm-delete-modal');
+        }
+        
+        /** Handles the final deletion of a cake */
+        async function executeDelete() {
+            const { id, imagePath } = cakeToDelete;
+            if (!id) return;
+            
+            showLoading();
+            hideModal('confirm-delete-modal');
+
+            // 1. Delete Image from Storage (if it exists)
+            if (imagePath) {
+                const { error: storageError } = await supabase
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .remove([imagePath]);
+                
+                if (storageError) {
+                    console.error('Could not delete image, but proceeding with DB delete:', storageError.message);
+                }
+            }
+
+            // 2. Delete from Database
+            const { error: dbError } = await supabase
+                .from(TABLE_NAME)
+                .delete()
+                .match({ id: id });
+
+            hideLoading();
+
+            if (dbError) {
+                showMessage(`Error deleting cake: ${dbError.message}`, true);
+            } else {
+                showMessage('Cake deleted successfully.');
+                fetchAdminCakes(); // Refresh admin list
+                fetchPublicCakes(); // Refresh public list
+            }
+            
+            cakeToDelete = { id: null, imagePath: null };
+        }
+
+        /** Handles the Add/Edit Cake form submission */
+        async function handleCakeFormSubmit(e) {
+            e.preventDefault();
+            showLoading();
+
+            const name = cakeNameInput.value;
+            const description = cakeDescriptionInput.value;
+            const price = cakePriceInput.value;
+            const file = cakeImageInput.files[0];
+            const id = cakeIdInput.value;
+            const currentImagePath = currentImagePathInput.value;
+
+            let newImageData = null;
+
+            // 1. Upload new image if provided
+            if (file) {
+                const filePath = `public/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+                const { error: uploadError } = await supabase
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .upload(filePath, file);
+
+                if (uploadError) {
+                    hideLoading();
+                    showMessage(`Error uploading image: ${uploadError.message}`, true);
+                    return;
+                }
+                
+                const { data: urlData } = supabase
+                    .storage
+                    .from(STORAGE_BUCKET)
+                    .getPublicUrl(filePath);
+
+                newImageData = urlData.publicUrl;
+
+                // 2. Delete old image if this is an edit and a new image was uploaded
+                if (id && currentImagePath) {
+                    const { error: deleteOldError } = await supabase
+                        .storage
+                        .from(STORAGE_BUCKET)
+                        .remove([currentImagePath]);
+                    
+                    if (deleteOldError) {
+                        console.error('Could not delete old image:', deleteOldError.message);
+                    }
+                }
+            }
+            
+            // 3. Prepare data for DB
+            let cakeData = {
+                name,
+                description,
+                price
+            };
+            
+            if (newImageData) {
+                cakeData.imageData = newImageData;
+            }
+
+            // 4. Upsert (Update or Insert)
+            let error;
+            if (id) {
+                const { error: updateError } = await supabase
+                    .from(TABLE_NAME)
+                    .update(cakeData)
+                    .match({ id: id });
+                error = updateError;
+            } else {
+                const { error: insertError } = await supabase
+                    .from(TABLE_NAME)
+                    .insert([cakeData]);
+                error = insertError;
+            }
+
+            hideLoading();
+            
+            if (error) {
+                showMessage(`Error saving cake: ${error.message}`, true);
+            } else {
+                showMessage(id ? 'Cake updated successfully!' : 'Cake added successfully!');
+                hideModal('cake-modal');
+                cakeForm.reset();
+                fetchAdminCakes(); // Refresh admin list
+                fetchPublicCakes(); // Refresh public list
+            }
+        }
+        
+        // --- EVENT LISTENERS ---
+        
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            currentYearEl.textContent = new Date().getFullYear();
+            updateThemeIcons(); // Set initial icon state
+            checkAuthState();
+            fetchPublicCakes();
         });
-      });
-    }
+        
+        // Theme Toggling
+        themeToggleBtnDesktop.addEventListener('click', handleThemeToggle);
+        themeToggleBtnMobile.addEventListener('click', handleThemeToggle);
+        window.addEventListener('themeChanged', updateThemeIcons);
 
-    // Login handler
-    login.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const u = document.getElementById('loginUser').value.trim();
-      const p = document.getElementById('loginPass').value;
-      if(u === STAFF_USERNAME && p === STAFF_PASSWORD){
-        setAdmin(true);
-        loginMsg.classList.add('hidden');
-        // show admin panel and update list
-        refreshCakes();
-      } else {
-        loginMsg.textContent = 'Invalid credentials';
-        loginMsg.classList.remove('hidden');
-      }
-    });
+        // Mobile Menu Toggling
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
 
-    // Add cake form handler
-    addCakeForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if(!isAdmin) { alert('Please login as staff'); return; }
-      const name = document.getElementById('cakeName').value.trim();
-      const description = document.getElementById('cakeDesc').value.trim();
-      const price = document.getElementById('cakePrice').value.trim();
-      const imageData = document.getElementById('cakeImage').value.trim();
-      if(!name || !price) { alert('Name and price required'); return; }
-      try {
-        adminMsg.textContent = 'Adding...';
-        adminMsg.classList.remove('hidden');
-        await addCakeToSupabase({ name, description, price, imageData });
-        adminMsg.textContent = 'Added successfully';
-        setTimeout(()=> adminMsg.classList.add('hidden'), 2000);
-        addCakeForm.reset();
-        await refreshCakes();
-      } catch (err) {
-        adminMsg.textContent = 'Error adding cake (check console)';
-        console.error(err);
-      }
-    });
+        // Modal Open/Close
+        staffLoginBtn.addEventListener('click', () => showModal('login-modal'));
+        staffLoginBtnMobile.addEventListener('click', () => showModal('login-modal'));
+        closeLoginModalBtn.addEventListener('click', () => hideModal('login-modal'));
+        
+        logoutBtn.addEventListener('click', handleLogout);
+        logoutBtnMobile.addEventListener('click', handleLogout);
+        loginForm.addEventListener('submit', handleLogin);
+        
+        closeAdminModalBtn.addEventListener('click', () => hideModal('admin-modal'));
+        addNewCakeBtn.addEventListener('click', handleShowAddModal);
 
-    // refresh button
-    refreshBtn.addEventListener('click', refreshCakes);
+        closeCakeModalBtn.addEventListener('click', () => hideModal('cake-modal'));
+        cakeForm.addEventListener('submit', handleCakeFormSubmit);
+        
+        cancelDeleteBtn.addEventListener('click', () => hideModal('confirm-delete-modal'));
+        confirmDeleteBtn.addEventListener('click', executeDelete);
 
-    // Start: fetch and render cakes
-    (async function init(){
-      await refreshCakes();
-    })();
-  </script>
+        // Event delegation for dynamic buttons
+        collectionGrid.addEventListener('click', handleWhatsAppOrder);
+        
+        adminCakesList.addEventListener('click', (e) => {
+            const editBtn = e.target.closest('.edit-cake-btn');
+            const deleteBtn = e.target.closest('.delete-cake-btn');
 
+            if (editBtn) {
+                handleShowEditModal(editBtn.dataset.id);
+            } else if (deleteBtn) {
+                handleShowDeleteModal(deleteBtn.dataset.id, deleteBtn.dataset.imagePath);
+            }
+        });
+
+    </script>
 </body>
 </html>
-
-
 
