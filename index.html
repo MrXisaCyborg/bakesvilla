@@ -5,1122 +5,708 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bakes-Villa - Artisan Cakes</title>
     
-    <!-- FAVICON: Cupcake emoji favicon for browser tabs -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧁</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><style>@font-face {font-family: 'Satisfy'; src: url('https://fonts.gstatic.com/s/satisfy/v16/rP2Fp2AHaPq3iFqWlE4D-w.woff2') format('woff2');} text {font-family: 'Satisfy'; font-size: 50px; font-weight: 700; fill: %23A37D45;}</style><text x=%2250%%22 y=%2265%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>BV</text></svg>">
     
-    <!-- Load Supabase SDK -->
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        // NOTE: These keys are derived from user input and MUST be kept in the code for the Supabase logic to work.
         const SUPABASE_URL = 'https://pbdibajhxdvotlppvfmz.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiZGliYWpoeGR2b3RscHB2Zm16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxMjQ1NTYsImV4cCI6MjA3NTcwMDU1Nn0.MEP7RhOQTOr2ZNbkfJwTGyNd-44dm5UWSVtrEajFZlY';
         
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Expose Supabase client globally
         window.supabaseClient = supabase;
-        window.SUPABASE_TABLE_NAME = 'Bakes-Villa'; // Table name confirmed via user error history
+        window.SUPABASE_TABLE_NAME = 'Bakes-Villa';
         
-        // Ensure the main script runs only after this module is loaded
-        if (window.onloadCallback) {
-            window.onloadCallback();
+        window.onloadCallback = function() {
+            if (typeof window.initializeApp === 'function') {
+                window.initializeApp();
+            }
         }
     </script>
 
-    <!-- Load Google Fonts: Playfair Display (for headings) and Inter (for body) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-    
-    <!-- Load Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Configure Tailwind with the Sophisticated Cafe Mode color palette -->
     <script>
-        // --- Color Palette Definitions (Based on User's Image) ---
-
-        // Light Mode Colors
-        const lightColors = {
-            'bg-main': '#F5F5E0',        // Pale Cream (Main Background)
-            'bg-surface': '#FFFFFF',     // Pure White (Card Background)
-            'primary': '#956247',        // Warm Brown (Accent/Text)
-            'secondary': '#A87C64',      // Soft Brown (Muted Text/Borders)
-            'accent-warm': '#593A32',    // Dark Chocolate (Buttons/Strong Accent)
-            'text-dark': '#3D271D',      // Deep Brown (Body Text)
-        };
-        
-        // Dark Mode Colors (Inverted and adapted for contrast)
-        const darkColors = {
-            'bg-main': '#3D271D',        // Dark Chocolate (Page Background)
-            'bg-surface': '#4D362C',     // Slightly Lighter Dark Chocolate (Card Background)
-            'primary': '#F5F5E0',        // Pale Cream (Accent/Title)
-            'secondary': '#D2B48C',      // Tan/Beige (Muted Text/Borders)
-            'accent-warm': '#D2B48C',    // Tan/Beige (Warm Accent)
-            'text-dark': '#F5F5E0',      // Pale Cream (Body Text)
-        };
-
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        heading: ['"Playfair Display"', 'serif'],
-                        body: ['Inter', 'sans-serif'],
+                        heading: ['Satisfy', 'cursive'],
+                        body: ['Quicksand', 'sans-serif'],
                     },
                     colors: {
-                        // Tailwind will use these custom properties defined in the <style> block
-                        'bg-main': 'var(--color-bg-main)',
-                        'bg-surface': 'var(--color-bg-surface)',
-                        'primary': 'var(--color-primary)',
-                        'secondary': 'var(--color-secondary)',
-                        'accent-warm': 'var(--color-accent-warm)',
-                        'text-dark': 'var(--color-text-dark)',
-                    },
-                    boxShadow: {
-                        'glow': '0 0 15px var(--color-primary-shadow)',
+                        'cream-bg': '#FCF9F3',
+                        'cream-light': '#FFFCF5',
+                        'brown-primary': '#A37D45',
+                        'brown-dark': '#72543D',
+                        'gray-dark': '#333333',
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        /* CSS Variables based on Light/Dark Mode */
         :root {
-            /* Light Mode Defaults */
-            --color-bg-main: #F5F5E0;
-            --color-bg-surface: #FFFFFF;
-            --color-primary: #956247; 
-            --color-secondary: #A87C64;
-            --color-accent-warm: #593A32;
-            --color-text-dark: #3D271D;
-            --color-primary-shadow: rgba(149, 98, 71, 0.4); /* Warm Brown Shadow */
+            --color-bg-main: #F5F0EA;
+            --color-bg-surface: #FFFCF5;
+            --color-primary: #A37D45; 
+            --color-secondary: #72543D;
+            --color-text-dark: #1a1a1a;
+            --color-primary-shadow: rgba(163, 125, 69, 0.3);
         }
         
         .dark {
-            /* Dark Mode Overrides */
-            --color-bg-main: #3D271D;
-            --color-bg-surface: #4D362C;
-            --color-primary: #F5F5E0;
-            --color-secondary: #D2B48C;
-            --color-accent-warm: #D2B48C;
-            --color-text-dark: #F5F5E0;
-            --color-primary-shadow: rgba(245, 245, 224, 0.4); /* Pale Cream Shadow */
+            --color-bg-main: #1A1A1A;
+            --color-bg-surface: #2A2A2A;
+            --color-primary: #F0E5D4;
+            --color-secondary: #A37D45;
+            --color-text-dark: #F0E5D4;
+            --color-primary-shadow: rgba(240, 229, 212, 0.2);
         }
-        
-        /* Base Styles and Fonts */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif; /* body font */
+            font-family: 'Quicksand', sans-serif;
             background-color: var(--color-bg-main);
             color: var(--color-text-dark);
-            scroll-behavior: smooth;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif; /* heading font */
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* CARD STYLES - Soft, Layered Surface */
-        .cake-card {
-            background-color: var(--color-bg-surface); 
-            transition: all 0.3s ease-in-out;
-            border: 1px solid var(--color-secondary); 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            opacity: 0; 
-            transform: translateY(20px); 
+        .hero-image {
+            height: 445px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            max-width: 680px;
         }
 
-        /* CARD HOVER EFFECT - Activate Glow */
-        .cake-card:hover {
-            box-shadow: var(--tw-shadow), var(--shadow-glow); 
-            border-color: var(--color-primary); 
-            transform: translateY(-5px) scale(1.02);
-        }
-        
-        /* MODAL BACKDROP - Glassmorphism style */
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(10px);
-        }
-        
-        /* MODAL CONTENT SIZING FIXES */
-        #modalContent, #editModalContent {
-            max-width: 95vw; /* Allow modal to use more screen width on mobile */
-            margin: 1rem; /* Add margin around the modal content */
-        }
-        
-        /* MODAL IMAGE SIZING FIX - Make image scale down gracefully */
-        .modal-image {
-            width: 100%; /* Use full available width in modal */
-            height: auto;
-            max-height: 50vh; /* Limit vertical size to keep content visible */
-            object-fit: contain; /* Use contain to ensure full image is visible, not cropped */
+        .btn-hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px var(--color-primary-shadow);
         }
 
-
-        /* PRIMARY BUTTON STYLES - Deep Accent */
-        .primary-button {
-            background-color: var(--color-primary); 
-            transition: all 0.2s ease-out; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            color: var(--color-bg-surface); 
-        }
-        .primary-button:hover {
-            background-color: var(--color-secondary); 
-            box-shadow: 0 0 15px var(--color-primary-shadow);
-            transform: scale(1.02); 
-        }
-        .primary-button:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        
-        /* ACCENT BUTTON STYLES - Warm Accent */
-        .accent-button {
-            background-color: var(--color-accent-warm); 
-            color: white;
-            transition: all 0.2s ease-out; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-        }
-        .accent-button:hover {
-            background-color: #B58D6D; /* Slightly lighter rose taupe */
-            box-shadow: 0 0 15px rgba(210, 180, 140, 0.7); /* Tan glow */
-            transform: scale(1.02); 
-        }
-        .accent-button:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        .smooth-transition {
+            transition: all 0.3s ease;
         }
 
-        /* FROSTED HEADER EFFECT */
-        .frosted-header {
-            /* Using solid dark brown in dark mode and solid white in light mode for the luxury header */
-            background-color: var(--color-bg-surface); 
-            backdrop-filter: blur(0); 
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-        }
-        .dark .frosted-header {
-            background-color: #3D271D; /* Solid Dark Chocolate for AMBAA GOLD look */
-            border-bottom: 1px solid #956247; /* Subtle border */
-        }
-        
-        /* Utility styles for forms and numbers (unchanged) */
-        input[type="file"]::file-selector-button { display: none; }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        
-        /* Entry Animation Keyframes */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(40px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-entry {
-            animation: slideIn 0.5s ease-out forwards;
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
         }
-        /* Specific Admin Card Styles */
-        .admin-card-actions {
-            opacity: 0;
-            transition: opacity 0.2s ease-in-out;
+
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .cake-card:hover .admin-card-actions {
-            opacity: 1;
+
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
-        
-        /* MOBILE NAVIGATION FIXES */
-        .mobile-menu-container {
+
+        .modal {
+            display: none;
             position: fixed;
-            top: 0;
+            z-index: 1000;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            z-index: 60; /* Above all modals except login */
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-out;
-            background-color: rgba(0, 0, 0, 0.5); /* Backdrop */
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
         }
-        .mobile-menu-container.open {
-            transform: translateX(0);
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .mobile-menu {
-            width: 75%; /* Use 3/4 screen width on mobile */
-            max-width: 300px;
-            height: 100%;
+
+        .modal-content {
             background-color: var(--color-bg-surface);
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
-        }
-        /* Header adjustment for small screens */
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
+        .admin-dashboard {
+            background-color: var(--color-bg-surface);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
 
+        .navbar {
+            background-color: #FFFCF5;
+            border-bottom: 1px solid rgba(163, 125, 69, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-section {
+            background: linear-gradient(to bottom, rgba(252, 249, 243, 0.95), rgba(252, 249, 243, 0.98));
+            padding: 4rem 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-family: 'Satisfy', cursive;
+            font-size: 4rem;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            color: #5a5a5a;
+            text-align: center;
+            font-size: 1.125rem;
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
+
 <body class="min-h-screen">
-
-    <!-- Mobile Navigation Modal -->
-    <div id="mobileMenuContainer" class="mobile-menu-container hidden" onclick="toggleMobileMenu(event)">
-        <div id="mobileMenu" class="mobile-menu p-6" onclick="event.stopPropagation()">
-            <div class="flex justify-end mb-8">
-                <button onclick="toggleMobileMenu()" class="text-primary hover:text-accent-warm transition duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <nav class="space-y-6">
-                <!-- Theme Toggle moved here -->
-                <div class="flex items-center space-x-3 pb-4 border-b border-secondary/30">
-                    <button id="themeToggle" onclick="toggleTheme(); toggleMobileMenu();" class="primary-button text-sm w-10 h-10 rounded-full font-bold flex items-center justify-center border border-primary/50">
-                        D
-                    </button>
-                    <span class="text-text-dark font-semibold">Toggle Theme (L/D)</span>
-                </div>
-
-                <a href="#about-section" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">About</a>
-                <a href="#gallery" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">Shop</a>
-                <a href="tel:7543060400" onclick="toggleMobileMenu();" class="block text-2xl font-heading font-semibold text-text-dark hover:text-primary transition duration-150">Call to Enquire</a>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Header Section -->
-    <header class="frosted-header sticky top-0 z-20 border-b border-secondary/30 shadow-lg">
-        <div class="max-w-7xl mx-auto py-4 px-6 sm:px-8 lg:px-10 header-content">
-            
-            <div class="flex items-center space-x-3">
-                 <!-- Hamburger Menu Button -->
-                <button onclick="toggleMobileMenu()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
-
-                <h1 class="text-4xl font-heading font-extrabold text-primary tracking-wider uppercase drop-shadow-sm flex-shrink-0 sm:text-3xl lg:text-4xl">
+    <header class="sticky top-0 z-50 navbar shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <h1 class="text-3xl font-heading font-extrabold tracking-wide" style="color: #A37D45;">
                     Bakes-Villa
                 </h1>
             </div>
-            
-            <div class="header-actions hidden sm:flex"> 
-                
-                <!-- Admin Controls Group -->
-                <div id="adminControlsGroup" class="flex items-center space-x-2">
-                    
-                    <!-- Admin Toggle Button (Visible only when logged in) -->
-                    <div id="adminPanelToggle" class="hidden">
-                        <button onclick="toggleAdminPanel()" class="primary-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-full flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-1">
-                                <path fill-rule="evenodd" d="M10.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Z" clip-rule="evenodd" />
-                                <path d="M1.5 18.75c0-1.87 3.8-3.375 8.25-3.375s8.25 1.505 8.25 3.375M20.25 10.5a.75.75 0 0 1-.75.75H4.5a.75.75 0 0 1-.75-.75V8.25a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 .75.75v2.25Z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Admin
-                        </button>
-                    </div>
 
-                    <!-- Logout Button -->
-                    <div id="logoutButtonContainer" class="hidden">
-                        <button onclick="handleLogout()" class="primary-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-full flex items-center bg-red-600 hover:bg-red-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <!-- Theme Toggle Button (Desktop only) -->
-                    <button id="themeToggleDesktop" onclick="toggleTheme()" class="primary-button text-sm w-8 h-8 rounded-full font-bold flex items-center justify-center border border-primary/50">
-                        D
-                    </button>
+            <ul class="hidden md:flex gap-8 text-lg font-semibold">
+                <li><a href="#hero" class="smooth-transition" style="color: #72543D;" onmouseover="this.style.color='#A37D45'" onmouseout="this.style.color='#72543D'">Our Story</a></li>
+                <li><a href="#collection-section" class="smooth-transition" style="color: #72543D;" onmouseover="this.style.color='#A37D45'" onmouseout="this.style.color='#72543D'">Collection</a></li>
+                <li><a href="#contact" class="smooth-transition" style="color: #72543D;" onmouseover="this.style.color='#A37D45'" onmouseout="this.style.color='#72543D'">Call Us</a></li>
+            </ul>
 
-                </div>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="p-2 rounded-full smooth-transition" style="background-color: rgba(114, 84, 61, 0.2);" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" class="w-6 h-6 hidden" style="color: #A37D45;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <svg id="theme-icon-moon" class="w-6 h-6" style="color: #A37D45;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
 
+                <button id="staff-login-btn" class="px-6 py-2 rounded-full font-semibold smooth-transition shadow-md" style="background-color: #333333; color: white;">
+                    Staff Login
+                </button>
             </div>
+
+            <button id="mobile-menu-toggle" class="md:hidden" style="color: #A37D45;">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden navbar border-t px-6 py-4" style="border-color: rgba(163, 125, 69, 0.2);">
+            <ul class="flex flex-col gap-4">
+                <li><a href="#hero" style="color: #72543D;">Our Story</a></li>
+                <li><a href="#collection-section" style="color: #72543D;">Collection</a></li>
+                <li><a href="#contact" style="color: #72543D;">Call Us</a></li>
+            </ul>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto pt-28 pb-16 px-6 sm:px-8 lg:px-10">
-        
-        <!-- Gourmet Hero/Headline Section -->
-        <div class="text-center mb-16">
-             <h2 class="text-5xl sm:text-6xl font-heading font-extrabold text-text-dark leading-tight mb-4">
-                The Art of Gourmet Baking
-            </h2>
-            <p class="text-xl sm:text-2xl text-secondary mb-8 max-w-4xl mx-auto">
-                Discover unparalleled craftsmanship in exquisite cakes and health-conscious pastries, perfected for discerning palates.
-            </p>
-             <a href="#gallery" class="primary-button text-white px-8 py-4 rounded-full font-heading font-semibold text-lg hover:bg-secondary transition duration-300">
-                View Our Collection
-            </a>
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-heading font-bold" style="color: #A37D45;">Staff Login</h2>
+                <button id="close-login" class="text-3xl" style="color: #72543D;">&times;</button>
+            </div>
+            <div id="login-error" class="hidden bg-red-100 text-red-700 p-3 rounded-lg mb-4"></div>
+            <input type="text" id="username" placeholder="Username" class="w-full p-3 mb-4 rounded-lg border-2 focus:outline-none" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);">
+            <input type="password" id="password" placeholder="Password" class="w-full p-3 mb-6 rounded-lg border-2 focus:outline-none" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);">
+            <button id="login-submit" class="w-full py-3 rounded-full font-bold smooth-transition" style="background-color: #A37D45; color: white;">
+                Login
+            </button>
         </div>
+    </div>
 
+    <div id="admin-dashboard" class="hidden container mx-auto px-6 py-12">
+        <div class="admin-dashboard">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-4xl font-heading font-bold" style="color: #A37D45;">Admin Dashboard</h2>
+                <button id="logout-btn" class="bg-red-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-red-600 smooth-transition">
+                    Logout
+                </button>
+            </div>
 
-        <!-- About Section Anchor -->
-        <div id="about-section" class="mb-16 border-t border-b border-secondary/50 py-10">
-            <h3 class="text-3xl font-heading font-bold text-primary mb-4 text-center">Founder's Note</h3>
-            
-            <div class="max-w-3xl mx-auto text-center">
-                <p class="text-lg text-text-dark leading-relaxed mb-4 italic">
-                    "Bakes-Villa was founded on the belief that a great cake should be an experience—a blend of artistry, premium ingredients, and health consciousness. We are committed to transforming simple baking into gourmet satisfaction."
+            <div class="mb-8">
+                <h3 class="text-2xl font-heading font-bold mb-4" style="color: #A37D45;">Add New Cake</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input type="text" id="cake-name" placeholder="Cake Name" class="p-3 rounded-lg border-2" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);">
+                    <input type="number" id="cake-price" placeholder="Price (₹)" class="p-3 rounded-lg border-2" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);">
+                </div>
+                <textarea id="cake-description" placeholder="Description" rows="3" class="w-full mt-4 p-3 rounded-lg border-2" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);"></textarea>
+                <input type="file" id="cake-image" accept="image/*" capture="environment" class="w-full mt-4 p-3 rounded-lg border-2" style="border-color: rgba(163, 125, 69, 0.3); background-color: var(--color-bg-main); color: var(--color-text-dark);">
+                <button id="add-cake-btn" class="mt-4 px-8 py-3 rounded-full font-bold smooth-transition" style="background-color: #A37D45; color: white;">
+                    Add Cake
+                </button>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-heading font-bold mb-4" style="color: #A37D45;">Manage Cakes</h3>
+                <div id="admin-cakes-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main id="main-content" class="container mx-auto px-6 py-12">
+        <section id="hero" class="mb-20 fade-in">
+            <div class="hero-section">
+                <h2 class="hero-title">
+                    Excellence Baked Daily
+                </h2>
+                <p class="hero-subtitle">
+                    Discover the art of artisan baking. Every creation is handcrafted for pure, gourmet satisfaction.
                 </p>
-                <p class="text-xl font-heading font-semibold text-accent-warm mt-4">— Siddhi Jain, Founder</p>
-            </div>
-        </div>
 
+                <img src="https://britishbakels.b-cdn.net/wp-content/uploads/sites/2/2022/06/feature-680x445.jpg" 
+                     alt="Delicious Pastries with Powdered Sugar" 
+                     class="w-full hero-image mx-auto">
 
-        <!-- Admin Panel Form -->
-        <div id="adminPanel" class="bg-bg-surface p-6 sm:p-8 rounded-xl shadow-lg border border-secondary/30 mb-16 hidden">
-            <h3 class="text-3xl font-heading font-bold text-primary mb-6 border-b border-secondary/30 pb-3">
-                Admin: Add New Cake
-            </h3>
-            <form id="addCakeForm" class="space-y-4">
-                <input type="text" id="cakeName" placeholder="Cake Name (e.g., Rose Taupe Velvet)" required 
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <textarea id="cakeDescription" placeholder="Description (e.g., A rich, dark-chocolate sponge with cream cheese frosting...)" required
-                          class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark"></textarea>
-                
-                <input type="number" id="cakePrice" placeholder="Price (Numbers only, e.g., 950)" required min="0"
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <div class="flex items-center space-x-4">
-                    <label for="cakeImage" class="flex items-center primary-button px-4 py-2 rounded-full cursor-pointer text-sm">
-                        <!-- Custom People Icon for file selection -->
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
-                            <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3.75 6.75c0-.621.504-1.125 1.125-1.125h16.5c.621 0 1.125.504 1.125 1.125v.75c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 0 1 3.75 7.5v-.75ZM7.5 10.5a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H8.25a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd" />
-                        </svg>
-                        Select Cake Photo
-                    </label>
-                    <input type="file" id="cakeImage" accept="image/*" required class="text-sm">
+                <div class="text-center mt-10">
+                    <a href="#collection-section" class="inline-block px-10 py-4 rounded-full text-lg font-bold shadow-lg smooth-transition btn-hover-lift" style="background-color: #A37D45; color: white;">
+                        Explore the Collection
+                    </a>
                 </div>
+            </div>
+        </section>
 
-                <div id="adminMessage" class="text-sm font-semibold text-center h-5"></div>
-                
-                <button type="submit" class="accent-button w-full py-3 rounded-full font-heading font-bold text-white text-lg mt-4">
-                    Add Cake to Catalog
-                </button>
-            </form>
-        </div>
-
-        <!-- Cake Gallery Anchor -->
-        <div id="gallery-anchor" class="mb-8">
-            <h3 class="text-3xl font-heading font-bold text-primary mb-4">Shop Our Cakes</h3>
-        </div>
-
-        <!-- Cake Gallery -->
-        <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            <!-- Cakes will be inserted here by JavaScript -->
-            <p id="loadingMessage" class="col-span-full text-center text-secondary text-lg">Loading delicious creations...</p>
-            <p id="errorMessage" class="col-span-full text-center text-red-500 font-bold hidden"></p>
-        </div>
-    </main>
-    
-    <!-- EDIT Modal Pop-up for Admin -->
-    <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center p-6 modal-backdrop" onclick="closeEditModal(event)">
-        <div id="editModalContent" class="bg-bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden p-6 sm:p-8 transform transition-all scale-90 opacity-0 duration-300 border border-primary/50" onclick="event.stopPropagation()">
-            <h3 class="text-3xl font-heading font-bold text-primary mb-6 border-b border-secondary/30 pb-3">
-                Admin: Edit Cake
+        <section id="about-section" class="mb-20 pt-10">
+            <h3 class="text-4xl font-heading font-extrabold mb-12 text-center pb-3 max-w-sm mx-auto" style="color: #A37D45; border-bottom: 2px solid rgba(163, 125, 69, 0.3);">
+                Our Commitment
             </h3>
-            <form id="editCakeForm" class="space-y-4">
-                <input type="hidden" id="editCakeId">
-                <input type="text" id="editCakeName" placeholder="Cake Name" required 
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <textarea id="editCakeDescription" placeholder="Description" required
-                          class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark"></textarea>
-                
-                <input type="number" id="editCakePrice" placeholder="Price (Numbers only)" required min="0"
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <div id="editMessage" class="text-sm font-semibold text-center h-5"></div>
-                
-                <button type="submit" class="accent-button w-full py-3 rounded-full font-heading font-bold text-white text-lg mt-4">
-                    Save Changes
-                </button>
-                <button type="button" onclick="closeEditModal()" class="primary-button w-full py-3 rounded-full font-heading font-bold text-lg mt-2">
-                    Cancel
-                </button>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- READ-ONLY Modal Pop-up for Guest User -->
-    <div id="cakeModal" class="fixed inset-0 z-50 hidden items-center justify-center p-6 modal-backdrop" onclick="closeModal(event)">
-        <div id="modalContent" class="bg-bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden transform transition-all scale-90 opacity-0 duration-300 border border-secondary/50" onclick="event.stopPropagation()">
             
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-5 border-b border-secondary/30">
-                <h3 id="modalTitle" class="text-3xl font-heading font-bold text-text-dark">Cake Name</h3>
-                <button onclick="closeModal()" class="text-secondary hover:text-primary transition duration-150 transform hover:rotate-90">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>                      
-                </button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="p-6 sm:p-8">
-                <img id="modalImage" src="" alt="Selected Cake" class="w-full h-64 object-cover rounded-xl mb-6 shadow-md border border-secondary/50 modal-image">
-                
-                <div class="flex justify-between items-center mb-4">
-                    <p class="text-2xl font-heading font-extrabold text-accent-warm" id="modalPrice">₹000</p>
+            <div class="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto text-center">
+                <div class="p-6 rounded-lg shadow-md card-hover" style="background-color: var(--color-bg-surface);">
+                    <div class="mx-auto mb-4" style="color: #A37D45;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 mx-auto">
+                            <path d="M12 2L4 7v10c0 5.5 3.8 10 8 11 4.2-1 8-5.5 8-11V7l-8-5z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-heading font-bold mb-3" style="color: #A37D45;">Finest Ingredients</h4>
+                    <p style="color: #72543D;">
+                        We source only premium, fresh ingredients to ensure every bite is perfection.
+                    </p>
                 </div>
-                <p id="modalDescription" class="text-secondary leading-relaxed text-lg mb-8">Cake description here.</p>
 
-                <!-- WhatsApp Order Link -->
-                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full block text-center accent-button font-heading font-bold py-4 px-8 rounded-full shadow-xl text-lg">
-                    WhatsApp Order
-                </a>
+                <div class="p-6 rounded-lg shadow-md card-hover" style="background-color: var(--color-bg-surface);">
+                    <div class="mx-auto mb-4" style="color: #A37D45;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 mx-auto">
+                            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm7 9c0-3.9-3.1-7-7-7s-7 3.1-7 7c0 2.4 1.2 4.5 3 5.7V22h8v-5.3c1.8-1.2 3-3.3 3-5.7z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-heading font-bold mb-3" style="color: #A37D45;">Handcrafted Excellence</h4>
+                    <p style="color: #72543D;">
+                        Each cake is meticulously crafted by our skilled bakers with passion and precision.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-lg shadow-md card-hover" style="background-color: var(--color-bg-surface);">
+                    <div class="mx-auto mb-4" style="color: #A37D45;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 mx-auto">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-heading font-bold mb-3" style="color: #A37D45;">Made Fresh Daily</h4>
+                    <p style="color: #72543D;">
+                        Baked fresh every morning to deliver the ultimate taste and quality.
+                    </p>
+                </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Admin Login Modal (Hidden by default) -->
-    <div id="adminLoginModal" class="fixed inset-0 z-50 hidden items-center justify-center p-6 modal-backdrop" onclick="closeLoginModal(event)">
-        <div id="loginModalContent" class="bg-bg-surface rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden p-8 transform transition-all scale-90 opacity-0 duration-300 border border-primary/50" onclick="event.stopPropagation()">
-            <h3 class="text-2xl font-heading font-bold text-primary mb-6 text-center">Admin Login (AL)</h3>
-            <form id="adminLoginForm" class="space-y-4">
-                <input type="text" id="adminUsername" placeholder="Username" required 
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <input type="password" id="adminPassword" placeholder="Password" required
-                       class="w-full p-3 rounded-lg border border-secondary bg-bg-main placeholder-secondary focus:ring-primary focus:border-primary text-text-dark">
-                
-                <div id="loginMessage" class="text-sm font-semibold text-center h-5 text-red-500"></div>
-                
-                <button type="submit" class="primary-button w-full py-3 rounded-full font-heading font-bold text-lg mt-4">
-                    Login
-                </button>
-            </form>
-        </div>
-    </div>
+        </section>
 
+        <section id="collection-section" class="mb-20 pt-10">
+            <h3 class="text-4xl font-heading font-extrabold mb-12 text-center pb-3 max-w-md mx-auto" style="color: #A37D45; border-bottom: 2px solid rgba(163, 125, 69, 0.3);">
+                Shop Our Cakes
+            </h3>
+            
+            <div id="collection-loading" class="text-center py-12">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2" style="border-color: #A37D45;"></div>
+                <p class="mt-4 text-lg" style="color: #72543D;">Loading our delicious cakes...</p>
+            </div>
 
-    <!-- Footer Section -->
-    <footer class="bg-bg-surface border-t border-secondary/30 py-5 text-center text-secondary text-sm">
-        <p id="footerYear">
-            <!-- Year placeholder will be filled by JS -->
-        </p>
-        <button onclick="openLoginModal()" class="text-primary hover:text-accent-warm transition duration-150 mt-1 focus:outline-none">
-            Admin Login (AL)
-        </button>
+            <div id="collection-grid" class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto hidden">
+            </div>
+
+            <div id="collection-empty" class="text-center py-12 hidden">
+                <p class="text-lg" style="color: #72543D;">No cakes available at the moment. Check back soon!</p>
+            </div>
+        </section>
+
+        <section id="our-story-section" class="mb-20 pt-10">
+            <h3 class="text-4xl font-heading font-extrabold mb-12 text-center pb-3 max-w-xs mx-auto" style="color: #A37D45; border-bottom: 2px solid rgba(163, 125, 69, 0.3);">
+                Our Story
+            </h3>
+            
+            <div id="our-story-content" class="max-w-4xl mx-auto text-lg leading-relaxed p-8 rounded-lg shadow-md" style="color: #72543D; background-color: var(--color-bg-surface);">
+                <p class="mb-4">
+                    At Bakes-Villa, every cake tells a story of passion, tradition, and artistry. Founded by artisan bakers who believe in the power of quality ingredients and time-honored techniques, we've been creating memorable moments through our handcrafted cakes.
+                </p>
+                <p class="mb-4">
+                    Our journey began with a simple belief: great cakes start with great ingredients. We work directly with local suppliers to source the finest butter, flour, and seasonal fruits, ensuring every creation meets our exacting standards.
+                </p>
+                <p>
+                    Today, Bakes-Villa continues to honor that tradition, baking fresh every day and bringing joy to celebrations across the community. From birthdays to weddings, our cakes are crafted to make your special moments unforgettable.
+                </p>
+            </div>
+        </section>
+
+        <section id="contact" class="mb-20 pt-10">
+            <h3 class="text-4xl font-heading font-extrabold mb-12 text-center pb-3 max-w-xs mx-auto" style="color: #A37D45; border-bottom: 2px solid rgba(163, 125, 69, 0.3);">
+                Call Us
+            </h3>
+            
+            <div class="max-w-2xl mx-auto text-center p-10 rounded-lg shadow-lg" style="background-color: var(--color-bg-surface);">
+                <p class="text-xl mb-6" style="color: #72543D;">
+                    Ready to order your perfect cake? Get in touch with us today!
+                </p>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6" style="color: #A37D45;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        <a href="tel:+917543060400" class="text-2xl font-bold smooth-transition" style="color: #A37D45;">
+                            +91 754 306 0400
+                        </a>
+                    </div>
+                    
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6" style="color: #A37D45;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <a href="mailto:bakesvillaindia@gmail.com" class="text-xl smooth-transition" style="color: #A37D45;">
+                            bakesvillaindia@gmail.com
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <a href="tel:+917543060400" class="inline-block px-8 py-3 rounded-full text-lg font-bold shadow-lg smooth-transition btn-hover-lift" style="background-color: #A37D45; color: white;">
+                        Call Now
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-8 mt-20" style="background-color: #333333; color: white;">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-lg font-heading mb-2">Bakes-Villa</p>
+            <p class="text-sm opacity-80">&copy; 2025 Bakes-Villa. All rights reserved. | Baked with ❤️</p>
+        </div>
     </footer>
 
-    <!-- JavaScript Application Logic -->
     <script>
-        // --- Global Variables and Constants ---
-        let isAdmin = false;
-        let isDarkMode = false;
-        
-        // Admin credentials (client-side simulation)
-        const ADMIN_USERNAME = 'siddhijain';
-        const ADMIN_PASSWORD = 'siddhijain123';
-        const ORDER_PHONE = '7543060400'; // UPDATED WHATSAPP NUMBER
+        let isAdminLoggedIn = false;
 
-        // Element references
-        const galleryEl = document.getElementById('gallery');
-        const loadingMessageEl = document.getElementById('loadingMessage');
-        const errorMessageEl = document.getElementById('errorMessage');
-        const footerYearEl = document.getElementById('footerYear');
-        const themeToggleEl = document.getElementById('themeToggle');
-        const mobileMenuContainerEl = document.getElementById('mobileMenuContainer');
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const sunIcon = document.getElementById('theme-icon-sun');
+        const moonIcon = document.getElementById('theme-icon-moon');
 
-        // Modals & Forms
-        const cakeModalEl = document.getElementById('cakeModal');
-        const modalContentEl = document.getElementById('modalContent');
-        const modalTitleEl = document.getElementById('modalTitle');
-        const modalImageEl = document.getElementById('modalImage');
-        const modalDescriptionEl = document.getElementById('modalDescription');
-        const modalPriceEl = document.getElementById('modalPrice');
-        const whatsappOrderLinkEl = document.getElementById('whatsappOrderLink');
-        
-        const adminPanelToggleEl = document.getElementById('adminPanelToggle');
-        const adminPanelEl = document.getElementById('adminPanel');
-        const addCakeFormEl = document.getElementById('addCakeForm');
-        const adminMessageEl = document.getElementById('adminMessage');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            html.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        }
 
-        const adminLoginModalEl = document.getElementById('adminLoginModal');
-        const loginModalContentEl = document.getElementById('loginModalContent');
-        const adminLoginFormEl = document.getElementById('adminLoginForm');
-        const loginMessageEl = document.getElementById('loginMessage');
-        const adminUsernameEl = document.getElementById('adminUsername');
-        const adminPasswordEl = document.getElementById('adminPassword');
-        
-        const editModalEl = document.getElementById('editModal');
-        const editModalContentEl = document.getElementById('editModalContent');
-        const editCakeFormEl = document.getElementById('editCakeForm');
-        const editCakeIdEl = document.getElementById('editCakeId');
-        const editCakeNameEl = document.getElementById('editCakeName');
-        const editCakeDescriptionEl = document.getElementById('editCakeDescription');
-        const editCakePriceEl = document.getElementById('editCakePrice');
-        const editMessageEl = document.getElementById('editMessage');
-
-        let supabaseClient;
-        let SUPABASE_TABLE_NAME;
-        const SUPABASE_BUCKET_NAME = 'cake_photos'; // Hardcoded for upload consistency
-
-
-        // --- Utility Functions ---
-
-        /**
-         * Renders a single cake card element.
-         * @param {object} cake - The cake data object.
-         * @param {number} index - Index for animation delay.
-         * @returns {HTMLElement} The created card element.
-         */
-        function createCakeCard(cake, index) {
-            const card = document.createElement('div');
-            card.classList.add('cake-card', 'p-5', 'rounded-2xl', 'shadow-deep', 'cursor-pointer', 'lg:hover:shadow-glow', 'border-secondary/30', 'relative');
-            card.style.animationDelay = `${index * 0.05}s`;
-            card.classList.add('animate-entry');
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
             
-            // Determine the click action based on admin status
-            card.onclick = () => {
-                if (isAdmin) {
-                    openEditModal(cake);
-                } else {
-                    openGuestModal(cake);
-                }
-            };
-
-            // Using imageData, confirmed column name
-            const safeImage = cake.imageData || 'https://placehold.co/300x300/6988A2/FFFFFF?text=Image+Missing';
-
-            card.innerHTML = `
-                <img src="${safeImage}" alt="${cake.name}" loading="lazy"
-                     class="w-full h-56 object-cover rounded-xl mb-4 border border-secondary/20 transition-transform duration-300 ease-in-out">
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-heading font-semibold text-text-dark mb-1 truncate">${cake.name}</h3>
-                    <p class="text-accent-warm font-bold text-xl">₹${cake.price}</p>
-                </div>
-                
-                <!-- Admin Delete Button -->
-                <div class="admin-card-actions absolute top-7 right-7 ${isAdmin ? 'block' : 'hidden'}">
-                    <button onclick="event.stopPropagation(); deleteCake('${cake.id}', '${cake.name}')" 
-                            class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-lg transition duration-200"
-                            title="Delete Cake">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.262 9m1.776-7.042a.25.25 0 0 1 .432 0l1.096 1.847c.394.664.912 1.252 1.547 1.76l2.164 1.758a.25.25 0 0 1 .094.483l-1.397.932a.75.75 0 0 0-.256.745l.235 1.176c.075.375-.24.735-.597.735H7.75c-.357 0-.672-.36-.597-.735l.235-1.176a.75.75 0 0 0-.256-.745l-1.397-.932a.25.25 0 0 1 .094-.483l2.164-1.758c.635-.508 1.153-1.096 1.547-1.76l1.096-1.847Z" />
-                        </svg>
-                    </button>
-                </div>
-            `;
-            return card;
-        }
-
-        // --- Gallery and Modal Logic ---
-
-        /**
-         * Renders all cakes into the gallery area.
-         * @param {Array<object>} cakes - Array of cake objects.
-         */
-        function renderGallery(cakes) {
-            galleryEl.innerHTML = '';
-            loadingMessageEl.classList.add('hidden');
-            errorMessageEl.classList.add('hidden');
-
-            if (cakes.length === 0) {
-                galleryEl.innerHTML = `<p class="col-span-full text-center text-secondary text-2xl mt-8">No cakes available yet. Check back soon!</p>`;
-                return;
-            }
-
-            // Sort by creation date (newest first)
-            cakes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-            cakes.forEach((cake, index) => {
-                galleryEl.appendChild(createCakeCard(cake, index));
-            });
-            
-            // Re-show delete icons if admin panel is open after re-render
-            if (isAdmin && !adminPanelEl.classList.contains('hidden')) {
-                document.querySelectorAll('.admin-card-actions').forEach(el => el.classList.remove('hidden'));
-            }
-        }
-
-
-        /**
-         * Opens the read-only modal for non-admin users.
-         */
-        function openGuestModal(cake) {
-            modalTitleEl.textContent = cake.name;
-            // FIX: Using cake.imageData (confirmed column name)
-            modalImageEl.src = cake.imageData || 'https://placehold.co/600x400/6988A2/FFFFFF?text=Image+Missing';
-            modalImageEl.alt = cake.name;
-            modalDescriptionEl.textContent = cake.description;
-            modalPriceEl.textContent = `₹${cake.price}`;
-            
-            // Generate WhatsApp message (removed ID)
-            const message = `Hello, I would like to order the cake "${cake.name}" priced at ₹${cake.price}. Please let me know the process!`;
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappLink = `https://wa.me/91${ORDER_PHONE}?text=${encodedMessage}`;
-            whatsappOrderLinkEl.href = whatsappLink;
-
-            // Show the modal
-            cakeModalEl.classList.remove('hidden');
-            cakeModalEl.classList.add('flex');
-            document.body.classList.add('overflow-hidden');
-
-            setTimeout(() => {
-                modalContentEl.classList.remove('scale-90', 'opacity-0');
-                modalContentEl.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        /**
-         * Closes the guest detail modal.
-         */
-        window.closeModal = function(event) {
-            if (event && event.target !== cakeModalEl && !event.target.closest('button')) {
-                return; 
-            }
-
-            modalContentEl.classList.remove('scale-100', 'opacity-100');
-            modalContentEl.classList.add('scale-90', 'opacity-0');
-
-            setTimeout(() => {
-                cakeModalEl.classList.remove('flex');
-                cakeModalEl.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }, 300);
-        }
-
-        // --- Admin Edit/Delete Logic ---
-        
-        /**
-         * Opens the Admin Edit modal and populates it with cake data.
-         */
-        function openEditModal(cake) {
-            editCakeIdEl.value = cake.id;
-            editCakeNameEl.value = cake.name;
-            editCakeDescriptionEl.value = cake.description;
-            editCakePriceEl.value = cake.price;
-            editMessageEl.textContent = ''; // Clear previous message
-
-            editModalEl.classList.remove('hidden');
-            editModalEl.classList.add('flex');
-            document.body.classList.add('overflow-hidden');
-
-            setTimeout(() => {
-                editModalContentEl.classList.remove('scale-90', 'opacity-0');
-                editModalContentEl.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-        
-        /**
-         * Closes the Admin Edit modal.
-         */
-        window.closeEditModal = function(event) {
-             if (event && event.target !== editModalEl) {
-                return; 
-            }
-            editModalContentEl.classList.remove('scale-100', 'opacity-100');
-            editModalContentEl.classList.add('scale-90', 'opacity-0');
-
-            setTimeout(() => {
-                editModalEl.classList.remove('flex');
-                editModalEl.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }, 300);
-        }
-        
-        /**
-         * Handles updating an existing cake record.
-         */
-        async function updateCake(event) {
-            event.preventDefault();
-
-            const id = editCakeIdEl.value;
-            const name = editCakeNameEl.value.trim();
-            const description = editCakeDescriptionEl.value.trim();
-            const price = parseFloat(editCakePriceEl.value);
-
-            if (isNaN(price) || price <= 0) {
-                editMessageEl.textContent = "Price must be a valid number.";
-                return;
-            }
-            
-            editMessageEl.textContent = "Saving changes...";
-
-            const { error } = await supabaseClient
-                .from(SUPABASE_TABLE_NAME)
-                .update({ 
-                    name: name,
-                    description: description,
-                    price: price.toFixed(0),
-                    // We do not update imageUrl here, assuming the image doesn't change during edit
-                })
-                .eq('id', id);
-
-            if (error) {
-                console.error("Update Error:", error);
-                editMessageEl.textContent = `Update failed: ${error.message}`;
-            } else {
-                editMessageEl.textContent = "Changes saved!";
-                setTimeout(() => {
-                    closeEditModal();
-                    // Realtime will handle gallery update
-                }, 500);
-            }
-        }
-        
-        /**
-         * Handles deleting a cake record.
-         */
-        window.deleteCake = async function(id, name) {
-            if (!isAdmin) return;
-            
-            // NOTE: Using window.confirm() here as it is an Admin action and a necessary final safety check.
-            if (!window.confirm(`Are you sure you want to delete "${name}"? This cannot be undone."`)) {
-                return;
-            }
-            
-            // Delete the record from the database
-            const { error: dbError } = await supabaseClient
-                .from(SUPABASE_TABLE_NAME)
-                .delete()
-                .eq('id', id); 
-
-            if (dbError) {
-                console.error("Delete Database Error:", dbError);
-                alert(`Failed to delete cake record: ${dbError.message}`); 
-                return;
-            }
-
-            alert(`Cake "${name}" deleted successfully.`);
-        }
-
-        // --- Supabase Database Logic ---
-
-        /**
-         * Fetches all cake records from Supabase.
-         */
-        async function fetchCakes() {
-            loadingMessageEl.classList.remove('hidden');
-            errorMessageEl.classList.add('hidden');
-            
-            const { data, error } = await supabaseClient
-                .from(SUPABASE_TABLE_NAME)
-                .select('*')
-                .order('createdAt', { ascending: false });
-
-            loadingMessageEl.classList.add('hidden');
-            
-            if (error) {
-                console.error("Supabase initial fetch error:", error);
-                errorMessageEl.textContent = `Error loading cakes. Check RLS READ policy.`;
-                errorMessageEl.classList.remove('hidden');
-                galleryEl.innerHTML = '';
-            } else {
-                renderGallery(data || []);
-            }
-        }
-
-        /**
-         * Sets up the initial fetch and real-time listener for the cakes table.
-         */
-        function setupSupabaseListener() {
-            if (typeof supabaseClient === 'undefined') {
-                errorMessageEl.textContent = "FATAL ERROR: Supabase Client not initialized.";
-                loadingMessageEl.classList.add('hidden');
-                return;
-            }
-
-            // Realtime subscription for instant updates
-            supabaseClient
-                .channel(`public:${SUPABASE_TABLE_NAME}`) 
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: SUPABASE_TABLE_NAME }, 
-                    () => fetchCakes()
-                )
-                .subscribe();
-
-            fetchCakes();
-        }
-
-
-        /**
-         * Handles submitting a new cake to the Supabase database and storage.
-         */
-        async function handleAddCake(event) {
-            event.preventDefault();
-            
-            if (!isAdmin) {
-                adminMessageEl.textContent = "Authentication required.";
-                return;
-            }
-
-            adminMessageEl.textContent = "Processing and uploading file to storage...";
-            
-            const name = document.getElementById('cakeName').value.trim();
-            const description = document.getElementById('cakeDescription').value.trim();
-            const price = parseFloat(document.getElementById('cakePrice').value);
-            const imageFile = document.getElementById('cakeImage').files[0];
-
-            if (isNaN(price) || price <= 0 || !imageFile) {
-                adminMessageEl.textContent = "Please fill all fields correctly.";
-                return;
-            }
-
-            const now = new Date();
-            // Force filename to end in .jpg and save to public folder for restrictive policy compliance
-            const filePath = `public/${name.replace(/\s+/g, '_').toLowerCase()}_${now.getTime()}.jpg`;
-            let publicUrl = '';
-            
-            // --- 1. UPLOAD IMAGE TO SUPABASE STORAGE ---
-            const SUPABASE_BUCKET_NAME = 'cake_photos'; // Local constant definition
-            const storageClient = supabaseClient.storage.from(SUPABASE_BUCKET_NAME);
-
-            const { data: uploadData, error: uploadError } = await storageClient
-                .upload(filePath, imageFile, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (uploadError) {
-                console.error("Storage Upload Error:", uploadError);
-                // CRITICAL FIX: The error is here, indicating bucket name or policy issue.
-                adminMessageEl.textContent = `Storage upload failed. (Check Bucket Policy for INSERT by 'anon' role).`;
-                return;
-            }
-
-            // Get the public URL for the image
-            const { data: publicUrlData } = storageClient.getPublicUrl(filePath);
-
-            publicUrl = publicUrlData.publicUrl;
-
-
-            // --- 2. INSERT RECORD TO POSTGRES TABLE ---
-            adminMessageEl.textContent = "Saving record to database...";
-
-            const { error: insertError } = await supabaseClient
-                .from(SUPABASE_TABLE_NAME)
-                .insert([{ 
-                    name: name,
-                    description: description,
-                    price: price.toFixed(0), // Save as string without decimals
-                    imageData: publicUrl, // FIX: Use 'imageData' as the column name
-                    createdAt: now.toISOString() 
-                }], {
-                    // Critical RLS hint to bypass composite indexing limitations
-                    hints: ['SKIP INDEX name', 'SKIP INDEX description'] 
-                })
-                .select(); 
-
-            if (insertError) {
-                console.error("Database Insert Error:", insertError);
-                adminMessageEl.textContent = `Record insert failed: ${insertError.message}`;
-            } else {
-                adminMessageEl.textContent = "Cake added successfully!";
-                addCakeFormEl.reset();
-                setTimeout(() => adminMessageEl.textContent = '', 3000);
-            }
-        }
-
-
-        // --- Admin/Auth Logic ---
-
-        /**
-         * Opens the Admin Login modal.
-         */
-        window.openLoginModal = function() {
-            if (isAdmin) {
-                toggleAdminPanel(); // If already logged in, toggle the panel directly
-                return;
-            }
-            adminLoginModalEl.classList.remove('hidden');
-            adminLoginModalEl.classList.add('flex');
-            loginModalContentEl.classList.remove('scale-90', 'opacity-0');
-            loginModalContentEl.classList.add('scale-100', 'opacity-100');
-            loginMessageEl.textContent = '';
-            adminUsernameEl.focus();
-        };
-
-        /**
-         * Closes the Admin Login modal.
-         */
-        window.closeLoginModal = function(event) {
-            if (event && event.target !== adminLoginModalEl) {
-                return; 
-            }
-            loginModalContentEl.classList.remove('scale-100', 'opacity-100');
-            loginModalContentEl.classList.add('scale-90', 'opacity-0');
-
-            setTimeout(() => {
-                adminLoginModalEl.classList.remove('flex');
-                adminLoginModalEl.classList.add('hidden');
-            }, 300);
-        };
-        
-        /**
-         * Handles client-side logout.
-         */
-        window.handleLogout = function() {
-            if (confirm("Are you sure you want to log out?")) {
-                isAdmin = false;
-                adminPanelEl.classList.add('hidden'); // Hide form
-                adminPanelToggleEl.classList.add('hidden'); // Hide Admin button
-                document.getElementById('logoutButtonContainer').classList.add('hidden'); // Hide Logout button
-                
-                // Force gallery re-render to hide delete/edit icons
-                fetchCakes(); 
-            }
-        }
-
-
-        /**
-         * Handles the client-side Admin Login attempt.
-         */
-        function handleAdminLogin(event) {
-            event.preventDefault();
-            
-            const username = adminUsernameEl.value.trim();
-            const password = adminPasswordEl.value.trim();
-
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                isAdmin = true;
-                loginMessageEl.textContent = "Success! Access granted.";
-                loginMessageEl.classList.remove('text-red-500');
-                loginMessageEl.classList.add('text-green-500');
-
-                // FINAL ROBUST FIX: Force state change and panel display
-                
-                // 1. Hide the modal contents immediately (for visual feedback)
-                loginModalContentEl.classList.remove('scale-100', 'opacity-100');
-                loginModalContentEl.classList.add('scale-90', 'opacity-0');
-                
-                // 2. Wait for the animation to finish, then hide the modal wrapper and show the panel
-                setTimeout(() => {
-                    adminLoginModalEl.classList.remove('flex');
-                    adminLoginModalEl.classList.add('hidden');
-                    
-                    // Show Admin UI elements
-                    adminPanelToggleEl.classList.remove('hidden');
-                    document.getElementById('logoutButtonContainer').classList.remove('hidden');
-                    adminPanelEl.classList.remove('hidden'); // Show add form immediately
-
-                    // Force a re-render to show delete icons on cards
-                    fetchCakes(); 
-                }, 300); 
-
-            } else {
-                loginMessageEl.textContent = "Invalid credentials.";
-                loginMessageEl.classList.remove('text-green-500');
-                loginMessageEl.classList.add('text-red-500');
-            }
-        }
-
-        /**
-         * Toggles visibility of the main Admin Panel form.
-         */
-        window.toggleAdminPanel = function() {
-            if (isAdmin) {
-                const isHidden = adminPanelEl.classList.toggle('hidden');
-                // When showing the panel, refetch cakes to ensure icons appear
-                if (!isHidden) {
-                    fetchCakes(); 
-                }
-            } else {
-                openLoginModal();
-            }
-        };
-        
-        // Add event listener for the edit form submission
-        editCakeFormEl.addEventListener('submit', updateCake);
-
-
-        // --- Mobile Menu Logic ---
-        window.toggleMobileMenu = function(event) {
-            if (event && event.target === mobileMenuContainerEl && mobileMenuContainerEl.classList.contains('open')) {
-                // Allows closing by clicking the dark backdrop area
-                mobileMenuContainerEl.classList.remove('open');
-                setTimeout(() => mobileMenuContainerEl.classList.add('hidden'), 300);
-                return;
-            }
-
-            if (mobileMenuContainerEl.classList.contains('open')) {
-                mobileMenuContainerEl.classList.remove('open');
-                setTimeout(() => mobileMenuContainerEl.classList.add('hidden'), 300);
-            } else {
-                mobileMenuContainerEl.classList.remove('hidden');
-                setTimeout(() => mobileMenuContainerEl.classList.add('open'), 10);
-            }
-        }
-
-
-        // --- Theme Logic ---
-
-        /**
-         * Sets the theme based on localStorage or system preference.
-         */
-        function initializeTheme() {
-            const storedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-                document.documentElement.classList.add('dark');
-                isDarkMode = true;
-                themeToggleEl.textContent = 'L';
-            } else {
-                document.documentElement.classList.remove('dark');
-                isDarkMode = false;
-                themeToggleEl.textContent = 'D';
-            }
-        }
-
-        /**
-         * Toggles between dark and light themes manually.
-         */
-        window.toggleTheme = function() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                isDarkMode = false;
-                themeToggleEl.textContent = 'D';
-            } else {
-                document.documentElement.classList.add('dark');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
                 localStorage.setItem('theme', 'dark');
-                isDarkMode = true;
-                themeToggleEl.textContent = 'L';
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('theme', 'light');
             }
-        }
+        });
 
-        // --- Initialization ---
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-        /**
-         * Runs application initialization after modules are loaded.
-         */
-        window.onloadCallback = function() {
-            // Check for Supabase client availability
-            if (typeof window.supabaseClient === 'undefined') {
-                errorMessageEl.textContent = "FATAL ERROR: Supabase service initialization failed. Please check network connection.";
-                errorMessageEl.classList.remove('hidden');
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        const staffLoginBtn = document.getElementById('staff-login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLogin = document.getElementById('close-login');
+        const loginSubmit = document.getElementById('login-submit');
+        const loginError = document.getElementById('login-error');
+
+        staffLoginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+
+        closeLogin.addEventListener('click', () => {
+            loginModal.classList.remove('active');
+            loginError.classList.add('hidden');
+        });
+
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove('active');
+                loginError.classList.add('hidden');
+            }
+        });
+
+        loginSubmit.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'siddhijain' && password === 'siddhijain12') {
+                isAdminLoggedIn = true;
+                loginModal.classList.remove('active');
+                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                loadAdminCakes();
+            } else {
+                loginError.textContent = 'Invalid username or password';
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            isAdminLoggedIn = false;
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        document.getElementById('add-cake-btn').addEventListener('click', async () => {
+            const name = document.getElementById('cake-name').value;
+            const price = document.getElementById('cake-price').value;
+            const description = document.getElementById('cake-description').value;
+            const imageFile = document.getElementById('cake-image').files[0];
+
+            if (!name || !price || !description) {
+                alert('Please fill all fields');
                 return;
             }
 
-            supabaseClient = window.supabaseClient;
-            SUPABASE_TABLE_NAME = window.SUPABASE_TABLE_NAME;
-            
-            // 1. Initialize Theme
-            initializeTheme();
+            let imageUrl = 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80';
 
-            // 2. Setup Database Listener (Fetch data and establish Realtime)
-            setupSupabaseListener();
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onloadend = async function() {
+                    imageUrl = reader.result;
+                    await saveCake(name, price, description, imageUrl);
+                }
+                reader.readAsDataURL(imageFile);
+            } else {
+                await saveCake(name, price, description, imageUrl);
+            }
+        });
 
-            // 3. Set up Admin Login listener
-            adminLoginFormEl.addEventListener('submit', handleAdminLogin);
-            
-            // 4. Set up Add Cake form listener
-            addCakeFormEl.addEventListener('submit', handleAddCake);
+        async function saveCake(name, price, description, imageUrl) {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from(window.SUPABASE_TABLE_NAME)
+                    .insert([{
+                        name: name,
+                        price: parseFloat(price),
+                        description: description,
+                        imageData: imageUrl
+                    }]);
 
-            // 5. Update Footer Year
-            footerYearEl.textContent = `© ${new Date().getFullYear()} Bakes-Villa. All rights reserved.`;
+                if (error) throw error;
+
+                alert('Cake added successfully!');
+                document.getElementById('cake-name').value = '';
+                document.getElementById('cake-price').value = '';
+                document.getElementById('cake-description').value = '';
+                document.getElementById('cake-image').value = '';
+                
+                loadAdminCakes();
+                loadCollection();
+            } catch (error) {
+                console.error('Error adding cake:', error);
+                alert('Error adding cake: ' + error.message);
+            }
+        }
+
+        async function loadAdminCakes() {
+            try {
+                const { data: cakes, error } = await window.supabaseClient
+                    .from(window.SUPABASE_TABLE_NAME)
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                const adminCakesList = document.getElementById('admin-cakes-list');
+                adminCakesList.innerHTML = '';
+
+                cakes.forEach(cake => {
+                    const cakeCard = document.createElement('div');
+                    cakeCard.className = 'rounded-lg shadow-md overflow-hidden';
+                    cakeCard.style.backgroundColor = 'var(--color-bg-main)';
+                    cakeCard.innerHTML = `
+                        <img src="${cake.imageData || cake.image_url}" alt="${cake.name}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="text-xl font-heading font-bold mb-2" style="color: #A37D45;">${cake.name}</h4>
+                            <p class="text-sm mb-2" style="color: #72543D;">${cake.description}</p>
+                            <p class="text-lg font-bold mb-3" style="color: #A37D45;">₹${cake.price}</p>
+                            <button onclick="deleteCake('${cake.id}')" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 smooth-transition">
+                                Delete
+                            </button>
+                        </div>
+                    `;
+                    adminCakesList.appendChild(cakeCard);
+                });
+            } catch (error) {
+                console.error('Error loading admin cakes:', error);
+            }
+        }
+
+        window.deleteCake = async function(cakeId) {
+            if (!confirm('Are you sure you want to delete this cake?')) return;
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from(window.SUPABASE_TABLE_NAME)
+                    .delete()
+                    .eq('id', cakeId);
+
+                if (error) throw error;
+
+                alert('Cake deleted successfully!');
+                loadAdminCakes();
+                loadCollection();
+            } catch (error) {
+                console.error('Error deleting cake:', error);
+                alert('Error deleting cake: ' + error.message);
+            }
+        }
+
+        window.initializeApp = async function() {
+            console.log('🚀 Initializing Bakes-Villa app...');
+            await loadCollection();
+            console.log('✅ App initialized successfully');
         };
+
+        async function loadCollection() {
+            const loadingEl = document.getElementById('collection-loading');
+            const gridEl = document.getElementById('collection-grid');
+            const emptyEl = document.getElementById('collection-empty');
+            
+            try {
+                console.log('Fetching from table:', window.SUPABASE_TABLE_NAME);
+                
+                const { data: cakes, error } = await window.supabaseClient
+                    .from(window.SUPABASE_TABLE_NAME)
+                    .select('*');
+                
+                if (error) {
+                    console.error('Supabase Error:', error);
+                    alert('Error loading cakes: ' + error.message + '\n\nPlease check: 1) Table name is correct 2) RLS policies allow SELECT');
+                    loadingEl.classList.add('hidden');
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+                
+                loadingEl.classList.add('hidden');
+                
+                if (!cakes || cakes.length === 0) {
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+                
+                gridEl.classList.remove('hidden');
+                gridEl.innerHTML = '';
+                
+                cakes.forEach(cake => {
+                    const cakeCard = document.createElement('div');
+                    cakeCard.className = 'rounded-lg shadow-lg overflow-hidden card-hover fade-in';
+                    cakeCard.style.backgroundColor = 'var(--color-bg-surface)';
+                    
+                    cakeCard.innerHTML = `
+                        <img src="${cake.imageData || 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=80'}" 
+                             alt="${cake.name || 'Delicious Cake'}" 
+                             class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h4 class="text-2xl font-heading font-bold mb-2" style="color: #A37D45;">${cake.name || 'Specialty Cake'}</h4>
+                            <p class="mb-4" style="color: #72543D;">${cake.description || 'A delicious handcrafted cake.'}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-2xl font-bold" style="color: #A37D45;">₹${cake.price || '500'}</span>
+                                <a href="tel:+917543060400" class="px-4 py-2 rounded-lg smooth-transition font-semibold" style="background-color: #333333; color: white;">
+                                    Order Now
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    gridEl.appendChild(cakeCard);
+                });
+                
+            } catch (error) {
+                console.error('Error loading cakes:', error);
+                loadingEl.classList.add('hidden');
+                emptyEl.classList.remove('hidden');
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', window.onloadCallback);
+        } else {
+            window.onloadCallback();
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body>
 </html>
+
