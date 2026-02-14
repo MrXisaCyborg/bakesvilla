@@ -50,9 +50,9 @@
                             600: '#E6396D',
                         },
                         'cocoa': {
-                            700: '#634444',
-                            800: '#4A2C2C', 
-                            900: '#2D1B1B',
+                            700: '#4A2C2C',
+                            800: '#2D1B1B', // Darker for better visibility
+                            900: '#1A0F0F', 
                         },
                         'vanilla': {
                             50: '#FFFDF5',
@@ -69,12 +69,12 @@
             --bg-page: #FFF8E7;
             --bg-card: #FFFFFF;
             --primary: #FF5C8D;
-            --text-main: #4A2C2C;
+            --text-main: #2D1B1B;
         }
 
         .dark {
-            --bg-page: #2D1B1B;
-            --bg-card: #3D2626;
+            --bg-page: #1A0F0F;
+            --bg-card: #2D1B1B;
             --primary: #FF85A2;
             --text-main: #FFF8E7;
         }
@@ -86,40 +86,28 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* CUSTOM ANIMATIONS */
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
+        /* FIXED ANIMATIONS */
         @keyframes heartBeat {
             0% { transform: scale(1); }
-            14% { transform: scale(1.1); }
+            14% { transform: scale(1.05); }
             28% { transform: scale(1); }
-            42% { transform: scale(1.1); }
+            42% { transform: scale(1.05); }
             70% { transform: scale(1); }
         }
 
-        .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-heart { animation: heartBeat 2s infinite; }
-        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+        .reveal { opacity: 0; transform: translateY(15px); transition: all 0.5s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         .bubbly-card {
             background: var(--bg-card);
-            border-radius: 2rem;
-            border: 2px solid rgba(255, 92, 141, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 1.5rem;
+            border: 2px solid rgba(255, 92, 141, 0.15);
+            transition: all 0.3s ease;
         }
 
-        @media (min-width: 768px) {
-            .bubbly-card { border-radius: 2.5rem; }
-        }
-
-        .bubbly-card:hover {
-            transform: scale(1.02) translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(255, 92, 141, 0.15);
+        .bubbly-card:active {
+            transform: scale(0.98);
         }
 
         .btn-sweet {
@@ -130,20 +118,9 @@
             transition: all 0.2s ease;
         }
 
-        @media (min-width: 768px) {
-            .btn-sweet { box-shadow: 0 6px 0 #E6396D; }
-        }
-
         .btn-sweet:active {
             transform: translateY(2px);
             box-shadow: 0 1px 0 #E6396D;
-        }
-
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0.2;
-            z-index: 0;
         }
 
         /* Slideshow Transition */
@@ -154,230 +131,210 @@
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out;
+            transition: opacity 1.2s ease-in-out;
             object-fit: cover;
         }
-        .slide.active {
-            opacity: 1;
-        }
+        .slide.active { opacity: 1; }
 
-        /* Ensure smooth scrolling on iOS */
-        .scroll-smooth {
-            -webkit-overflow-scrolling: touch;
-        }
+        .mobile-nav-shadow { box-shadow: 0 -8px 24px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="font-sans">
-
-    <!-- FLOATING DECORATIONS (Hidden on small mobile to avoid clutter) -->
-    <div class="hidden sm:block particle animate-float text-4xl top-20 left-10">🧁</div>
-    <div class="hidden sm:block particle animate-float text-3xl top-60 right-10" style="animation-delay: 2s;">🍓</div>
-    <div class="hidden sm:block particle animate-float text-2xl bottom-40 left-20" style="animation-delay: 4s;">💖</div>
+<body class="font-sans leading-relaxed">
 
     <!-- NAVIGATION -->
-    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-lg border-b-2 border-strawberry-100 px-4 py-3">
+    <nav class="sticky top-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b-2 border-strawberry-100 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="text-2xl sm:text-3xl">👩‍🍳</span>
-                <h1 class="font-heading text-xl sm:text-3xl text-strawberry-500">BakesVilla</h1>
+                <span class="text-2xl">🧁</span>
+                <h1 class="font-heading text-xl sm:text-2xl text-strawberry-500 tracking-tight">BakesVilla</h1>
             </div>
             
-            <div class="flex items-center gap-3 sm:gap-8">
+            <div class="flex items-center gap-2">
+                <button onclick="toggleMobileMenuNav()" class="md:hidden text-2xl p-2 text-strawberry-500" aria-label="Menu">☰</button>
                 <div class="hidden md:flex items-center gap-8 font-bold text-cocoa-800 dark:text-vanilla-100">
-                    <a href="#shop" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Our Treats</a>
-                    <a href="#about" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Purnea Story</a>
+                    <a href="#shop" class="hover:text-strawberry-500 transition-colors">Treats</a>
+                    <a href="#about" class="hover:text-strawberry-500 transition-colors">Our Story</a>
                 </div>
-                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-strawberry-50 rounded-full transition-colors">🌙</button>
-                <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block btn-sweet px-6 py-2 text-sm font-bold uppercase tracking-wider">
-                    Kitchen Dashboard
-                </button>
+                <button onclick="toggleTheme()" class="text-xl p-2 rounded-full">🌙</button>
+                <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block btn-sweet px-6 py-2 text-xs font-bold uppercase">Dashboard</button>
             </div>
         </div>
     </nav>
 
+    <!-- MOBILE DRAWER -->
+    <div id="mobileDrawer" class="fixed inset-0 z-[150] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleMobileMenuNav()"></div>
+        <div class="absolute top-0 right-0 h-full w-64 bg-vanilla-50 dark:bg-cocoa-900 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col p-6" id="drawerContent">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="font-heading text-2xl text-strawberry-500">Menu</h2>
+                <button onclick="toggleMobileMenuNav()" class="text-2xl">✕</button>
+            </div>
+            <div class="flex flex-col gap-6 font-bold text-lg">
+                <a href="#shop" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">🍰 Shop</a>
+                <a href="#about" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">🏠 Story</a>
+                <a href="tel:7543060400" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">📞 Call</a>
+                <div class="h-px bg-strawberry-100 my-2"></div>
+                <button onclick="toggleMobileMenuNav(); openLoginModal()" class="text-left">👩‍🍳 Staff Login</button>
+            </div>
+        </div>
+    </div>
+
     <!-- HERO SECTION -->
-    <section class="relative pt-8 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <div class="text-center md:text-left md:w-1/2 z-10">
-                <div class="inline-flex items-center gap-2 bg-strawberry-100 text-strawberry-600 px-4 py-1 rounded-full text-[10px] sm:text-xs font-bold mb-4 sm:mb-6 animate-bounce">
-                    <span>🏠</span> 100% Homemade in Purnea
+    <section class="relative py-8 md:py-16 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
+            <div class="text-center md:text-left md:w-1/2">
+                <div class="inline-block bg-strawberry-100 text-strawberry-600 px-3 py-1 rounded-full text-[10px] font-bold mb-4 uppercase">
+                    🏠 Homemade in Purnea
                 </div>
-                <h2 class="font-heading text-4xl sm:text-5xl md:text-7xl mb-4 sm:mb-6 text-strawberry-500 leading-tight">
-                    Baked With <br> <span class="text-cocoa-800 dark:text-vanilla-100">Love & Butter</span>
+                <h2 class="font-heading text-4xl sm:text-6xl mb-4 text-strawberry-500 leading-tight">
+                    Baked With <br> <span class="text-cocoa-800 dark:text-vanilla-50">Love & Butter</span>
                 </h2>
-                <p class="text-base sm:text-xl font-medium text-cocoa-700 dark:text-vanilla-200 mb-8 sm:mb-10 max-w-md mx-auto md:mx-0 leading-relaxed">
-                    No preservatives. No mass production. Just fresh, delicious cakes baked right in our home kitchen in Purnea, Bihar.
+                <p class="text-sm sm:text-lg font-bold text-cocoa-700 dark:text-vanilla-100 mb-8 max-w-md mx-auto md:mx-0">
+                    Fresh, delicious cakes baked right in our home kitchen in Purnea. No preservatives, just heart.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
-                    <a href="#shop" class="btn-sweet px-10 py-4 font-heading text-xl animate-heart">Order Now 🍰</a>
-                    <a href="tel:7543060400" class="bg-white border-2 border-strawberry-200 text-strawberry-500 px-10 py-4 rounded-full font-bold text-center hover:bg-strawberry-50 transition-all shadow-sm">Call Us</a>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                    <a href="#shop" class="btn-sweet px-8 py-4 font-heading text-lg animate-heart">Order Now 🍰</a>
+                    <a href="tel:7543060400" class="bg-white border-2 border-strawberry-100 text-strawberry-500 px-8 py-4 rounded-full font-bold text-center text-sm shadow-sm">Call Us</a>
                 </div>
             </div>
-            <div class="w-full md:w-1/2 relative px-4 sm:px-0">
-                <!-- SLIDESHOW CONTAINER -->
-                <div id="heroSlider" class="w-full aspect-[4/3] sm:aspect-square rounded-[2rem] sm:rounded-[3rem] overflow-hidden sm:rotate-3 shadow-2xl border-4 sm:border-8 border-white relative bg-strawberry-50">
-                    <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1888&auto=format&fit=crop" class="slide active" alt="Homemade Cake 1">
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1887&auto=format&fit=crop" class="slide" alt="Homemade Cake 2">
-                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1889&auto=format&fit=crop" class="slide" alt="Homemade Cake 3">
+            <div class="w-full md:w-1/2 relative px-2">
+                <div id="heroSlider" class="w-full aspect-square rounded-[2rem] overflow-hidden shadow-xl border-4 border-white relative bg-strawberry-50">
+                    <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1888&auto=format&fit=crop" class="slide active">
+                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1887&auto=format&fit=crop" class="slide">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1889&auto=format&fit=crop" class="slide">
                 </div>
-                <div class="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl border-2 border-strawberry-100 animate-float z-20">
-                    <p class="font-heading text-lg sm:text-2xl text-strawberry-500">Fresh Today!</p>
-                    <p class="text-[10px] sm:text-xs font-bold opacity-60">Limited batches only</p>
+                <div class="absolute -bottom-2 -left-2 bg-strawberry-500 text-white p-3 rounded-2xl shadow-lg border-2 border-white z-20">
+                    <p class="font-heading text-lg leading-none">Fresh Today!</p>
+                    <p class="text-[9px] font-bold opacity-80 uppercase tracking-tighter">Limited batches</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="bg-vanilla-100 dark:bg-cocoa-900 py-16 md:py-24 px-4 sm:px-6 relative overflow-hidden">
+    <!-- ABOUT SECTION (FIXED CONTRAST) -->
+    <section id="about" class="bg-vanilla-100 dark:bg-cocoa-900 py-12 md:py-24 px-4">
         <div class="max-w-4xl mx-auto text-center reveal">
-            <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-6 sm:mb-8">Our Purnea Heritage</h3>
-            <p class="text-base sm:text-xl md:text-2xl leading-relaxed font-semibold text-cocoa-800 dark:text-vanilla-100 mb-10 sm:mb-12">
-                Bakes-Villa is a <span class="text-strawberry-500">purely homemade</span> home kitchen in Purnea, Bihar. We aren't a big factory; we are local artisans dedicated to bringing the warmth of home-baking to your birthdays and anniversaries.
+            <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-6">Our Purnea Heritage</h3>
+            <p class="text-base sm:text-xl font-bold text-cocoa-800 dark:text-vanilla-50 mb-10 leading-relaxed">
+                Bakes-Villa is a <span class="text-strawberry-600">home kitchen</span> in Purnea, Bihar. We aren't a factory; we are local artisans bringing the warmth of home-baking to your table.
             </p>
             
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">📍</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Location</h4>
-                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">Purnea, Bihar</p>
+            <div class="flex flex-row overflow-x-auto gap-3 pb-4 sm:grid sm:grid-cols-3 sm:overflow-visible">
+                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-2xl block mb-1">📍</span>
+                    <p class="font-bold text-strawberry-500 text-xs">Purnea, Bihar</p>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">🚚</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Delivery</h4>
-                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">Across Town</p>
+                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-2xl block mb-1">🚚</span>
+                    <p class="font-bold text-strawberry-500 text-xs">Home Delivery</p>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">🥣</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Quality</h4>
-                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">100% Homemade</p>
+                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-2xl block mb-1">👩‍🍳</span>
+                    <p class="font-bold text-strawberry-500 text-xs">Pure Homemade</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- SHOP SECTION -->
-    <section id="shop" class="py-16 md:py-24 px-4 sm:px-6 md:px-10">
+    <section id="shop" class="py-12 md:py-24 px-4">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-10 sm:mb-16 reveal">
-                <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-2 sm:mb-4">Handcrafted Menu</h3>
-                <p class="font-bold text-cocoa-700 dark:text-vanilla-100 opacity-70 text-sm sm:text-base">Hand-selected treats from our home kitchen</p>
+            <div class="text-center mb-10 reveal">
+                <h3 class="font-heading text-4xl sm:text-5xl text-strawberry-500 mb-2">Handcrafted Menu</h3>
+                <p class="font-bold text-cocoa-700 dark:text-vanilla-100 text-xs sm:text-sm">Click on a treat to see its story and order</p>
             </div>
 
-            <!-- GALLERY -->
-            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Loader -->
                 <div class="col-span-full py-10 text-center">
-                    <div class="w-12 h-12 border-4 border-strawberry-200 border-t-strawberry-500 rounded-full animate-spin mx-auto"></div>
-                    <p class="font-heading text-xl text-strawberry-300 mt-6">Preheating the oven...</p>
+                    <div class="w-10 h-10 border-4 border-strawberry-200 border-t-strawberry-500 rounded-full animate-spin mx-auto"></div>
                 </div>
             </div>
 
-            <!-- VIEW FULL CATALOG BUTTON -->
-            <div id="catalogButtonContainer" class="mt-10 sm:mt-16 text-center hidden reveal active">
-                <button onclick="expandCatalog()" class="btn-sweet px-8 sm:px-12 py-4 sm:py-5 font-heading text-xl sm:text-2xl shadow-xl transition-transform hover:scale-105 active:scale-95">
-                    View Full Catalog ✨
+            <div id="catalogButtonContainer" class="mt-12 text-center hidden reveal">
+                <button onclick="expandCatalog()" class="btn-sweet px-10 py-4 font-heading text-xl shadow-lg">
+                    See Full Catalog ✨
                 </button>
             </div>
         </div>
     </section>
 
     <!-- ADMIN PANEL -->
-    <section id="adminPanel" class="hidden py-12 md:py-20 px-4 sm:px-6 bg-strawberry-50 dark:bg-slate-900 border-y-8 border-dashed border-strawberry-100">
-        <div class="max-w-3xl mx-auto bubbly-card p-6 sm:p-12">
-            <div class="flex justify-between items-center mb-6 sm:mb-8">
-                <h3 class="font-heading text-2xl sm:text-3xl text-strawberry-500">Kitchen Dashboard</h3>
-                <button onclick="handleLogout()" class="text-xs font-bold uppercase tracking-widest text-red-500 hover:text-red-700">Logout</button>
+    <section id="adminPanel" class="hidden py-12 px-4 bg-strawberry-50 dark:bg-cocoa-900 border-y-4 border-dashed border-strawberry-100">
+        <div class="max-w-xl mx-auto bubbly-card p-6 sm:p-10">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="font-heading text-2xl text-strawberry-500">Add Treat</h3>
+                <button onclick="handleLogout()" class="text-[10px] font-bold uppercase text-red-500">Logout</button>
             </div>
-            <form id="addCakeForm" class="space-y-4 sm:space-y-6">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Cake Name</label>
-                    <input type="text" id="cakeName" required class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
+            <form id="addCakeForm" class="space-y-4">
+                <input type="text" id="cakeName" placeholder="Name" required class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800">
+                <textarea id="cakeDescription" placeholder="Description" required rows="3" class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800"></textarea>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" id="cakePrice" placeholder="Price (₹)" required class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800">
+                    <input type="file" id="cakeImage" accept="image/*" class="w-full text-[10px] p-2">
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">The Flavour Story</label>
-                    <textarea id="cakeDescription" required rows="3" class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800"></textarea>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Price (₹)</label>
-                        <input type="number" id="cakePrice" required class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Cake Photo</label>
-                        <input type="file" id="cakeImage" accept="image/*" class="w-full text-[10px] font-bold p-2">
-                    </div>
-                </div>
-                <button type="submit" class="w-full btn-sweet py-4 sm:py-5 text-xl sm:text-2xl font-heading tracking-wide">
-                    List This Cake ✨
-                </button>
-                <p id="adminMessage" class="text-center font-bold text-strawberry-500 mt-4"></p>
+                <button type="submit" class="w-full btn-sweet py-4 text-xl font-heading">Post to Shop ✨</button>
+                <p id="adminMessage" class="text-center font-bold text-strawberry-500 mt-2 text-sm"></p>
             </form>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="pt-16 pb-40 md:pb-20 px-6 text-center border-t border-strawberry-100 bg-white dark:bg-slate-950">
+    <footer class="pt-16 pb-32 px-6 text-center border-t border-strawberry-100 bg-white dark:bg-black">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-heading text-3xl sm:text-4xl text-strawberry-500 mb-2">Bakes-Villa</h2>
-            <p class="font-bold text-cocoa-800 dark:text-vanilla-100 opacity-60 mb-8 text-sm sm:text-base">Purnea's Finest Homemade Home Kitchen</p>
-            <div class="flex justify-center gap-6 sm:gap-8 mb-10">
-                <button id="footerLoginBtn" onclick="openLoginModal()" class="text-[10px] font-bold uppercase tracking-widest hover:text-strawberry-500">Chef Access</button>
-                <a href="tel:7543060400" class="text-[10px] font-bold uppercase tracking-widest hover:text-strawberry-500 transition-colors">Contact Us</a>
+            <h2 class="font-heading text-3xl text-strawberry-500 mb-2">Bakes-Villa</h2>
+            <p class="font-bold opacity-40 text-[10px] uppercase tracking-widest">Handmade with ❤️ Purnea, Bihar</p>
+            <div class="flex justify-center gap-6 mt-8">
+                <button onclick="openLoginModal()" class="text-[10px] font-bold uppercase">Staff</button>
+                <a href="tel:7543060400" class="text-[10px] font-bold uppercase">Contact</a>
             </div>
-            <p class="text-[10px] uppercase tracking-widest opacity-30">Freshly Baked with ❤️ in Purnea, Bihar</p>
         </div>
     </footer>
 
-    <!-- MOBILE STICKY CTA (Optimized for safe area) -->
-    <div class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-sm md:hidden z-[100] transition-all" id="mobileBar">
-        <div class="bg-white/95 backdrop-blur-2xl border-2 border-strawberry-200 rounded-[2rem] flex items-center justify-between p-1.5 shadow-2xl">
-            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2 text-cocoa-800 active:scale-95 transition-transform">
+    <!-- MOBILE STICKY BAR -->
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-sm md:hidden z-[100]">
+        <div class="bg-white/95 backdrop-blur-xl border-2 border-strawberry-100 rounded-[2rem] flex items-center justify-between p-1.5 mobile-nav-shadow">
+            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2 text-cocoa-800 dark:text-cocoa-200">
                 <span class="text-lg">📞</span>
-                <span class="text-[9px] font-extrabold uppercase mt-1">Call</span>
+                <span class="text-[9px] font-extrabold uppercase mt-0.5">Call</span>
             </a>
-            <a href="#shop" class="w-14 h-14 bg-strawberry-500 rounded-full flex items-center justify-center text-2xl shadow-lg -translate-y-4 border-4 border-white animate-heart active:scale-90 transition-transform">
-                🍰
-            </a>
-            <a id="mobileWaLink" href="#" target="_blank" class="flex-1 flex flex-col items-center py-2 text-green-600 active:scale-95 transition-transform">
+            <a href="#shop" class="w-12 h-12 bg-strawberry-500 rounded-full flex items-center justify-center text-xl shadow-lg -translate-y-4 border-4 border-white animate-heart">🍰</a>
+            <a id="mobileWaLink" href="#" target="_blank" class="flex-1 flex flex-col items-center py-2 text-green-600">
                 <span class="text-lg">💬</span>
-                <span class="text-[9px] font-extrabold uppercase mt-1">WhatsApp</span>
+                <span class="text-[9px] font-extrabold uppercase mt-0.5">WhatsApp</span>
             </a>
         </div>
     </div>
 
-    <!-- DETAIL MODAL -->
-    <div id="cakeModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-3 sm:p-4 bg-cocoa-900/60 backdrop-blur-md" onclick="closeModal(event)">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-2xl scale-95 transition-all max-h-[90vh] flex flex-col" id="modalContainer" onclick="event.stopPropagation()">
-            <div class="relative overflow-hidden flex-shrink-0 h-48 sm:h-72">
+    <!-- DETAIL MODAL (FIXED FULL VIEW) -->
+    <div id="cakeModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-3 bg-black/70 backdrop-blur-md" onclick="closeModal(event)">
+        <div class="bg-white dark:bg-cocoa-800 w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl scale-95 transition-all flex flex-col max-h-[92vh]" id="modalContainer" onclick="event.stopPropagation()">
+            <div class="relative flex-shrink-0 h-56 sm:h-72">
                 <img id="modalImage" src="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 bg-black/40 backdrop-blur text-white rounded-full flex items-center justify-center text-xl">✕</button>
             </div>
-            <div class="p-6 sm:p-10 overflow-y-auto">
-                <div class="flex justify-between items-start mb-4 sm:mb-6">
-                    <h3 id="modalTitle" class="font-heading text-3xl sm:text-4xl text-strawberry-500"></h3>
-                    <button onclick="closeModal()" class="w-8 h-8 sm:w-10 sm:h-10 bg-strawberry-50 rounded-full flex items-center justify-center text-strawberry-500 text-lg hover:bg-strawberry-100 transition-colors">✕</button>
+            <div class="p-6 sm:p-8 overflow-y-auto">
+                <div class="flex items-center gap-3 mb-2">
+                    <p id="modalPrice" class="text-2xl font-bold text-strawberry-600"></p>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[9px] font-bold uppercase">Fresh</span>
                 </div>
-                <div class="flex items-center gap-4 mb-4 sm:mb-6">
-                    <p id="modalPrice" class="text-2xl sm:text-3xl font-bold text-cocoa-800 dark:text-white"></p>
-                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold">Available Now</span>
-                </div>
-                <p id="modalDescription" class="font-semibold text-cocoa-700 dark:text-vanilla-100 mb-8 sm:mb-10 leading-relaxed text-sm sm:text-base"></p>
-                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-sweet py-4 sm:py-5 block text-center font-heading text-xl sm:text-2xl shadow-xl animate-heart">
-                    Place Order Now 🧁
+                <h3 id="modalTitle" class="font-heading text-3xl text-cocoa-800 dark:text-vanilla-50 mb-4"></h3>
+                <p id="modalDescription" class="font-semibold text-cocoa-700 dark:text-vanilla-100 mb-8 leading-relaxed text-sm"></p>
+                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-sweet py-4 block text-center font-heading text-xl shadow-lg">
+                    Order via WhatsApp 🍰
                 </a>
             </div>
         </div>
     </div>
 
     <!-- LOGIN MODAL -->
-    <div id="loginModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6 bg-strawberry-900/40 backdrop-blur-xl" onclick="closeLoginModal(event)">
-        <div class="bubbly-card p-8 sm:p-10 w-full max-w-md" onclick="event.stopPropagation()">
-            <h3 class="font-heading text-2xl sm:text-3xl mb-6 sm:mb-8 text-center text-strawberry-500">Kitchen Access</h3>
-            <form id="loginForm" class="space-y-4 sm:space-y-6">
-                <input type="text" id="adminUser" placeholder="Chef Name" class="w-full p-4 rounded-xl sm:rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
-                <input type="password" id="adminPass" placeholder="Secret Password" class="w-full p-4 rounded-xl sm:rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
-                <button type="submit" class="w-full btn-sweet py-4 font-heading text-xl">Enter Kitchen 👩‍🍳</button>
-                <p id="loginError" class="text-center text-red-500 text-xs font-bold"></p>
+    <div id="loginModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6 bg-black/60 backdrop-blur-xl" onclick="closeLoginModal(event)">
+        <div class="bubbly-card p-8 w-full max-w-sm" onclick="event.stopPropagation()">
+            <h3 class="font-heading text-2xl mb-6 text-center text-strawberry-500">Chef Login</h3>
+            <form id="loginForm" class="space-y-4">
+                <input type="text" id="adminUser" placeholder="Username" class="w-full p-4 rounded-xl bg-strawberry-50 dark:bg-cocoa-900 border-none outline-none">
+                <input type="password" id="adminPass" placeholder="Password" class="w-full p-4 rounded-xl bg-strawberry-50 dark:bg-cocoa-900 border-none outline-none">
+                <button type="submit" class="w-full btn-sweet py-4 font-heading text-lg">Enter Kitchen 👩‍🍳</button>
             </form>
         </div>
     </div>
@@ -386,37 +343,43 @@
         let isAdmin = false;
         let showAllCakes = false;
         let cakeDataGlobal = [];
+        const PHONE = '7543060400';
         const ADMIN_USER = 'siddhijain';
         const ADMIN_PASS = 'siddhijain123';
-        const PHONE = '7543060400';
 
-        // SLIDESHOW LOGIC
+        window.toggleMobileMenuNav = () => {
+            const drawer = document.getElementById('mobileDrawer');
+            const content = document.getElementById('drawerContent');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => content.classList.replace('translate-x-full', 'translate-x-0'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                content.classList.replace('translate-x-0', 'translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+                document.body.style.overflow = 'auto';
+            }
+        };
+
         function initHeroSlider() {
             const slides = document.querySelectorAll('.slide');
-            if(slides.length === 0) return;
-            let currentSlide = 0;
+            let current = 0;
+            if(!slides.length) return;
             setInterval(() => {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
             }, 4000);
         }
 
-        // REVEAL ON SCROLL
         function checkScroll() {
-            const reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(el => {
-                const windowHeight = window.innerHeight;
-                const revealTop = el.getBoundingClientRect().top;
-                const revealPoint = 80;
-                if (revealTop < windowHeight - revealPoint) {
-                    el.classList.add('active');
-                }
+            document.querySelectorAll('.reveal').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) el.classList.add('active');
             });
         }
         window.addEventListener('scroll', checkScroll);
 
-        // THEME
         function initializeTheme() {
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -427,53 +390,39 @@
             localStorage.theme = isDark ? 'dark' : 'light';
         };
 
-        // MODAL LOGIC
         function openGuestModal(cake) {
             const modal = document.getElementById('cakeModal');
-            const container = document.getElementById('modalContainer');
             document.getElementById('modalTitle').innerText = cake.name;
             document.getElementById('modalImage').src = cake.imageData;
             document.getElementById('modalPrice').innerText = `₹${cake.price}`;
             document.getElementById('modalDescription').innerText = cake.description;
             
-            const msg = `Hi Bakes-Villa! I'm interested in your homemade ${cake.name}. Could you please share the next steps?`;
-            document.getElementById('whatsappOrderLink').href = `https://wa.me/91${PHONE}?text=${encodeURIComponent(msg)}`;
+            const wa = `https://wa.me/91${PHONE}?text=${encodeURIComponent('Hi Bakes-Villa! I want to order the ' + cake.name)}`;
+            document.getElementById('whatsappOrderLink').href = wa;
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            setTimeout(() => container.classList.remove('scale-95'), 10);
+            setTimeout(() => document.getElementById('modalContainer').classList.remove('scale-95'), 10);
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            const container = document.getElementById('modalContainer');
-            container.classList.add('scale-95');
+            document.getElementById('modalContainer').classList.add('scale-95');
             setTimeout(() => {
                 document.getElementById('cakeModal').classList.add('hidden');
                 document.body.style.overflow = 'auto';
             }, 200);
         }
 
-        // AUTH
-        window.openLoginModal = () => {
-            const modal = document.getElementById('loginModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        };
-        
+        window.openLoginModal = () => document.getElementById('loginModal').classList.remove('hidden', 'flex'), document.getElementById('loginModal').classList.add('flex');
         window.closeLoginModal = () => document.getElementById('loginModal').classList.add('hidden');
 
         window.handleLogout = () => {
-            if (confirm("Are you sure you want to logout, Chef?")) {
-                isAdmin = false;
-                localStorage.removeItem('bv_admin');
-                document.getElementById('adminBtn').classList.add('hidden');
-                document.getElementById('adminPanel').classList.add('hidden');
-                document.getElementById('footerLoginBtn').classList.remove('hidden');
-                fetchCakes(); // Re-render gallery to hide admin buttons
-            }
+            isAdmin = false;
+            localStorage.removeItem('bv_admin');
+            location.reload();
         };
-        
+
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
             if (document.getElementById('adminUser').value === ADMIN_USER && document.getElementById('adminPass').value === ADMIN_PASS) {
@@ -481,165 +430,101 @@
                 localStorage.setItem('bv_admin', 'true');
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('footerLoginBtn').classList.add('hidden');
                 closeLoginModal();
                 fetchCakes();
-                window.scrollTo({ top: document.getElementById('adminPanel').offsetTop - 80, behavior: 'smooth' });
-            } else {
-                document.getElementById('loginError').innerText = "Wrong Recipe! 🍪";
             }
         };
 
         function toggleAdminPanel() {
-            if (!isAdmin) {
-                openLoginModal();
-                return;
-            }
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('hidden');
             if(!panel.classList.contains('hidden')) window.scrollTo({ top: panel.offsetTop - 80, behavior: 'smooth' });
         }
 
-        // CATALOG EXPANSION
         window.expandCatalog = () => {
             showAllCakes = true;
             renderGallery(cakeDataGlobal);
             document.getElementById('catalogButtonContainer').classList.add('hidden');
         };
 
-        // SUPABASE LOGIC
         async function fetchCakes() {
-            const gallery = document.getElementById('gallery');
             const { data, error } = await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).select('*').order('createdAt', { ascending: false });
-
-            if (error) {
-                gallery.innerHTML = `<p class="col-span-full text-center text-red-500 font-bold">Failed to load the kitchen! 🧁</p>`;
-                return;
+            if (!error) {
+                cakeDataGlobal = data;
+                renderGallery(data);
             }
-
-            cakeDataGlobal = data;
-            renderGallery(data);
         }
 
         function renderGallery(data) {
             const gallery = document.getElementById('gallery');
-            const btnContainer = document.getElementById('catalogButtonContainer');
             gallery.innerHTML = '';
-            
-            if (data.length === 0) {
-                gallery.innerHTML = `<p class="col-span-full text-center py-10 font-bold opacity-30 text-lg">Oven is empty... but baking soon! 🍰</p>`;
+            if (!data.length) {
+                gallery.innerHTML = `<p class="col-span-full py-10 opacity-30 font-bold">Oven is preheating... 🍰</p>`;
                 return;
             }
-
-            const itemsToDisplay = showAllCakes ? data : data.slice(0, 3);
-            
-            itemsToDisplay.forEach((cake, idx) => {
+            const display = showAllCakes ? data : data.slice(0, 3);
+            display.forEach((cake, idx) => {
                 const card = document.createElement('div');
-                card.className = 'bubbly-card overflow-hidden group cursor-pointer p-4 reveal active';
+                card.className = 'bubbly-card overflow-hidden cursor-pointer p-4 reveal active';
                 card.style.transitionDelay = `${idx * 0.1}s`;
                 card.onclick = () => openGuestModal(cake);
-                
                 card.innerHTML = `
-                    <div class="relative h-48 sm:h-64 rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden mb-4 sm:mb-6">
-                        <img src="${cake.imageData}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[8px] sm:text-[10px] font-extrabold uppercase text-strawberry-500 shadow-sm">Homebaked</div>
-                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-3 right-3 bg-red-500 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-90 transition-transform">✕</button>` : ''}
+                    <div class="relative h-48 rounded-xl overflow-hidden mb-4">
+                        <img src="${cake.imageData}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[8px] font-extrabold uppercase text-strawberry-500 shadow-sm">Homebaked</div>
+                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg">✕</button>` : ''}
                     </div>
-                    <div class="px-1 sm:px-2">
-                        <h4 class="font-heading text-xl sm:text-2xl text-strawberry-500 truncate mb-1">${cake.name}</h4>
-                        <div class="flex justify-between items-center">
-                            <p class="font-bold text-lg sm:text-xl text-cocoa-800 dark:text-vanilla-100">₹${cake.price}</p>
-                            <span class="text-[8px] sm:text-[10px] font-bold text-strawberry-300 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Batch #${data.length - idx}</span>
-                        </div>
+                    <div>
+                        <h4 class="font-heading text-xl text-strawberry-500 truncate mb-1">${cake.name}</h4>
+                        <p class="font-bold text-cocoa-800 dark:text-vanilla-50">₹${cake.price}</p>
                     </div>
                 `;
                 gallery.appendChild(card);
             });
-
-            if (data.length > 3 && !showAllCakes) {
-                btnContainer.classList.remove('hidden');
-            } else {
-                btnContainer.classList.add('hidden');
-            }
+            if (data.length > 3 && !showAllCakes) document.getElementById('catalogButtonContainer').classList.remove('hidden');
         }
 
         async function deleteCake(id) {
-            if (!isAdmin) return;
-            if (!confirm("Are you sure you want to remove this treat? 🍪")) return;
-            await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).delete().eq('id', id);
-            fetchCakes();
+            if (confirm("Remove this treat? 🍪")) {
+                await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).delete().eq('id', id);
+                fetchCakes();
+            }
         }
 
-        // ADD CAKE
         document.getElementById('addCakeForm').onsubmit = async (e) => {
             e.preventDefault();
-            
-            if (!isAdmin) {
-                alert("Chef Access Denied. Please login first.");
-                openLoginModal();
-                return;
-            }
-
             const btn = e.target.querySelector('button');
-            const msg = document.getElementById('adminMessage');
-            btn.disabled = true;
-            btn.innerText = "Baking... 🍰";
-
+            btn.disabled = true; btn.innerText = "Baking... 🍰";
+            const file = document.getElementById('cakeImage').files[0];
             const name = document.getElementById('cakeName').value;
             const desc = document.getElementById('cakeDescription').value;
             const price = document.getElementById('cakePrice').value;
-            const file = document.getElementById('cakeImage').files[0];
 
-            if (!file) { msg.innerText = "Add a photo! 📸"; btn.disabled = false; return; }
-
-            try {
-                const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-                const { error: uploadError } = await window.supabaseClient.storage.from('cake_photos').upload(`public/${fileName}`, file);
-
-                if (uploadError) { msg.innerText = "Upload failed!"; btn.disabled = false; return; }
-
-                const { data: publicUrlData } = window.supabaseClient.storage.from('cake_photos').getPublicUrl(`public/${fileName}`);
-                
+            const fName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+            const { error: upErr } = await window.supabaseClient.storage.from('cake_photos').upload(`public/${fName}`, file);
+            if (!upErr) {
+                const { data: url } = window.supabaseClient.storage.from('cake_photos').getPublicUrl(`public/${fName}`);
                 await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).insert([{
-                    name, description: desc, price, imageData: publicUrlData.publicUrl, createdAt: new Date().toISOString()
+                    name, description: desc, price, imageData: url.publicUrl, createdAt: new Date().toISOString()
                 }]);
-
-                msg.innerText = "Cake is out of the oven! ✨";
                 e.target.reset();
                 fetchCakes();
-            } catch (err) {
-                msg.innerText = "Error adding cake.";
-                console.error(err);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "List This Cake ✨";
-                setTimeout(() => msg.innerText = "", 3000);
             }
+            btn.disabled = false; btn.innerText = "Post to Shop ✨";
         };
 
-        // INIT
         window.onloadCallback = () => {
             initializeTheme();
             initHeroSlider();
-            
-            const waMsg = encodeURIComponent("Hi Bakes-Villa Purnea! I saw your homemade cakes online and I'd like to enquire about ordering one.");
-            document.getElementById('mobileWaLink').href = `https://wa.me/91${PHONE}?text=${waMsg}`;
-
+            document.getElementById('mobileWaLink').href = `https://wa.me/91${PHONE}?text=Hi! I want to order a cake from Bakes-Villa Purnea.`;
             if (localStorage.getItem('bv_admin') === 'true') {
                 isAdmin = true;
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('footerLoginBtn').classList.add('hidden');
             }
-
             fetchCakes();
             checkScroll();
-
-            window.supabaseClient
-                .channel(`public:${window.SUPABASE_TABLE_NAME}`)
-                .on('postgres_changes', { event: '*', schema: 'public', table: window.SUPABASE_TABLE_NAME }, () => fetchCakes())
-                .subscribe();
+            window.supabaseClient.channel(`public:${window.SUPABASE_TABLE_NAME}`).on('postgres_changes', { event: '*', schema: 'public', table: window.SUPABASE_TABLE_NAME }, fetchCakes).subscribe();
         };
     </script>
 </body>
