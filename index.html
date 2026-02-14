@@ -117,6 +117,13 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 10px; }
+
+        /* Ensure images always fit container professionally */
+        .img-professional {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="font-sans selection:bg-luxe-gold selection:text-white">
@@ -183,9 +190,10 @@
             
             <div class="w-full md:w-7/12 relative">
                 <div id="heroSlider" class="w-full aspect-[4/5] sm:aspect-[16/10] rounded-2xl overflow-hidden luxe-shadow relative bg-luxe-onyx border border-luxe-gold/10">
-                    <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1888&auto=format&fit=crop" class="slide active">
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1887&auto=format&fit=crop" class="slide">
-                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1889&auto=format&fit=crop" class="slide">
+                    <!-- Reliable Luxury Cake Images -->
+                    <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1000&auto=format&fit=crop" class="slide active">
+                    <img src="https://images.unsplash.com/photo-1557925923-33b27f891f88?q=80&w=1000&auto=format&fit=crop" class="slide">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1000&auto=format&fit=crop" class="slide">
                     
                     <div class="absolute bottom-6 right-6 z-20 glass p-6 rounded-xl max-w-[180px] hidden sm:block">
                         <p class="font-heading italic text-lg mb-2">"Baking is a love language."</p>
@@ -196,7 +204,7 @@
         </div>
     </section>
 
-    <!-- HERITAGE -->
+    <!-- HERITAGE - FIXED IMAGE ERROR -->
     <section id="about" class="py-20 md:py-32 px-6 relative overflow-hidden bg-luxe-onyx text-white">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div class="md:w-1/2 reveal">
@@ -217,7 +225,10 @@
                 </div>
             </div>
             <div class="md:w-1/2 relative reveal">
-                <img src="https://images.unsplash.com/photo-1557925923-d34346089333?q=80&w=1918&auto=format&fit=crop" class="rounded-2xl luxe-shadow grayscale hover:grayscale-0 transition-all duration-700" alt="Baking Art">
+                <!-- UPDATED RELIABLE IMAGE URL -->
+                <div class="rounded-2xl overflow-hidden luxe-shadow">
+                    <img src="https://images.unsplash.com/photo-1550617931-e17a7b70dce2?q=80&w=1000&auto=format&fit=crop" class="img-professional grayscale hover:grayscale-0 transition-all duration-700" alt="Artisanal Baking">
+                </div>
             </div>
         </div>
     </section>
@@ -274,7 +285,7 @@
     <!-- FOOTER -->
     <footer class="pt-20 pb-32 px-10 text-center border-t border-luxe-gold/10">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-heading text-4xl mb-4 italic tracking-tight">Bakes-Villa</h2>
+            <h2 class="font-heading text-4xl mb-4 italic tracking-tight text-text-primary">Bakes-Villa</h2>
             <p class="font-bold opacity-30 text-[8px] uppercase tracking-[0.6em] mb-10 text-center">Artisan Handbaking • Purnea • Bihar</p>
             <div class="flex justify-center gap-8">
                 <button id="footerLoginBtn" onclick="openLoginModal()" class="text-[9px] font-bold uppercase tracking-[0.3em] hover:text-luxe-gold transition-colors">Staff Login</button>
@@ -297,7 +308,7 @@
         </div>
     </div>
 
-    <!-- DETAIL MODAL -->
+    <!-- DETAIL MODAL - IMPROVED SCROLLING -->
     <div id="cakeModal" class="fixed inset-0 z-[400] hidden items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl transition-all" onclick="closeModal(event)">
         <div class="bg-white dark:bg-luxe-onyx w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl scale-95 transition-all flex flex-col md:flex-row max-h-[92vh]" id="modalContainer" onclick="event.stopPropagation()">
             <div class="md:w-1/2 relative flex-shrink-0 h-64 md:h-auto overflow-hidden">
@@ -312,7 +323,7 @@
                 </div>
                 <h3 id="modalTitle" class="font-heading text-3xl sm:text-5xl mb-6 italic leading-tight"></h3>
                 <p id="modalDescription" class="text-xs sm:text-sm opacity-70 leading-loose mb-10 tracking-wide font-light"></p>
-                <div class="mt-auto pt-4">
+                <div class="mt-auto pt-4 pb-4">
                     <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-luxe py-5 block text-center font-bold uppercase text-[9px] tracking-[0.4em] shadow-xl rounded-sm">
                         Place Order via WhatsApp ✨
                     </a>
@@ -478,8 +489,8 @@
                 card.style.transitionDelay = `${idx * 0.1}s`;
                 card.onclick = () => openGuestModal(cake);
                 card.innerHTML = `
-                    <div class="relative overflow-hidden mb-6 luxe-shadow aspect-[4/5] rounded-sm">
-                        <img src="${cake.imageData}" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000">
+                    <div class="relative overflow-hidden mb-6 luxe-shadow aspect-[4/5] rounded-sm bg-luxe-onyx">
+                        <img src="${cake.imageData}" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" onerror="this.src='https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1000&auto=format&fit=crop'">
                         <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="absolute bottom-5 left-5 text-white translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
                             <p class="text-[8px] font-bold uppercase tracking-[0.3em]">Artisan View</p>
