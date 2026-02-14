@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- SEO & LOCAL SEARCH OPTIMIZATION (PURNEA, BIHAR) -->
     <title>Bakes-Villa | Best Homemade Cakes in Purnea, Bihar | Freshly Baked at Home</title>
@@ -83,6 +83,7 @@
             background-color: var(--bg-page);
             color: var(--text-main);
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* CUSTOM ANIMATIONS */
@@ -101,14 +102,18 @@
 
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-heart { animation: heartBeat 2s infinite; }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         .bubbly-card {
             background: var(--bg-card);
-            border-radius: 2.5rem;
+            border-radius: 2rem;
             border: 2px solid rgba(255, 92, 141, 0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @media (min-width: 768px) {
+            .bubbly-card { border-radius: 2.5rem; }
         }
 
         .bubbly-card:hover {
@@ -121,19 +126,23 @@
             background-color: var(--primary);
             color: white;
             border-radius: 2rem;
-            box-shadow: 0 6px 0 #E6396D;
+            box-shadow: 0 4px 0 #E6396D;
             transition: all 0.2s ease;
         }
 
+        @media (min-width: 768px) {
+            .btn-sweet { box-shadow: 0 6px 0 #E6396D; }
+        }
+
         .btn-sweet:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #E6396D;
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #E6396D;
         }
 
         .particle {
             position: absolute;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.2;
             z-index: 0;
         }
 
@@ -151,116 +160,122 @@
         .slide.active {
             opacity: 1;
         }
+
+        /* Ensure smooth scrolling on iOS */
+        .scroll-smooth {
+            -webkit-overflow-scrolling: touch;
+        }
     </style>
 </head>
 <body class="font-sans">
 
-    <!-- FLOATING DECORATIONS -->
-    <div class="particle animate-float text-4xl top-20 left-10">🧁</div>
-    <div class="particle animate-float text-3xl top-60 right-10" style="animation-delay: 2s;">🍓</div>
-    <div class="particle animate-float text-2xl bottom-40 left-20" style="animation-delay: 4s;">💖</div>
+    <!-- FLOATING DECORATIONS (Hidden on small mobile to avoid clutter) -->
+    <div class="hidden sm:block particle animate-float text-4xl top-20 left-10">🧁</div>
+    <div class="hidden sm:block particle animate-float text-3xl top-60 right-10" style="animation-delay: 2s;">🍓</div>
+    <div class="hidden sm:block particle animate-float text-2xl bottom-40 left-20" style="animation-delay: 4s;">💖</div>
 
     <!-- NAVIGATION -->
-    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b-2 border-strawberry-100 px-4 py-3">
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-lg border-b-2 border-strawberry-100 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="text-2xl">👩‍🍳</span>
-                <h1 class="font-heading text-2xl md:text-3xl text-strawberry-500">BakesVilla</h1>
+                <span class="text-2xl sm:text-3xl">👩‍🍳</span>
+                <h1 class="font-heading text-xl sm:text-3xl text-strawberry-500">BakesVilla</h1>
             </div>
             
-            <div class="hidden md:flex items-center gap-8 font-bold text-cocoa-800 dark:text-vanilla-100">
-                <a href="#shop" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Our Treats</a>
-                <a href="#about" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Purnea Story</a>
-                <button onclick="toggleTheme()" class="text-xl">🌙</button>
+            <div class="flex items-center gap-3 sm:gap-8">
+                <div class="hidden md:flex items-center gap-8 font-bold text-cocoa-800 dark:text-vanilla-100">
+                    <a href="#shop" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Our Treats</a>
+                    <a href="#about" class="hover:text-strawberry-500 transition-colors text-lg tracking-wide">Purnea Story</a>
+                </div>
+                <button onclick="toggleTheme()" class="text-xl p-2 hover:bg-strawberry-50 rounded-full transition-colors">🌙</button>
+                <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block btn-sweet px-6 py-2 text-sm font-bold uppercase tracking-wider">
+                    Kitchen Dashboard
+                </button>
             </div>
-
-            <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block btn-sweet px-6 py-2 text-sm font-bold uppercase tracking-wider">
-                Kitchen Dashboard
-            </button>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <section class="relative pt-16 pb-24 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <section class="relative pt-8 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
             <div class="text-center md:text-left md:w-1/2 z-10">
-                <div class="inline-flex items-center gap-2 bg-strawberry-100 text-strawberry-600 px-4 py-1 rounded-full text-xs font-bold mb-6 animate-bounce">
+                <div class="inline-flex items-center gap-2 bg-strawberry-100 text-strawberry-600 px-4 py-1 rounded-full text-[10px] sm:text-xs font-bold mb-4 sm:mb-6 animate-bounce">
                     <span>🏠</span> 100% Homemade in Purnea
                 </div>
-                <h2 class="font-heading text-5xl md:text-7xl mb-6 text-strawberry-500 leading-tight">
+                <h2 class="font-heading text-4xl sm:text-5xl md:text-7xl mb-4 sm:mb-6 text-strawberry-500 leading-tight">
                     Baked With <br> <span class="text-cocoa-800 dark:text-vanilla-100">Love & Butter</span>
                 </h2>
-                <p class="text-xl font-medium text-cocoa-700 dark:text-vanilla-200 mb-10 max-w-md mx-auto md:mx-0">
+                <p class="text-base sm:text-xl font-medium text-cocoa-700 dark:text-vanilla-200 mb-8 sm:mb-10 max-w-md mx-auto md:mx-0 leading-relaxed">
                     No preservatives. No mass production. Just fresh, delicious cakes baked right in our home kitchen in Purnea, Bihar.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
                     <a href="#shop" class="btn-sweet px-10 py-4 font-heading text-xl animate-heart">Order Now 🍰</a>
                     <a href="tel:7543060400" class="bg-white border-2 border-strawberry-200 text-strawberry-500 px-10 py-4 rounded-full font-bold text-center hover:bg-strawberry-50 transition-all shadow-sm">Call Us</a>
                 </div>
             </div>
-            <div class="md:w-1/2 relative">
+            <div class="w-full md:w-1/2 relative px-4 sm:px-0">
                 <!-- SLIDESHOW CONTAINER -->
-                <div id="heroSlider" class="w-full aspect-square rounded-[3rem] overflow-hidden rotate-3 shadow-2xl border-8 border-white relative bg-strawberry-50">
+                <div id="heroSlider" class="w-full aspect-[4/3] sm:aspect-square rounded-[2rem] sm:rounded-[3rem] overflow-hidden sm:rotate-3 shadow-2xl border-4 sm:border-8 border-white relative bg-strawberry-50">
                     <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1888&auto=format&fit=crop" class="slide active" alt="Homemade Cake 1">
                     <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1887&auto=format&fit=crop" class="slide" alt="Homemade Cake 2">
                     <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1889&auto=format&fit=crop" class="slide" alt="Homemade Cake 3">
                 </div>
-                <div class="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl border-2 border-strawberry-100 animate-float z-20">
-                    <p class="font-heading text-2xl text-strawberry-500">Fresh Today!</p>
-                    <p class="text-xs font-bold opacity-60">Limited batches only</p>
+                <div class="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl border-2 border-strawberry-100 animate-float z-20">
+                    <p class="font-heading text-lg sm:text-2xl text-strawberry-500">Fresh Today!</p>
+                    <p class="text-[10px] sm:text-xs font-bold opacity-60">Limited batches only</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ABOUT SECTION -->
-    <section id="about" class="bg-vanilla-100 dark:bg-cocoa-900 py-24 px-6 relative overflow-hidden">
+    <section id="about" class="bg-vanilla-100 dark:bg-cocoa-900 py-16 md:py-24 px-4 sm:px-6 relative overflow-hidden">
         <div class="max-w-4xl mx-auto text-center reveal">
-            <h3 class="font-heading text-5xl text-strawberry-500 mb-8">Our Purnea Heritage</h3>
-            <p class="text-xl md:text-2xl leading-relaxed font-semibold text-cocoa-800 dark:text-vanilla-100 mb-12">
-                Bakes-Villa is a <span class="text-strawberry-500">purely homemade</span> home kitchen in Purnea, Bihar. We aren't a big factory; we are local artisans dedicated to bringing the warmth of home-baking to your birthdays and anniversaries. Every swirl of frosting is handled with personal care.
+            <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-6 sm:mb-8">Our Purnea Heritage</h3>
+            <p class="text-base sm:text-xl md:text-2xl leading-relaxed font-semibold text-cocoa-800 dark:text-vanilla-100 mb-10 sm:mb-12">
+                Bakes-Villa is a <span class="text-strawberry-500">purely homemade</span> home kitchen in Purnea, Bihar. We aren't a big factory; we are local artisans dedicated to bringing the warmth of home-baking to your birthdays and anniversaries.
             </p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-4xl block mb-4">📍</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-xs mb-1">Location</h4>
-                    <p class="font-bold text-strawberry-500 text-lg">Purnea, Bihar</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">📍</span>
+                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Location</h4>
+                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">Purnea, Bihar</p>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-4xl block mb-4">🚚</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-xs mb-1">Delivery</h4>
-                    <p class="font-bold text-strawberry-500 text-lg">Across Town</p>
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">🚚</span>
+                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Delivery</h4>
+                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">Across Town</p>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-4xl block mb-4">🥣</span>
-                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-xs mb-1">Quality</h4>
-                    <p class="font-bold text-strawberry-500 text-lg">100% Homemade</p>
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-sm border-b-4 border-strawberry-200">
+                    <span class="text-3xl sm:text-4xl block mb-2 sm:mb-4">🥣</span>
+                    <h4 class="font-bold text-cocoa-800 dark:text-white uppercase tracking-widest text-[10px] mb-1">Quality</h4>
+                    <p class="font-bold text-strawberry-500 text-base sm:text-lg">100% Homemade</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- SHOP SECTION -->
-    <section id="shop" class="py-24 px-4 md:px-10">
+    <section id="shop" class="py-16 md:py-24 px-4 sm:px-6 md:px-10">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16 reveal">
-                <h3 class="font-heading text-5xl text-strawberry-500 mb-4">Handcrafted Menu</h3>
-                <p class="font-bold text-cocoa-700 dark:text-vanilla-100 opacity-70">Hand-selected treats from our home kitchen</p>
+            <div class="text-center mb-10 sm:mb-16 reveal">
+                <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-2 sm:mb-4">Handcrafted Menu</h3>
+                <p class="font-bold text-cocoa-700 dark:text-vanilla-100 opacity-70 text-sm sm:text-base">Hand-selected treats from our home kitchen</p>
             </div>
 
             <!-- GALLERY -->
-            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
                 <!-- Loader -->
-                <div class="col-span-full py-20 text-center">
-                    <div class="w-16 h-16 border-4 border-strawberry-200 border-t-strawberry-500 rounded-full animate-spin mx-auto"></div>
-                    <p class="font-heading text-2xl text-strawberry-300 mt-6">Preheating the oven...</p>
+                <div class="col-span-full py-10 text-center">
+                    <div class="w-12 h-12 border-4 border-strawberry-200 border-t-strawberry-500 rounded-full animate-spin mx-auto"></div>
+                    <p class="font-heading text-xl text-strawberry-300 mt-6">Preheating the oven...</p>
                 </div>
             </div>
 
             <!-- VIEW FULL CATALOG BUTTON -->
-            <div id="catalogButtonContainer" class="mt-16 text-center hidden reveal active">
-                <button onclick="expandCatalog()" class="btn-sweet px-12 py-5 font-heading text-2xl shadow-xl transition-transform hover:scale-105">
+            <div id="catalogButtonContainer" class="mt-10 sm:mt-16 text-center hidden reveal active">
+                <button onclick="expandCatalog()" class="btn-sweet px-8 sm:px-12 py-4 sm:py-5 font-heading text-xl sm:text-2xl shadow-xl transition-transform hover:scale-105 active:scale-95">
                     View Full Catalog ✨
                 </button>
             </div>
@@ -268,32 +283,32 @@
     </section>
 
     <!-- ADMIN PANEL -->
-    <section id="adminPanel" class="hidden py-20 px-6 bg-strawberry-50 dark:bg-slate-900 border-y-8 border-dashed border-strawberry-100">
-        <div class="max-w-3xl mx-auto bubbly-card p-8 md:p-12">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-heading text-3xl text-strawberry-500">Kitchen Dashboard</h3>
+    <section id="adminPanel" class="hidden py-12 md:py-20 px-4 sm:px-6 bg-strawberry-50 dark:bg-slate-900 border-y-8 border-dashed border-strawberry-100">
+        <div class="max-w-3xl mx-auto bubbly-card p-6 sm:p-12">
+            <div class="flex justify-between items-center mb-6 sm:mb-8">
+                <h3 class="font-heading text-2xl sm:text-3xl text-strawberry-500">Kitchen Dashboard</h3>
                 <button onclick="handleLogout()" class="text-xs font-bold uppercase tracking-widest text-red-500 hover:text-red-700">Logout</button>
             </div>
-            <form id="addCakeForm" class="space-y-6">
+            <form id="addCakeForm" class="space-y-4 sm:space-y-6">
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-[0.2em] mb-3 opacity-60">Cake Name</label>
-                    <input type="text" id="cakeName" required class="w-full rounded-2xl border-2 border-strawberry-50 p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
+                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Cake Name</label>
+                    <input type="text" id="cakeName" required class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-[0.2em] mb-3 opacity-60">The Flavour Story</label>
-                    <textarea id="cakeDescription" required rows="3" class="w-full rounded-2xl border-2 border-strawberry-50 p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800"></textarea>
+                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">The Flavour Story</label>
+                    <textarea id="cakeDescription" required rows="3" class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800"></textarea>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-[0.2em] mb-3 opacity-60">Price (₹)</label>
-                        <input type="number" id="cakePrice" required class="w-full rounded-2xl border-2 border-strawberry-50 p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
+                        <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Price (₹)</label>
+                        <input type="number" id="cakePrice" required class="w-full rounded-xl sm:rounded-2xl border-2 border-strawberry-50 p-3 sm:p-4 focus:border-strawberry-500 outline-none transition-all dark:bg-slate-800">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-[0.2em] mb-3 opacity-60">Cake Photo</label>
-                        <input type="file" id="cakeImage" accept="image/*" class="w-full text-xs font-bold p-2">
+                        <label class="block text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-60">Cake Photo</label>
+                        <input type="file" id="cakeImage" accept="image/*" class="w-full text-[10px] font-bold p-2">
                     </div>
                 </div>
-                <button type="submit" class="w-full btn-sweet py-5 text-2xl font-heading tracking-wide">
+                <button type="submit" class="w-full btn-sweet py-4 sm:py-5 text-xl sm:text-2xl font-heading tracking-wide">
                     List This Cake ✨
                 </button>
                 <p id="adminMessage" class="text-center font-bold text-strawberry-500 mt-4"></p>
@@ -302,50 +317,52 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="pt-20 pb-40 md:pb-20 px-6 text-center border-t border-strawberry-100 bg-white dark:bg-slate-950">
+    <footer class="pt-16 pb-40 md:pb-20 px-6 text-center border-t border-strawberry-100 bg-white dark:bg-slate-950">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-heading text-4xl text-strawberry-500 mb-2">Bakes-Villa</h2>
-            <p class="font-bold text-cocoa-800 dark:text-vanilla-100 opacity-60 mb-8">Purnea's Finest Homemade Home Kitchen</p>
-            <div class="flex justify-center gap-8 mb-10">
-                <button id="footerLoginBtn" onclick="openLoginModal()" class="text-xs font-bold uppercase tracking-widest hover:text-strawberry-500">Chef Access</button>
-                <a href="tel:7543060400" class="text-xs font-bold uppercase tracking-widest hover:text-strawberry-500 transition-colors">Contact Us</a>
+            <h2 class="font-heading text-3xl sm:text-4xl text-strawberry-500 mb-2">Bakes-Villa</h2>
+            <p class="font-bold text-cocoa-800 dark:text-vanilla-100 opacity-60 mb-8 text-sm sm:text-base">Purnea's Finest Homemade Home Kitchen</p>
+            <div class="flex justify-center gap-6 sm:gap-8 mb-10">
+                <button id="footerLoginBtn" onclick="openLoginModal()" class="text-[10px] font-bold uppercase tracking-widest hover:text-strawberry-500">Chef Access</button>
+                <a href="tel:7543060400" class="text-[10px] font-bold uppercase tracking-widest hover:text-strawberry-500 transition-colors">Contact Us</a>
             </div>
             <p class="text-[10px] uppercase tracking-widest opacity-30">Freshly Baked with ❤️ in Purnea, Bihar</p>
         </div>
     </footer>
 
-    <!-- MOBILE STICKY CTA -->
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm md:hidden z-[100] transition-all" id="mobileBar">
-        <div class="bg-white/90 backdrop-blur-2xl border-2 border-strawberry-200 rounded-[2.5rem] flex items-center justify-between p-2 shadow-2xl">
-            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2 text-cocoa-800">
-                <span class="text-xl">📞</span>
-                <span class="text-[10px] font-extrabold uppercase mt-1">Call</span>
+    <!-- MOBILE STICKY CTA (Optimized for safe area) -->
+    <div class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-[94%] max-w-sm md:hidden z-[100] transition-all" id="mobileBar">
+        <div class="bg-white/95 backdrop-blur-2xl border-2 border-strawberry-200 rounded-[2rem] flex items-center justify-between p-1.5 shadow-2xl">
+            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2 text-cocoa-800 active:scale-95 transition-transform">
+                <span class="text-lg">📞</span>
+                <span class="text-[9px] font-extrabold uppercase mt-1">Call</span>
             </a>
-            <a href="#shop" class="w-16 h-16 bg-strawberry-500 rounded-full flex items-center justify-center text-3xl shadow-lg -translate-y-4 border-4 border-white animate-heart">
+            <a href="#shop" class="w-14 h-14 bg-strawberry-500 rounded-full flex items-center justify-center text-2xl shadow-lg -translate-y-4 border-4 border-white animate-heart active:scale-90 transition-transform">
                 🍰
             </a>
-            <a id="mobileWaLink" href="#" target="_blank" class="flex-1 flex flex-col items-center py-2 text-green-600">
-                <span class="text-xl">💬</span>
-                <span class="text-[10px] font-extrabold uppercase mt-1">WhatsApp</span>
+            <a id="mobileWaLink" href="#" target="_blank" class="flex-1 flex flex-col items-center py-2 text-green-600 active:scale-95 transition-transform">
+                <span class="text-lg">💬</span>
+                <span class="text-[9px] font-extrabold uppercase mt-1">WhatsApp</span>
             </a>
         </div>
     </div>
 
     <!-- DETAIL MODAL -->
-    <div id="cakeModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-cocoa-900/60 backdrop-blur-md" onclick="closeModal(event)">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[3rem] overflow-hidden shadow-2xl scale-95 transition-all" id="modalContainer" onclick="event.stopPropagation()">
-            <img id="modalImage" src="" class="w-full h-72 object-cover">
-            <div class="p-8 md:p-10">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 id="modalTitle" class="font-heading text-4xl text-strawberry-500"></h3>
-                    <button onclick="closeModal()" class="w-10 h-10 bg-strawberry-50 rounded-full flex items-center justify-center text-strawberry-500 text-xl hover:bg-strawberry-100 transition-colors">✕</button>
+    <div id="cakeModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-3 sm:p-4 bg-cocoa-900/60 backdrop-blur-md" onclick="closeModal(event)">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-2xl scale-95 transition-all max-h-[90vh] flex flex-col" id="modalContainer" onclick="event.stopPropagation()">
+            <div class="relative overflow-hidden flex-shrink-0 h-48 sm:h-72">
+                <img id="modalImage" src="" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 sm:p-10 overflow-y-auto">
+                <div class="flex justify-between items-start mb-4 sm:mb-6">
+                    <h3 id="modalTitle" class="font-heading text-3xl sm:text-4xl text-strawberry-500"></h3>
+                    <button onclick="closeModal()" class="w-8 h-8 sm:w-10 sm:h-10 bg-strawberry-50 rounded-full flex items-center justify-center text-strawberry-500 text-lg hover:bg-strawberry-100 transition-colors">✕</button>
                 </div>
-                <div class="flex items-center gap-4 mb-6">
-                    <p id="modalPrice" class="text-3xl font-bold text-cocoa-800 dark:text-white"></p>
-                    <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold">Available Now</span>
+                <div class="flex items-center gap-4 mb-4 sm:mb-6">
+                    <p id="modalPrice" class="text-2xl sm:text-3xl font-bold text-cocoa-800 dark:text-white"></p>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold">Available Now</span>
                 </div>
-                <p id="modalDescription" class="font-semibold text-cocoa-700 dark:text-vanilla-100 mb-10 leading-relaxed"></p>
-                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-sweet py-5 block text-center font-heading text-2xl shadow-xl animate-heart">
+                <p id="modalDescription" class="font-semibold text-cocoa-700 dark:text-vanilla-100 mb-8 sm:mb-10 leading-relaxed text-sm sm:text-base"></p>
+                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-sweet py-4 sm:py-5 block text-center font-heading text-xl sm:text-2xl shadow-xl animate-heart">
                     Place Order Now 🧁
                 </a>
             </div>
@@ -354,13 +371,13 @@
 
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6 bg-strawberry-900/40 backdrop-blur-xl" onclick="closeLoginModal(event)">
-        <div class="bubbly-card p-10 w-full max-w-md" onclick="event.stopPropagation()">
-            <h3 class="font-heading text-3xl mb-8 text-center text-strawberry-500">Kitchen Access</h3>
-            <form id="loginForm" class="space-y-6">
-                <input type="text" id="adminUser" placeholder="Chef Name" class="w-full p-4 rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
-                <input type="password" id="adminPass" placeholder="Secret Password" class="w-full p-4 rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
+        <div class="bubbly-card p-8 sm:p-10 w-full max-w-md" onclick="event.stopPropagation()">
+            <h3 class="font-heading text-2xl sm:text-3xl mb-6 sm:mb-8 text-center text-strawberry-500">Kitchen Access</h3>
+            <form id="loginForm" class="space-y-4 sm:space-y-6">
+                <input type="text" id="adminUser" placeholder="Chef Name" class="w-full p-4 rounded-xl sm:rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
+                <input type="password" id="adminPass" placeholder="Secret Password" class="w-full p-4 rounded-xl sm:rounded-2xl bg-strawberry-50 border-none outline-none dark:bg-slate-800">
                 <button type="submit" class="w-full btn-sweet py-4 font-heading text-xl">Enter Kitchen 👩‍🍳</button>
-                <p id="loginError" class="text-center text-red-500 text-sm font-bold"></p>
+                <p id="loginError" class="text-center text-red-500 text-xs font-bold"></p>
             </form>
         </div>
     </div>
@@ -391,7 +408,7 @@
             reveals.forEach(el => {
                 const windowHeight = window.innerHeight;
                 const revealTop = el.getBoundingClientRect().top;
-                const revealPoint = 100;
+                const revealPoint = 80;
                 if (revealTop < windowHeight - revealPoint) {
                     el.classList.add('active');
                 }
@@ -510,7 +527,7 @@
             gallery.innerHTML = '';
             
             if (data.length === 0) {
-                gallery.innerHTML = `<p class="col-span-full text-center py-20 font-bold opacity-30 text-2xl">Oven is empty... but baking soon! 🍰</p>`;
+                gallery.innerHTML = `<p class="col-span-full text-center py-10 font-bold opacity-30 text-lg">Oven is empty... but baking soon! 🍰</p>`;
                 return;
             }
 
@@ -523,17 +540,17 @@
                 card.onclick = () => openGuestModal(cake);
                 
                 card.innerHTML = `
-                    <div class="relative h-64 rounded-[2rem] overflow-hidden mb-6">
+                    <div class="relative h-48 sm:h-64 rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden mb-4 sm:mb-6">
                         <img src="${cake.imageData}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-extrabold uppercase text-strawberry-500 shadow-sm">Homebaked</div>
-                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-4 right-4 bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">✕</button>` : ''}
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[8px] sm:text-[10px] font-extrabold uppercase text-strawberry-500 shadow-sm">Homebaked</div>
+                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-3 right-3 bg-red-500 text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-90 transition-transform">✕</button>` : ''}
                     </div>
-                    <div class="px-2">
-                        <h4 class="font-heading text-2xl text-strawberry-500 truncate mb-1">${cake.name}</h4>
+                    <div class="px-1 sm:px-2">
+                        <h4 class="font-heading text-xl sm:text-2xl text-strawberry-500 truncate mb-1">${cake.name}</h4>
                         <div class="flex justify-between items-center">
-                            <p class="font-bold text-xl text-cocoa-800 dark:text-vanilla-100">₹${cake.price}</p>
-                            <span class="text-[10px] font-bold text-strawberry-300 uppercase tracking-[0.2em]">Batch #${data.length - idx}</span>
+                            <p class="font-bold text-lg sm:text-xl text-cocoa-800 dark:text-vanilla-100">₹${cake.price}</p>
+                            <span class="text-[8px] sm:text-[10px] font-bold text-strawberry-300 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Batch #${data.length - idx}</span>
                         </div>
                     </div>
                 `;
@@ -558,7 +575,6 @@
         document.getElementById('addCakeForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            // STRICT SECURITY GUARD
             if (!isAdmin) {
                 alert("Chef Access Denied. Please login first.");
                 openLoginModal();
@@ -605,13 +621,11 @@
         // INIT
         window.onloadCallback = () => {
             initializeTheme();
-            checkScroll();
             initHeroSlider();
             
             const waMsg = encodeURIComponent("Hi Bakes-Villa Purnea! I saw your homemade cakes online and I'd like to enquire about ordering one.");
             document.getElementById('mobileWaLink').href = `https://wa.me/91${PHONE}?text=${waMsg}`;
 
-            // Handle session persistence
             if (localStorage.getItem('bv_admin') === 'true') {
                 isAdmin = true;
                 document.getElementById('adminBtn').classList.remove('hidden');
@@ -620,6 +634,7 @@
             }
 
             fetchCakes();
+            checkScroll();
 
             window.supabaseClient
                 .channel(`public:${window.SUPABASE_TABLE_NAME}`)
