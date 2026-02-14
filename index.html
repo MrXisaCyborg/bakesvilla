@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- SEO & LOCAL SEARCH OPTIMIZATION (PURNEA, BIHAR) -->
-    <title>Bakes-Villa | Best Homemade Cakes in Purnea, Bihar | Freshly Baked at Home</title>
-    <meta name="description" content="Order 100% homemade, fresh cakes from Bakes-Villa Purnea. We are a home kitchen in Purnea, Bihar, specializing in custom birthday cakes and treats made with love.">
-    <meta name="keywords" content="Homemade Cakes Purnea, Home Baker Purnea Bihar, Custom Cakes Purnea, Bakes-Villa Purnea, Freshly Baked Purnea, Cake Delivery Purnea Bihar">
+    <title>Bakes-Villa | Purnea's #1 Luxury Homemade Cakes | Handcrafted in Bihar</title>
+    <meta name="description" content="Elevate your celebrations with Bakes-Villa Purnea. The finest boutique home kitchen in Bihar, offering artisanal, fresh, and 100% homemade cakes. Order online now.">
+    <meta name="keywords" content="Boutique Bakery Purnea, Luxury Cakes Purnea, Best Home Baker Bihar, Bakes-Villa Purnea, Custom Birthday Cakes Purnea, Artisan Cakes Bihar">
     <meta name="geo.region" content="IN-BR" />
     <meta name="geo.placename" content="Purnea" />
     
     <!-- FAVICON -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧁</text></svg>">
     
     <!-- SUPABASE SDK -->
     <script type="module">
@@ -27,7 +27,7 @@
     </script>
 
     <!-- GOOGLE FONTS -->
-    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- TAILWIND CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,25 +38,15 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        heading: ['"Cherry Bomb One"', 'cursive'],
-                        sans: ['Quicksand', 'sans-serif'],
+                        heading: ['"Playfair Display"', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
                     },
                     colors: {
-                        'strawberry': {
-                            50: '#FFF5F7',
-                            100: '#FFEBF0',
-                            200: '#FFD1DC', 
-                            500: '#FF5C8D', 
-                            600: '#E6396D',
-                        },
-                        'cocoa': {
-                            700: '#4A2C2C',
-                            800: '#2D1B1B', // Darker for better visibility
-                            900: '#1A0F0F', 
-                        },
-                        'vanilla': {
-                            50: '#FFFDF5',
-                            100: '#FFF8E7', 
+                        'luxe': {
+                            'gold': '#C5A059',
+                            'rose': '#E8A0A0',
+                            'onyx': '#1A1A1A', 
+                            'cream': '#F9F5F0',
                         }
                     }
                 }
@@ -66,275 +56,280 @@
 
     <style>
         :root {
-            --bg-page: #FFF8E7;
-            --bg-card: #FFFFFF;
-            --primary: #FF5C8D;
-            --text-main: #2D1B1B;
+            --bg-main: #F9F5F0;
+            --accent-gold: #C5A059;
+            --text-primary: #1A1A1A;
+            --card-glass: rgba(255, 255, 255, 0.7);
         }
 
         .dark {
-            --bg-page: #1A0F0F;
-            --bg-card: #2D1B1B;
-            --primary: #FF85A2;
-            --text-main: #FFF8E7;
+            --bg-main: #0F0F0F;
+            --accent-gold: #D4AF37;
+            --text-primary: #F9F5F0;
+            --card-glass: rgba(26, 26, 26, 0.8);
         }
 
         body {
-            background-color: var(--bg-page);
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* FIXED ANIMATIONS */
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.05); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.05); }
-            70% { transform: scale(1); }
+        @keyframes goldPulse {
+            0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
         }
 
-        .animate-heart { animation: heartBeat 2s infinite; }
-        .reveal { opacity: 0; transform: translateY(15px); transition: all 0.5s ease-out; }
+        .animate-gold-pulse { animation: goldPulse 2s infinite; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .bubbly-card {
-            background: var(--bg-card);
-            border-radius: 1.5rem;
-            border: 2px solid rgba(255, 92, 141, 0.15);
-            transition: all 0.3s ease;
+        .glass {
+            background: var(--card-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.1);
         }
 
-        .bubbly-card:active {
-            transform: scale(0.98);
+        .btn-luxe {
+            background-color: var(--text-primary);
+            color: var(--bg-main);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-sweet {
-            background-color: var(--primary);
-            color: white;
-            border-radius: 2rem;
-            box-shadow: 0 4px 0 #E6396D;
-            transition: all 0.2s ease;
-        }
-
-        .btn-sweet:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #E6396D;
-        }
+        .btn-luxe:active { transform: scale(0.96); }
 
         /* Slideshow Transition */
         .slide {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1.5s ease-in-out;
             object-fit: cover;
         }
         .slide.active { opacity: 1; }
 
-        .mobile-nav-shadow { box-shadow: 0 -8px 24px rgba(0,0,0,0.1); }
+        .luxe-shadow { box-shadow: 0 20px 50px -12px rgba(0,0,0,0.15); }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 10px; }
     </style>
 </head>
-<body class="font-sans leading-relaxed">
+<body class="font-sans selection:bg-luxe-gold selection:text-white">
 
-    <!-- NAVIGATION -->
-    <nav class="sticky top-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b-2 border-strawberry-100 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- FLOATING NAV -->
+    <nav class="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[200] w-[92%] max-w-4xl">
+        <div class="glass rounded-full px-5 py-3 flex items-center justify-between shadow-2xl">
             <div class="flex items-center gap-2">
-                <span class="text-2xl">🧁</span>
-                <h1 class="font-heading text-xl sm:text-2xl text-strawberry-500 tracking-tight">BakesVilla</h1>
+                <span class="text-xl sm:text-2xl">✨</span>
+                <h1 class="font-heading font-bold text-lg sm:text-xl tracking-widest uppercase">BakesVilla</h1>
             </div>
-            
-            <div class="flex items-center gap-2">
-                <button onclick="toggleMobileMenuNav()" class="md:hidden text-2xl p-2 text-strawberry-500" aria-label="Menu">☰</button>
-                <div class="hidden md:flex items-center gap-8 font-bold text-cocoa-800 dark:text-vanilla-100">
-                    <a href="#shop" class="hover:text-strawberry-500 transition-colors">Treats</a>
-                    <a href="#about" class="hover:text-strawberry-500 transition-colors">Our Story</a>
+            <div class="flex items-center gap-2 sm:gap-4">
+                <button onclick="toggleMobileMenuNav()" class="md:hidden text-lg p-2">☰</button>
+                <div class="hidden md:flex items-center gap-8 font-semibold text-[10px] uppercase tracking-[0.2em]">
+                    <a href="#shop" class="hover:text-luxe-gold transition-colors">The Menu</a>
+                    <a href="#about" class="hover:text-luxe-gold transition-colors">Our Story</a>
+                    <a href="tel:7543060400" class="hover:text-luxe-gold transition-colors">Enquire</a>
                 </div>
-                <button onclick="toggleTheme()" class="text-xl p-2 rounded-full">🌙</button>
-                <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block btn-sweet px-6 py-2 text-xs font-bold uppercase">Dashboard</button>
+                <div class="h-4 w-px bg-luxe-gold/20 hidden md:block"></div>
+                <button onclick="toggleTheme()" class="text-lg p-2">🌙</button>
+                <button id="adminBtn" onclick="toggleAdminPanel()" class="hidden md:block text-[10px] font-bold uppercase tracking-widest text-luxe-gold px-2">Staff</button>
             </div>
         </div>
     </nav>
 
     <!-- MOBILE DRAWER -->
-    <div id="mobileDrawer" class="fixed inset-0 z-[150] hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleMobileMenuNav()"></div>
-        <div class="absolute top-0 right-0 h-full w-64 bg-vanilla-50 dark:bg-cocoa-900 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col p-6" id="drawerContent">
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="font-heading text-2xl text-strawberry-500">Menu</h2>
-                <button onclick="toggleMobileMenuNav()" class="text-2xl">✕</button>
-            </div>
-            <div class="flex flex-col gap-6 font-bold text-lg">
-                <a href="#shop" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">🍰 Shop</a>
-                <a href="#about" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">🏠 Story</a>
-                <a href="tel:7543060400" onclick="toggleMobileMenuNav()" class="flex items-center gap-3">📞 Call</a>
-                <div class="h-px bg-strawberry-100 my-2"></div>
-                <button onclick="toggleMobileMenuNav(); openLoginModal()" class="text-left">👩‍🍳 Staff Login</button>
+    <div id="mobileDrawer" class="fixed inset-0 z-[250] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleMobileMenuNav()"></div>
+        <div class="absolute top-0 right-0 h-full w-72 bg-white dark:bg-luxe-onyx shadow-2xl transform translate-x-full transition-transform duration-500 flex flex-col p-10" id="drawerContent">
+            <button onclick="toggleMobileMenuNav()" class="self-end text-2xl mb-12">✕</button>
+            <div class="flex flex-col gap-8 font-heading text-3xl">
+                <a href="#shop" onclick="toggleMobileMenuNav()" class="italic">The Collection</a>
+                <a href="#about" onclick="toggleMobileMenuNav()" class="italic">Heritage</a>
+                <a href="tel:7543060400" onclick="toggleMobileMenuNav()" class="italic">Concierge</a>
+                <div class="h-px bg-luxe-gold/10 my-4"></div>
+                <button id="drawerAdminBtn" onclick="toggleMobileMenuNav(); toggleAdminPanel()" class="hidden text-left text-sm font-sans font-bold uppercase tracking-widest text-luxe-gold">Dashboard</button>
+                <button id="drawerLoginBtn" onclick="toggleMobileMenuNav(); openLoginModal()" class="text-left text-sm font-sans font-bold uppercase tracking-widest opacity-50">Staff Portal</button>
             </div>
         </div>
     </div>
 
     <!-- HERO SECTION -->
-    <section class="relative py-8 md:py-16 px-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
-            <div class="text-center md:text-left md:w-1/2">
-                <div class="inline-block bg-strawberry-100 text-strawberry-600 px-3 py-1 rounded-full text-[10px] font-bold mb-4 uppercase">
-                    🏠 Homemade in Purnea
-                </div>
-                <h2 class="font-heading text-4xl sm:text-6xl mb-4 text-strawberry-500 leading-tight">
-                    Baked With <br> <span class="text-cocoa-800 dark:text-vanilla-50">Love & Butter</span>
+    <section class="relative min-h-screen flex items-center justify-center px-4 pt-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-16">
+            <div class="text-center md:text-left md:w-5/12 z-10 reveal active">
+                <span class="inline-block border-l-2 border-luxe-gold pl-4 text-[10px] font-bold tracking-[0.4em] uppercase mb-6 opacity-60">
+                    Est. 2024 • Purnea, Bihar
+                </span>
+                <h2 class="font-heading text-5xl sm:text-6xl md:text-8xl mb-6 leading-[0.95] tracking-tighter">
+                    Purely <br> <i class="font-normal text-luxe-gold">Homemade</i> <br> Perfection.
                 </h2>
-                <p class="text-sm sm:text-lg font-bold text-cocoa-700 dark:text-vanilla-100 mb-8 max-w-md mx-auto md:mx-0">
-                    Fresh, delicious cakes baked right in our home kitchen in Purnea. No preservatives, just heart.
+                <p class="text-sm sm:text-base font-medium opacity-60 mb-10 max-w-sm mx-auto md:mx-0 leading-relaxed tracking-wide">
+                    Artisanal treats crafted in our home kitchen. No mass production. Just the soulful taste of home.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                    <a href="#shop" class="btn-sweet px-8 py-4 font-heading text-lg animate-heart">Order Now 🍰</a>
-                    <a href="tel:7543060400" class="bg-white border-2 border-strawberry-100 text-strawberry-500 px-8 py-4 rounded-full font-bold text-center text-sm shadow-sm">Call Us</a>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center md:justify-start">
+                    <a href="#shop" class="btn-luxe px-10 py-5 font-bold uppercase text-[10px] tracking-[0.3em] shadow-2xl">
+                        Shop Collection
+                    </a>
+                    <a href="tel:7543060400" class="text-[10px] font-bold uppercase tracking-[0.3em] self-center hover:text-luxe-gold transition-colors py-2 border-b border-luxe-gold/20">
+                        Speak to the Chef
+                    </a>
                 </div>
             </div>
-            <div class="w-full md:w-1/2 relative px-2">
-                <div id="heroSlider" class="w-full aspect-square rounded-[2rem] overflow-hidden shadow-xl border-4 border-white relative bg-strawberry-50">
+            
+            <div class="w-full md:w-7/12 relative">
+                <div id="heroSlider" class="w-full aspect-[4/5] sm:aspect-[16/10] rounded-2xl overflow-hidden luxe-shadow relative bg-luxe-onyx border border-luxe-gold/10">
                     <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?q=80&w=1888&auto=format&fit=crop" class="slide active">
                     <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1887&auto=format&fit=crop" class="slide">
                     <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1889&auto=format&fit=crop" class="slide">
-                </div>
-                <div class="absolute -bottom-2 -left-2 bg-strawberry-500 text-white p-3 rounded-2xl shadow-lg border-2 border-white z-20">
-                    <p class="font-heading text-lg leading-none">Fresh Today!</p>
-                    <p class="text-[9px] font-bold opacity-80 uppercase tracking-tighter">Limited batches</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT SECTION (FIXED CONTRAST) -->
-    <section id="about" class="bg-vanilla-100 dark:bg-cocoa-900 py-12 md:py-24 px-4">
-        <div class="max-w-4xl mx-auto text-center reveal">
-            <h3 class="font-heading text-3xl sm:text-5xl text-strawberry-500 mb-6">Our Purnea Heritage</h3>
-            <p class="text-base sm:text-xl font-bold text-cocoa-800 dark:text-vanilla-50 mb-10 leading-relaxed">
-                Bakes-Villa is a <span class="text-strawberry-600">home kitchen</span> in Purnea, Bihar. We aren't a factory; we are local artisans bringing the warmth of home-baking to your table.
-            </p>
-            
-            <div class="flex flex-row overflow-x-auto gap-3 pb-4 sm:grid sm:grid-cols-3 sm:overflow-visible">
-                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-2xl block mb-1">📍</span>
-                    <p class="font-bold text-strawberry-500 text-xs">Purnea, Bihar</p>
-                </div>
-                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-2xl block mb-1">🚚</span>
-                    <p class="font-bold text-strawberry-500 text-xs">Home Delivery</p>
-                </div>
-                <div class="flex-shrink-0 w-32 sm:w-auto bg-white dark:bg-cocoa-800 p-4 rounded-2xl shadow-sm border-b-4 border-strawberry-200">
-                    <span class="text-2xl block mb-1">👩‍🍳</span>
-                    <p class="font-bold text-strawberry-500 text-xs">Pure Homemade</p>
+                    
+                    <div class="absolute bottom-6 right-6 z-20 glass p-6 rounded-xl max-w-[180px] hidden sm:block">
+                        <p class="font-heading italic text-lg mb-2">"Baking is a love language."</p>
+                        <p class="text-[9px] font-bold uppercase tracking-widest opacity-50">— Chef Siddhi</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SHOP SECTION -->
-    <section id="shop" class="py-12 md:py-24 px-4">
+    <!-- HERITAGE -->
+    <section id="about" class="py-20 md:py-32 px-6 relative overflow-hidden bg-luxe-onyx text-white">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+            <div class="md:w-1/2 reveal">
+                <h3 class="font-heading text-4xl sm:text-6xl italic mb-10">The Purnea Legacy</h3>
+                <div class="space-y-6 opacity-70 text-sm sm:text-base leading-loose tracking-wide font-light">
+                    <p>Bakes-Villa is an exclusive home kitchen born in the heart of Purnea. We believe luxury isn't found in a factory, but in the slow, meticulous handling of organic ingredients.</p>
+                    <p>Every cake is a unique commission—handcrafted to tell your story, celebrate your milestones, and bring the warmth of a family kitchen to your most elegant events.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
+                    <div>
+                        <h4 class="text-luxe-gold text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Location</h4>
+                        <p class="font-heading text-lg italic">Purnea, Bihar</p>
+                    </div>
+                    <div>
+                        <h4 class="text-luxe-gold text-[9px] font-bold uppercase tracking-[0.3em] mb-2">Quality</h4>
+                        <p class="font-heading text-lg italic">100% Homemade</p>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative reveal">
+                <img src="https://images.unsplash.com/photo-1557925923-d34346089333?q=80&w=1918&auto=format&fit=crop" class="rounded-2xl luxe-shadow grayscale hover:grayscale-0 transition-all duration-700" alt="Baking Art">
+            </div>
+        </div>
+    </section>
+
+    <!-- THE COLLECTION -->
+    <section id="shop" class="py-20 md:py-32 px-4 md:px-10">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-10 reveal">
-                <h3 class="font-heading text-4xl sm:text-5xl text-strawberry-500 mb-2">Handcrafted Menu</h3>
-                <p class="font-bold text-cocoa-700 dark:text-vanilla-100 text-xs sm:text-sm">Click on a treat to see its story and order</p>
+            <div class="text-center mb-16 reveal">
+                <h3 class="font-heading text-5xl sm:text-7xl mb-4 italic">The Collection</h3>
+                <p class="text-[10px] font-bold tracking-[0.5em] uppercase opacity-40">Select creations for your palate</p>
+                <div class="w-12 h-0.5 bg-luxe-gold mx-auto mt-6"></div>
             </div>
 
-            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Loader -->
-                <div class="col-span-full py-10 text-center">
-                    <div class="w-10 h-10 border-4 border-strawberry-200 border-t-strawberry-500 rounded-full animate-spin mx-auto"></div>
+            <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
+                <!-- Luxury Loader -->
+                <div class="col-span-full py-20 text-center">
+                    <div class="w-10 h-10 border border-luxe-gold border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
                 </div>
             </div>
 
-            <div id="catalogButtonContainer" class="mt-12 text-center hidden reveal">
-                <button onclick="expandCatalog()" class="btn-sweet px-10 py-4 font-heading text-xl shadow-lg">
-                    See Full Catalog ✨
+            <div id="catalogButtonContainer" class="mt-16 text-center hidden reveal">
+                <button onclick="expandCatalog()" class="btn-luxe px-12 py-5 font-bold uppercase text-[9px] tracking-[0.4em] shadow-xl">
+                    Explore Full Gallery
                 </button>
             </div>
         </div>
     </section>
 
     <!-- ADMIN PANEL -->
-    <section id="adminPanel" class="hidden py-12 px-4 bg-strawberry-50 dark:bg-cocoa-900 border-y-4 border-dashed border-strawberry-100">
-        <div class="max-w-xl mx-auto bubbly-card p-6 sm:p-10">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-heading text-2xl text-strawberry-500">Add Treat</h3>
-                <button onclick="handleLogout()" class="text-[10px] font-bold uppercase text-red-500">Logout</button>
+    <section id="adminPanel" class="hidden py-20 px-4 bg-white dark:bg-black border-y border-luxe-gold/10">
+        <div class="max-w-2xl mx-auto glass p-8 sm:p-12 rounded-3xl shadow-2xl">
+            <div class="flex justify-between items-center mb-10">
+                <h3 class="font-heading text-3xl italic">Kitchen Dashboard</h3>
+                <button onclick="handleLogout()" class="text-[9px] font-bold uppercase text-red-500 tracking-widest px-4 py-2 border border-red-500/20 rounded-full">Sign Out</button>
             </div>
-            <form id="addCakeForm" class="space-y-4">
-                <input type="text" id="cakeName" placeholder="Name" required class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800">
-                <textarea id="cakeDescription" placeholder="Description" required rows="3" class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800"></textarea>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="cakePrice" placeholder="Price (₹)" required class="w-full rounded-xl border-2 border-strawberry-50 p-3 dark:bg-cocoa-800">
-                    <input type="file" id="cakeImage" accept="image/*" class="w-full text-[10px] p-2">
+            <form id="addCakeForm" class="space-y-6">
+                <input type="text" id="cakeName" placeholder="Treat Title" required class="w-full bg-transparent border-b border-luxe-gold/20 py-4 outline-none focus:border-luxe-gold transition-all text-lg font-heading italic">
+                <textarea id="cakeDescription" placeholder="The Flavour Story" required rows="3" class="w-full bg-transparent border-b border-luxe-gold/20 py-4 outline-none focus:border-luxe-gold transition-all text-sm tracking-wide"></textarea>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <input type="number" id="cakePrice" placeholder="Value (₹)" required class="w-full bg-transparent border-b border-luxe-gold/20 py-4 outline-none focus:border-luxe-gold transition-all font-bold">
+                    <div class="flex flex-col">
+                        <label class="text-[9px] uppercase tracking-widest mb-2 opacity-50">Upload Portrait</label>
+                        <input type="file" id="cakeImage" accept="image/*" class="text-[10px] font-bold">
+                    </div>
                 </div>
-                <button type="submit" class="w-full btn-sweet py-4 text-xl font-heading">Post to Shop ✨</button>
-                <p id="adminMessage" class="text-center font-bold text-strawberry-500 mt-2 text-sm"></p>
+                <button type="submit" class="w-full btn-luxe py-5 font-bold uppercase tracking-[0.4em] text-[10px] mt-8 rounded-sm">
+                    Publish to Catalog
+                </button>
+                <p id="adminMessage" class="text-center font-bold text-luxe-gold mt-6 text-xs italic"></p>
             </form>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="pt-16 pb-32 px-6 text-center border-t border-strawberry-100 bg-white dark:bg-black">
+    <footer class="pt-20 pb-32 px-10 text-center border-t border-luxe-gold/10">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-heading text-3xl text-strawberry-500 mb-2">Bakes-Villa</h2>
-            <p class="font-bold opacity-40 text-[10px] uppercase tracking-widest">Handmade with ❤️ Purnea, Bihar</p>
-            <div class="flex justify-center gap-6 mt-8">
-                <button onclick="openLoginModal()" class="text-[10px] font-bold uppercase">Staff</button>
-                <a href="tel:7543060400" class="text-[10px] font-bold uppercase">Contact</a>
+            <h2 class="font-heading text-4xl mb-4 italic tracking-tight">Bakes-Villa</h2>
+            <p class="font-bold opacity-30 text-[8px] uppercase tracking-[0.6em] mb-10 text-center">Artisan Handbaking • Purnea • Bihar</p>
+            <div class="flex justify-center gap-8">
+                <button id="footerLoginBtn" onclick="openLoginModal()" class="text-[9px] font-bold uppercase tracking-[0.3em] hover:text-luxe-gold transition-colors">Staff Login</button>
+                <a href="tel:7543060400" class="text-[9px] font-bold uppercase tracking-[0.3em] hover:text-luxe-gold transition-colors">Concierge</a>
             </div>
         </div>
     </footer>
 
-    <!-- MOBILE STICKY BAR -->
-    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-sm md:hidden z-[100]">
-        <div class="bg-white/95 backdrop-blur-xl border-2 border-strawberry-100 rounded-[2rem] flex items-center justify-between p-1.5 mobile-nav-shadow">
-            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2 text-cocoa-800 dark:text-cocoa-200">
+    <!-- MOBILE STICKY CONTACT -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm md:hidden z-[300]">
+        <div class="bg-luxe-onyx text-white rounded-full flex items-center justify-between p-1.5 shadow-2xl border border-white/5 animate-gold-pulse">
+            <a href="tel:7543060400" class="flex-1 flex flex-col items-center py-2.5 border-r border-white/10">
                 <span class="text-lg">📞</span>
-                <span class="text-[9px] font-extrabold uppercase mt-0.5">Call</span>
+                <span class="text-[7px] font-bold uppercase mt-1 tracking-[0.2em]">Concierge</span>
             </a>
-            <a href="#shop" class="w-12 h-12 bg-strawberry-500 rounded-full flex items-center justify-center text-xl shadow-lg -translate-y-4 border-4 border-white animate-heart">🍰</a>
-            <a id="mobileWaLink" href="#" target="_blank" class="flex-1 flex flex-col items-center py-2 text-green-600">
+            <a id="mobileWaLink" href="#" target="_blank" class="flex-[2] flex flex-col items-center py-2.5 bg-luxe-gold rounded-full text-luxe-onyx active:opacity-80">
                 <span class="text-lg">💬</span>
-                <span class="text-[9px] font-extrabold uppercase mt-0.5">WhatsApp</span>
+                <span class="text-[7px] font-extrabold uppercase mt-1 tracking-[0.15em]">Direct WhatsApp Order</span>
             </a>
         </div>
     </div>
 
-    <!-- DETAIL MODAL (FIXED FULL VIEW) -->
-    <div id="cakeModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-3 bg-black/70 backdrop-blur-md" onclick="closeModal(event)">
-        <div class="bg-white dark:bg-cocoa-800 w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl scale-95 transition-all flex flex-col max-h-[92vh]" id="modalContainer" onclick="event.stopPropagation()">
-            <div class="relative flex-shrink-0 h-56 sm:h-72">
+    <!-- DETAIL MODAL -->
+    <div id="cakeModal" class="fixed inset-0 z-[400] hidden items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl transition-all" onclick="closeModal(event)">
+        <div class="bg-white dark:bg-luxe-onyx w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl scale-95 transition-all flex flex-col md:flex-row max-h-[92vh]" id="modalContainer" onclick="event.stopPropagation()">
+            <div class="md:w-1/2 relative flex-shrink-0 h-64 md:h-auto overflow-hidden">
                 <img id="modalImage" src="" class="w-full h-full object-cover">
-                <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 bg-black/40 backdrop-blur text-white rounded-full flex items-center justify-center text-xl">✕</button>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
             </div>
-            <div class="p-6 sm:p-8 overflow-y-auto">
+            <div class="md:w-1/2 p-6 sm:p-10 overflow-y-auto flex flex-col custom-scrollbar">
+                <button onclick="closeModal()" class="self-end text-xl mb-4 opacity-30 hover:opacity-100 p-2">✕</button>
                 <div class="flex items-center gap-3 mb-2">
-                    <p id="modalPrice" class="text-2xl font-bold text-strawberry-600"></p>
-                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[9px] font-bold uppercase">Fresh</span>
+                    <p id="modalPrice" class="text-2xl sm:text-3xl font-heading italic text-luxe-gold"></p>
+                    <span class="text-[8px] font-bold uppercase tracking-widest px-3 py-1 bg-luxe-gold/10 rounded-full border border-luxe-gold/20">Homemade Fresh</span>
                 </div>
-                <h3 id="modalTitle" class="font-heading text-3xl text-cocoa-800 dark:text-vanilla-50 mb-4"></h3>
-                <p id="modalDescription" class="font-semibold text-cocoa-700 dark:text-vanilla-100 mb-8 leading-relaxed text-sm"></p>
-                <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-sweet py-4 block text-center font-heading text-xl shadow-lg">
-                    Order via WhatsApp 🍰
-                </a>
+                <h3 id="modalTitle" class="font-heading text-3xl sm:text-5xl mb-6 italic leading-tight"></h3>
+                <p id="modalDescription" class="text-xs sm:text-sm opacity-70 leading-loose mb-10 tracking-wide font-light"></p>
+                <div class="mt-auto pt-4">
+                    <a id="whatsappOrderLink" href="#" target="_blank" class="w-full btn-luxe py-5 block text-center font-bold uppercase text-[9px] tracking-[0.4em] shadow-xl rounded-sm">
+                        Place Order via WhatsApp ✨
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- LOGIN MODAL -->
-    <div id="loginModal" class="fixed inset-0 z-[120] hidden items-center justify-center p-6 bg-black/60 backdrop-blur-xl" onclick="closeLoginModal(event)">
-        <div class="bubbly-card p-8 w-full max-w-sm" onclick="event.stopPropagation()">
-            <h3 class="font-heading text-2xl mb-6 text-center text-strawberry-500">Chef Login</h3>
-            <form id="loginForm" class="space-y-4">
-                <input type="text" id="adminUser" placeholder="Username" class="w-full p-4 rounded-xl bg-strawberry-50 dark:bg-cocoa-900 border-none outline-none">
-                <input type="password" id="adminPass" placeholder="Password" class="w-full p-4 rounded-xl bg-strawberry-50 dark:bg-cocoa-900 border-none outline-none">
-                <button type="submit" class="w-full btn-sweet py-4 font-heading text-lg">Enter Kitchen 👩‍🍳</button>
+    <div id="loginModal" class="fixed inset-0 z-[500] hidden items-center justify-center p-6 bg-black/95" onclick="closeLoginModal(event)">
+        <div class="glass p-10 w-full max-w-sm rounded-3xl shadow-inner" onclick="event.stopPropagation()">
+            <h3 class="font-heading text-2xl mb-8 text-center italic tracking-widest">Kitchen Entry</h3>
+            <form id="loginForm" class="space-y-6">
+                <input type="text" id="adminUser" placeholder="Chef Identity" class="w-full bg-transparent border-b border-luxe-gold/20 py-4 outline-none text-center tracking-[0.2em] text-[9px] uppercase font-bold">
+                <input type="password" id="adminPass" placeholder="Secret Cipher" class="w-full bg-transparent border-b border-luxe-gold/20 py-4 outline-none text-center tracking-[0.2em] text-[9px] uppercase font-bold">
+                <button type="submit" class="w-full btn-luxe py-5 font-bold uppercase text-[9px] tracking-[0.4em] mt-6 rounded-full">Authorize</button>
+                <p id="loginError" class="text-center text-red-500 text-[8px] font-bold uppercase tracking-widest mt-4"></p>
             </form>
         </div>
     </div>
@@ -356,7 +351,7 @@
                 document.body.style.overflow = 'hidden';
             } else {
                 content.classList.replace('translate-x-0', 'translate-x-full');
-                setTimeout(() => drawer.classList.add('hidden'), 300);
+                setTimeout(() => drawer.classList.add('hidden'), 500);
                 document.body.style.overflow = 'auto';
             }
         };
@@ -369,13 +364,13 @@
                 slides[current].classList.remove('active');
                 current = (current + 1) % slides.length;
                 slides[current].classList.add('active');
-            }, 4000);
+            }, 5000);
         }
 
         function checkScroll() {
             document.querySelectorAll('.reveal').forEach(el => {
                 const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 50) el.classList.add('active');
+                if (rect.top < window.innerHeight - 100) el.classList.add('active');
             });
         }
         window.addEventListener('scroll', checkScroll);
@@ -397,7 +392,7 @@
             document.getElementById('modalPrice').innerText = `₹${cake.price}`;
             document.getElementById('modalDescription').innerText = cake.description;
             
-            const wa = `https://wa.me/91${PHONE}?text=${encodeURIComponent('Hi Bakes-Villa! I want to order the ' + cake.name)}`;
+            const wa = `https://wa.me/91${PHONE}?text=${encodeURIComponent('Greetings Chef Siddhi! I am interested in your artisanal creation: ' + cake.name)}`;
             document.getElementById('whatsappOrderLink').href = wa;
 
             modal.classList.remove('hidden');
@@ -411,16 +406,17 @@
             setTimeout(() => {
                 document.getElementById('cakeModal').classList.add('hidden');
                 document.body.style.overflow = 'auto';
-            }, 200);
+            }, 300);
         }
 
         window.openLoginModal = () => document.getElementById('loginModal').classList.remove('hidden', 'flex'), document.getElementById('loginModal').classList.add('flex');
         window.closeLoginModal = () => document.getElementById('loginModal').classList.add('hidden');
 
         window.handleLogout = () => {
-            isAdmin = false;
-            localStorage.removeItem('bv_admin');
-            location.reload();
+            if (confirm("Sign out of the kitchen?")) {
+                localStorage.removeItem('bv_admin');
+                location.reload();
+            }
         };
 
         document.getElementById('loginForm').onsubmit = (e) => {
@@ -428,17 +424,30 @@
             if (document.getElementById('adminUser').value === ADMIN_USER && document.getElementById('adminPass').value === ADMIN_PASS) {
                 isAdmin = true;
                 localStorage.setItem('bv_admin', 'true');
-                document.getElementById('adminBtn').classList.remove('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
+                syncAdminUI();
                 closeLoginModal();
                 fetchCakes();
+                window.scrollTo({ top: document.getElementById('adminPanel').offsetTop - 120, behavior: 'smooth' });
+            } else {
+                document.getElementById('loginError').innerText = "Cipher Incorrect ✨";
             }
         };
+
+        function syncAdminUI() {
+            if (localStorage.getItem('bv_admin') === 'true') {
+                isAdmin = true;
+                document.getElementById('adminBtn').classList.remove('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('drawerAdminBtn').classList.remove('hidden');
+                document.getElementById('drawerLoginBtn').classList.add('hidden');
+                document.getElementById('footerLoginBtn').classList.add('hidden');
+            }
+        }
 
         function toggleAdminPanel() {
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('hidden');
-            if(!panel.classList.contains('hidden')) window.scrollTo({ top: panel.offsetTop - 80, behavior: 'smooth' });
+            if(!panel.classList.contains('hidden')) window.scrollTo({ top: panel.offsetTop - 120, behavior: 'smooth' });
         }
 
         window.expandCatalog = () => {
@@ -459,24 +468,30 @@
             const gallery = document.getElementById('gallery');
             gallery.innerHTML = '';
             if (!data.length) {
-                gallery.innerHTML = `<p class="col-span-full py-10 opacity-30 font-bold">Oven is preheating... 🍰</p>`;
+                gallery.innerHTML = `<p class="col-span-full py-10 opacity-30 italic font-heading text-xl">The kitchen is preparing creations... 🍰</p>`;
                 return;
             }
             const display = showAllCakes ? data : data.slice(0, 3);
             display.forEach((cake, idx) => {
                 const card = document.createElement('div');
-                card.className = 'bubbly-card overflow-hidden cursor-pointer p-4 reveal active';
+                card.className = 'group cursor-pointer reveal active';
                 card.style.transitionDelay = `${idx * 0.1}s`;
                 card.onclick = () => openGuestModal(cake);
                 card.innerHTML = `
-                    <div class="relative h-48 rounded-xl overflow-hidden mb-4">
-                        <img src="${cake.imageData}" class="w-full h-full object-cover">
-                        <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[8px] font-extrabold uppercase text-strawberry-500 shadow-sm">Homebaked</div>
-                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg">✕</button>` : ''}
+                    <div class="relative overflow-hidden mb-6 luxe-shadow aspect-[4/5] rounded-sm">
+                        <img src="${cake.imageData}" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000">
+                        <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute bottom-5 left-5 text-white translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                            <p class="text-[8px] font-bold uppercase tracking-[0.3em]">Artisan View</p>
+                        </div>
+                        ${isAdmin ? `<button onclick="event.stopPropagation(); deleteCake('${cake.id}')" class="absolute top-4 right-4 bg-red-500/90 text-white w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-xl active:scale-90">✕</button>` : ''}
                     </div>
-                    <div>
-                        <h4 class="font-heading text-xl text-strawberry-500 truncate mb-1">${cake.name}</h4>
-                        <p class="font-bold text-cocoa-800 dark:text-vanilla-50">₹${cake.price}</p>
+                    <div class="flex justify-between items-start px-1">
+                        <div class="max-w-[75%]">
+                            <h4 class="font-heading text-2xl italic tracking-tight group-hover:text-luxe-gold transition-colors">${cake.name}</h4>
+                            <p class="text-[7px] font-bold uppercase tracking-[0.3em] opacity-30 mt-1">Home Kitchen Batch</p>
+                        </div>
+                        <p class="font-bold text-luxe-gold text-sm tracking-tighter">₹${cake.price}</p>
                     </div>
                 `;
                 gallery.appendChild(card);
@@ -485,7 +500,8 @@
         }
 
         async function deleteCake(id) {
-            if (confirm("Remove this treat? 🍪")) {
+            if (!isAdmin) return;
+            if (confirm("Remove this masterpiece? 🍪")) {
                 await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).delete().eq('id', id);
                 fetchCakes();
             }
@@ -494,34 +510,37 @@
         document.getElementById('addCakeForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            btn.disabled = true; btn.innerText = "Baking... 🍰";
+            const msg = document.getElementById('adminMessage');
+            btn.disabled = true; btn.innerText = "Processing Mastery... ✨";
             const file = document.getElementById('cakeImage').files[0];
             const name = document.getElementById('cakeName').value;
             const desc = document.getElementById('cakeDescription').value;
             const price = document.getElementById('cakePrice').value;
 
+            if (!file) { msg.innerText = "Upload an image."; btn.disabled = false; return; }
+
             const fName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
             const { error: upErr } = await window.supabaseClient.storage.from('cake_photos').upload(`public/${fName}`, file);
             if (!upErr) {
                 const { data: url } = window.supabaseClient.storage.from('cake_photos').getPublicUrl(`public/${fName}`);
-                await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).insert([{
+                const { error: insErr } = await window.supabaseClient.from(window.SUPABASE_TABLE_NAME).insert([{
                     name, description: desc, price, imageData: url.publicUrl, createdAt: new Date().toISOString()
                 }]);
-                e.target.reset();
-                fetchCakes();
-            }
-            btn.disabled = false; btn.innerText = "Post to Shop ✨";
+                if (!insErr) {
+                    e.target.reset();
+                    fetchCakes();
+                    msg.innerText = "Creation Published.";
+                } else { msg.innerText = "Database Error."; }
+            } else { msg.innerText = "Upload failed."; }
+            btn.disabled = false; btn.innerText = "Publish to Catalog";
+            setTimeout(() => msg.innerText = "", 3000);
         };
 
         window.onloadCallback = () => {
             initializeTheme();
             initHeroSlider();
-            document.getElementById('mobileWaLink').href = `https://wa.me/91${PHONE}?text=Hi! I want to order a cake from Bakes-Villa Purnea.`;
-            if (localStorage.getItem('bv_admin') === 'true') {
-                isAdmin = true;
-                document.getElementById('adminBtn').classList.remove('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-            }
+            syncAdminUI();
+            document.getElementById('mobileWaLink').href = `https://wa.me/91${PHONE}?text=Greetings Chef! I am interested in your luxury homemade cakes.`;
             fetchCakes();
             checkScroll();
             window.supabaseClient.channel(`public:${window.SUPABASE_TABLE_NAME}`).on('postgres_changes', { event: '*', schema: 'public', table: window.SUPABASE_TABLE_NAME }, fetchCakes).subscribe();
